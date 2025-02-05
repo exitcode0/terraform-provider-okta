@@ -178,54 +178,8 @@ func (d *AppsDataSource) Read(ctx context.Context, req datasource.ReadRequest, r
 		if !ok {
 			continue
 		}
-
-		FeaturesList, err := types.ListValueFrom(ctx, types.StringType, oktaApp.GetFeatures())
-		resp.Diagnostics.Append(err...)
-
-		adminNotes, userNotes := getNotes(oktaApp)
-
-		hideValue := map[string]attr.Value{
-			"ios": types.BoolPointerValue(oktaApp.GetVisibility().Hide.IOS),
-			"web": types.BoolPointerValue(oktaApp.GetVisibility().Hide.Web),
-		}
-		hideTypes := map[string]attr.Type{
-			"ios": types.BoolType,
-			"web": types.BoolType,
-		}
-
-		hide, _ := types.ObjectValue(hideTypes, hideValue)
-
-		visibilityValue := map[string]attr.Value{
-			"hide":                hide,
-			"auto_launch":         types.BoolPointerValue(oktaApp.GetVisibility().AutoLaunch),
-			"auto_submit_toolbar": types.BoolPointerValue(oktaApp.GetVisibility().AutoSubmitToolbar),
-		}
-		visibilityTypes := map[string]attr.Type{
-			"hide": types.ObjectType{
-				AttrTypes: map[string]attr.Type{
-					"ios": types.BoolType,
-					"web": types.BoolType,
-				},
-			},
-			"auto_launch":         types.BoolType,
-			"auto_submit_toolbar": types.BoolType,
-		}
-
-		visibility, _ := types.ObjectValue(visibilityTypes, visibilityValue)
-
-		state.Apps = append(state.Apps, OktaAppModel{
-			ID:          types.StringValue(oktaApp.GetId()),
-			Created:     types.StringValue(oktaApp.GetCreated().Format(time.RFC3339)),
-			LastUpdated: types.StringValue(oktaApp.GetLastUpdated().Format(time.RFC3339)),
-			Name:        types.StringValue(oktaApp.GetName()),
-			Label:       types.StringValue(oktaApp.GetLabel()),
-			Status:      types.StringValue(oktaApp.GetStatus()),
-			SignOnMode:  types.StringValue(oktaApp.GetSignOnMode()),
-			Features:    FeaturesList,
-			AdminNote:   types.StringValue(adminNotes),
-			EndUserNote: types.StringValue(userNotes),
-			Visibility:  visibility,
-		})
+		oktaAppModel := buildOktaAppModel(ctx, oktaApp)
+		state.Apps = append(state.Apps, oktaAppModel)
 	}
 
 	resp.Diagnostics.Append(resp.State.Set(ctx, &state)...)
@@ -276,4 +230,55 @@ func getNotes(app interface{}) (string, string) {
 	}
 
 	return "", ""
+}
+
+func buildOktaAppModel(ctx context.Context, oktaApp OktaApp) OktaAppModel {
+	FeaturesList, _ := types.ListValueFrom(ctx, types.StringType, oktaApp.GetFeatures())
+
+	adminNotes, userNotes := getNotes(oktaApp)
+
+	hideValue := map[string]attr.Value{
+		"ios": types.BoolPointerValue(oktaApp.GetVisibility().Hide.IOS),
+		"web": types.BoolPointerValue(oktaApp.GetVisibility().Hide.Web),
+	}
+	hideTypes := map[string]attr.Type{
+		"ios": types.BoolType,
+		"web": types.BoolType,
+	}
+
+	hide, _ := types.ObjectValue(hideTypes, hideValue)
+
+	visibilityValue := map[string]attr.Value{
+		"hide":                hide,
+		"auto_launch":         types.BoolPointerValue(oktaApp.GetVisibility().AutoLaunch),
+		"auto_submit_toolbar": types.BoolPointerValue(oktaApp.GetVisibility().AutoSubmitToolbar),
+	}
+	visibilityTypes := map[string]attr.Type{
+		"hide": types.ObjectType{
+			AttrTypes: map[string]attr.Type{
+				"ios": types.BoolType,
+				"web": types.BoolType,
+			},
+		},
+		"auto_launch":         types.BoolType,
+		"auto_submit_toolbar": types.BoolType,
+	}
+
+	visibility, _ := types.ObjectValue(visibilityTypes, visibilityValue)
+
+	oktaAppModel := OktaAppModel{
+		ID:          types.StringValue(oktaApp.GetId()),
+		Created:     types.StringValue(oktaApp.GetCreated().Format(time.RFC3339)),
+		LastUpdated: types.StringValue(oktaApp.GetLastUpdated().Format(time.RFC3339)),
+		Name:        types.StringValue(oktaApp.GetName()),
+		Label:       types.StringValue(oktaApp.GetLabel()),
+		Status:      types.StringValue(oktaApp.GetStatus()),
+		SignOnMode:  types.StringValue(oktaApp.GetSignOnMode()),
+		Features:    FeaturesList,
+		AdminNote:   types.StringValue(adminNotes),
+		EndUserNote: types.StringValue(userNotes),
+		Visibility:  visibility,
+	}
+
+	return oktaAppModel
 }

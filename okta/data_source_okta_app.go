@@ -2,127 +2,84 @@ package okta
 
 import (
 	"context"
-	"encoding/json"
+	"fmt"
 
-	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
-	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
-	"github.com/okta/terraform-provider-okta/sdk"
+	"github.com/hashicorp/terraform-plugin-framework/attr"
+	"github.com/hashicorp/terraform-plugin-framework/datasource"
+	"github.com/hashicorp/terraform-plugin-framework/datasource/schema"
+	"github.com/hashicorp/terraform-plugin-framework/types"
 )
 
-func dataSourceApp() *schema.Resource {
-	return &schema.Resource{
-		ReadContext: dataSourceAppRead,
-		Schema: buildSchema(skipUsersAndGroupsSchema, map[string]*schema.Schema{
-			"id": {
-				Type:          schema.TypeString,
-				Optional:      true,
-				ConflictsWith: []string{"label", "label_prefix"},
-				Description:   "Id of application to retrieve, conflicts with label and label_prefix.",
-			},
-			"label": {
-				Type:          schema.TypeString,
-				Optional:      true,
-				ConflictsWith: []string{"id", "label_prefix"},
-				Description: `The label of the app to retrieve, conflicts with
-				label_prefix and id. Label uses the ?q=<label> query parameter exposed by
-				Okta's List Apps API. The API will search both name and label using that
-				query. Therefore similarily named and labeled apps may be returned in the query
-				and have the unitended result of associating the wrong app with this data
-				source. See:
-				https://developer.okta.com/docs/reference/api/apps/#list-applications`,
-			},
-			"label_prefix": {
-				Type:          schema.TypeString,
-				Optional:      true,
-				ConflictsWith: []string{"id", "label"},
-				Description: `Label prefix of the app to retrieve, conflicts with label and id. This will tell the
-				provider to do a starts with query as opposed to an equals query.`,
-			},
-			"active_only": {
-				Type:        schema.TypeBool,
-				Optional:    true,
-				Default:     true,
-				Description: "Search only ACTIVE applications.",
-			},
-			"name": {
-				Type:        schema.TypeString,
+var _ datasource.DataSource = &AppDataSource{}
+
+func NewAppDataSource() datasource.DataSource { return &AppDataSource{} }
+
+type AppDataSource struct{ config *Config }
+
+type AppDataSourceModel struct {
+	ID types.String `tfsdk:"id"`
+}
+
+func (d *AppDataSource) Metadata(ctx context.Context, req datasource.MetadataRequest, resp *datasource.MetadataResponse) {
+	resp.TypeName = req.ProviderTypeName + "_app"
+}
+
+func (d *AppDataSource) Schema(ctx context.Context, req datasource.SchemaRequest, resp *datasource.SchemaResponse) {
+	resp.Schema = schema.Schema{
+		Attributes: map[string]schema.Attribute{
+			"id":           schema.StringAttribute{Computed: true},
+			"created":      schema.StringAttribute{Computed: true},
+			"last_updated": schema.StringAttribute{Computed: true},
+			"name":         schema.StringAttribute{Computed: true},
+			"label":        schema.StringAttribute{Computed: true},
+			"status":       schema.StringAttribute{Computed: true},
+			"sign_on_mode": schema.StringAttribute{Computed: true},
+			"features": schema.ListAttribute{
+				ElementType: types.StringType,
 				Computed:    true,
-				Description: "Name of application.",
 			},
-			"status": {
-				Type:        schema.TypeString,
-				Computed:    true,
-				Description: "Status of application.",
+			"admin_note":   schema.StringAttribute{Computed: true},
+			"enduser_note": schema.StringAttribute{Computed: true},
+			"visibility": schema.ObjectAttribute{
+				Computed: true,
+				AttributeTypes: map[string]attr.Type{
+					"auto_launch":         types.BoolType,
+					"auto_submit_toolbar": types.BoolType,
+					"hide": types.ObjectType{
+						AttrTypes: map[string]attr.Type{
+							"ios": types.BoolType,
+							"web": types.BoolType,
+						},
+					},
+				},
 			},
-			"links": {
-				Type:        schema.TypeString,
-				Computed:    true,
-				Description: "Discoverable resources related to the app",
-			},
-			"groups": {
-				Type:        schema.TypeSet,
-				Computed:    true,
-				Elem:        &schema.Schema{Type: schema.TypeString},
-				Description: "Groups associated with the application",
-				Deprecated:  "The `groups` field is now deprecated for the data source `okta_app`, please replace all uses of this with: `okta_app_group_assignments`",
-			},
-			"users": {
-				Type:        schema.TypeSet,
-				Computed:    true,
-				Elem:        &schema.Schema{Type: schema.TypeString},
-				Description: "Users associated with the application",
-				Deprecated:  "The `users` field is now deprecated for the data source `okta_app`, please replace all uses of this with: `okta_app_user_assignments`",
-			},
-		}),
-		Description: "Get an application of any kind from Okta.",
+		},
 	}
 }
 
-func dataSourceAppRead(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
-	filters, err := getAppFilters(d)
-	if err != nil {
-		return diag.Errorf("invalid app filters: %v", err)
-	}
-	var app *sdk.Application
-	if filters.ID != "" {
-		respApp, _, err := getOktaClientFromMetadata(m).Application.GetApplication(ctx, filters.ID, sdk.NewApplication(), nil)
-		if err != nil {
-			return diag.Errorf("failed get app by ID: %v", err)
-		}
-		app = respApp.(*sdk.Application)
-	} else {
-		appList, err := listApps(ctx, getOktaClientFromMetadata(m), filters, 1)
-		if err != nil {
-			return diag.Errorf("failed to list apps: %v", err)
-		}
-		if len(appList) < 1 {
-			return diag.Errorf("no application found with the provided filter: %+v", filters)
-		}
+func (d *AppDataSource) Configure(ctx context.Context, req datasource.ConfigureRequest, resp *datasource.ConfigureResponse) {
+	d.config = dataSourceConfiguration(req, resp)
+}
 
-		// Okta API for list apps uses a starts with query on label and name
-		// which could result in multiple matches on the data source's "label"
-		// property.  We need to further inspect for an exact label match.
-		if filters.Label != "" {
-			// guard on nils, an app is always set
-			app = appList[0]
-			for i, _app := range appList {
-				if _app.Label == filters.Label {
-					app = appList[i]
-					break
-				}
-			}
-		} else {
-			if len(appList) > 1 {
-				logger(m).Info("found multiple applications with the criteria supplied, using the first one, sorted by creation date")
-			}
-			app = appList[0]
-		}
+func (d *AppDataSource) Read(ctx context.Context, req datasource.ReadRequest, resp *datasource.ReadResponse) {
+	var state AppDataSourceModel
+	resp.Diagnostics.Append(req.Config.Get(ctx, &state)...)
+
+	client := d.config.oktaSDKClientV5
+	apiRequest := client.ApplicationAPI.GetApplication(ctx, state.ID.ValueString())
+	app, _, err := apiRequest.Execute()
+	if err != nil {
+		resp.Diagnostics.AddError("Unable to Read Okta App", fmt.Sprintf("Error retrieving app: %s", err.Error()))
+		return
 	}
-	d.SetId(app.Id)
-	_ = d.Set("label", app.Label)
-	_ = d.Set("name", app.Name)
-	_ = d.Set("status", app.Status)
-	p, _ := json.Marshal(app.Links)
-	_ = d.Set("links", string(p))
-	return nil
+
+	oktaApp, ok := app.GetActualInstance().(OktaApp)
+	if !ok {
+		resp.Diagnostics.AddError("Unable to Read Okta App", "App is not an OktaApp")
+		return
+	}
+
+	oktaAppModel := buildOktaAppModel(ctx, oktaApp)
+
+	resp.Diagnostics.Append(resp.State.Set(ctx, &oktaAppModel)...)
 }
