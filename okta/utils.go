@@ -20,6 +20,7 @@ import (
 	"unicode"
 
 	"github.com/hashicorp/go-hclog"
+	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"github.com/okta/okta-sdk-golang/v4/okta"
 	v5okta "github.com/okta/okta-sdk-golang/v5/okta"
@@ -681,4 +682,13 @@ func Intersection(old []string, new []string) (intersection []string, exclusiveO
 		}
 	}
 	return
+}
+
+// Helper function to convert []string to []types.String
+func convertStringSlice(slice []string) []types.String {
+	result := make([]types.String, len(slice))
+	for i, v := range slice {
+		result[i] = types.StringValue(v)
+	}
+	return result
 }
