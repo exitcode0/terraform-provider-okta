@@ -9,7 +9,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/terraform"
-	"github.com/okta/terraform-provider-okta/sdk"
+	v5okta "github.com/okta/okta-sdk-golang/v5/okta"
 )
 
 func TestAccResourceOktaEventHook_crud(t *testing.T) {
@@ -18,6 +18,11 @@ func TestAccResourceOktaEventHook_crud(t *testing.T) {
 	config := mgr.GetFixtures("basic.tf", t)
 	updatedConfig := mgr.GetFixtures("basic_updated.tf", t)
 	activatedConfig := mgr.GetFixtures("basic_activated.tf", t)
+
+	header_key_1 := "x-test-header"
+	header_value_1 := "test stuff"
+	header_key_2 := "x-another-header"
+	header_value_2 := "more test stuff"
 
 	oktaResourceTest(t, resource.TestCase{
 		PreCheck:          testAccPreCheck(t),
@@ -39,10 +44,7 @@ func TestAccResourceOktaEventHook_crud(t *testing.T) {
 					testCheckResourceSetAttr(
 						resourceName,
 						"events",
-						eventSet(&sdk.EventSubscriptions{
-							Type:  "EVENT_TYPE",
-							Items: []string{"user.lifecycle.create", "user.lifecycle.delete.initiated"},
-						}),
+						eventSet(v5okta.NewEventSubscriptions([]string{"user.lifecycle.create", "user.lifecycle.delete.initiated"}, "EVENT_TYPE")),
 					),
 				),
 			},
@@ -60,29 +62,19 @@ func TestAccResourceOktaEventHook_crud(t *testing.T) {
 					testCheckResourceSetAttr(
 						resourceName,
 						"headers",
-						testMakeEventHookHeadersSet([]*sdk.EventHookChannelConfigHeader{
-							{
-								Key:   "x-test-header",
-								Value: "test stuff",
-							},
-							{
-								Key:   "x-another-header",
-								Value: "more test stuff",
-							},
+						testMakeEventHookHeadersSet([]*v5okta.EventHookChannelConfigHeader{
+							{Key: &header_key_1, Value: &header_value_1},
+							{Key: &header_key_2, Value: &header_value_2},
 						}),
 					),
 					testCheckResourceSetAttr(
 						resourceName,
 						"events",
-						eventSet(&sdk.EventSubscriptions{
-							Type: "EVENT_TYPE",
-							Items: []string{
+						eventSet(v5okta.NewEventSubscriptions([]string{
 								"user.lifecycle.create",
 								"user.lifecycle.delete.initiated",
 								"user.account.update_profile",
-							},
-						},
-						),
+						}, "EVENT_TYPE")),
 					),
 				),
 			},
@@ -100,35 +92,32 @@ func TestAccResourceOktaEventHook_crud(t *testing.T) {
 					testCheckResourceSetAttr(
 						resourceName,
 						"events",
-						eventSet(&sdk.EventSubscriptions{
-							Type:  "EVENT_TYPE",
-							Items: []string{"user.lifecycle.create", "user.lifecycle.delete.initiated"},
-						}),
+						eventSet(v5okta.NewEventSubscriptions([]string{"user.lifecycle.create", "user.lifecycle.delete.initiated"}, "EVENT_TYPE")),
 					),
-				),
+					),
 			},
 		},
 	})
 }
 
 func eventHookExists(id string) (bool, error) {
-	client := sdkV2ClientForTest()
-	eh, resp, err := client.EventHook.GetEventHook(context.Background(), id)
-	if err := suppressErrorOn404(resp, err); err != nil {
+	client := sdkV5ClientForTest()
+	eh, resp, err := client.EventHookAPI.GetEventHook(context.Background(), id).Execute()
+	if err := v5suppressErrorOn404(resp, err); err != nil {
 		return false, err
 	}
 	return eh != nil, nil
 }
 
-func testMakeEventHookHeadersSet(headers []*sdk.EventHookChannelConfigHeader) *schema.Set {
+func testMakeEventHookHeadersSet(headers []*v5okta.EventHookChannelConfigHeader) *schema.Set {
 	h := make([]interface{}, len(headers))
 	for i, header := range headers {
 		h[i] = map[string]interface{}{
-			"key":   header.Key,
-			"value": header.Value,
+			"key":   header.GetKey(),
+			"value": header.GetValue(),
 		}
 	}
-	return schema.NewSet(schema.HashResource(headerSchema), h)
+	return schema.NewSet(schema.HashResource(eventHookHeaderSchema), h)
 }
 
 // Create a TestCheckFunc that compares a Set to the current state
