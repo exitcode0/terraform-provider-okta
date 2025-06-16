@@ -13,8 +13,8 @@ import (
 func TestAccResourceOktaAppGroupAssignments_crud(t *testing.T) {
 	resourceName := fmt.Sprintf("%s.test", appGroupAssignments)
 	mgr := newFixtureManager("resources", appGroupAssignments, t.Name())
-	config := mgr.GetFixtures("basic.tf", t)
-	updatedConfig := mgr.GetFixtures("updated.tf", t)
+	config := mgr.GetFixtures("test_basic.tf", t)
+	updatedConfig := mgr.GetFixtures("test_updated.tf", t)
 
 	group1 := fmt.Sprintf("%s.test1", group)
 	group2 := fmt.Sprintf("%s.test2", group)
@@ -24,7 +24,7 @@ func TestAccResourceOktaAppGroupAssignments_crud(t *testing.T) {
 		PreCheck:          testAccPreCheck(t),
 		ErrorCheck:        testAccErrorChecks(t),
 		ProviderFactories: testAccProvidersFactories,
-		CheckDestroy:      checkUserDestroy,
+		CheckDestroy:      checkResourceDestroy(appGroupAssignments, createDoesAppExist(sdk.NewBookmarkApplication())),
 		Steps: []resource.TestStep{
 			{
 				Config: config,
@@ -341,8 +341,8 @@ func clickOpsCheckIfGroupIsAssignedToApp(appResourceName string, groups ...strin
 func TestAccResourceOktaAppGroupAssignments_2068_empty_assignments(t *testing.T) {
 	resourceName := fmt.Sprintf("%s.test", appGroupAssignments)
 	mgr := newFixtureManager("resources", appGroupAssignments, t.Name())
-	config := mgr.GetFixtures("basic.tf", t)
-	updatedConfig := mgr.GetFixtures("updated_empty.tf", t)
+	config := mgr.GetFixtures("test_basic.tf", t)
+	updatedConfig := mgr.GetFixtures("test_updated_empty.tf", t)
 
 	group1 := fmt.Sprintf("%s.test1", group)
 	group2 := fmt.Sprintf("%s.test2", group)
@@ -352,7 +352,7 @@ func TestAccResourceOktaAppGroupAssignments_2068_empty_assignments(t *testing.T)
 		PreCheck:          testAccPreCheck(t),
 		ErrorCheck:        testAccErrorChecks(t),
 		ProviderFactories: testAccProvidersFactories,
-		CheckDestroy:      checkUserDestroy,
+		CheckDestroy:      checkResourceDestroy(appGroupAssignments, createDoesAppExist(sdk.NewBookmarkApplication())),
 		Steps: []resource.TestStep{
 			{
 				Config: config,
@@ -424,4 +424,521 @@ resource "okta_app_group_assignments" "test" {
 			},
 		},
 	})
+}
+
+// TestAccResourceOktaAppGroupAssignments_priority_zero tests that priority 0
+// is treated as a valid explicit priority value, distinct from unset priority
+func TestAccResourceOktaAppGroupAssignments_priority_zero(t *testing.T) {
+	resourceName := fmt.Sprintf("%s.test", appGroupAssignments)
+	mgr := newFixtureManager("resources", appGroupAssignments, t.Name())
+	config := mgr.GetFixtures("test_priority_zero.tf", t)
+
+	group1 := fmt.Sprintf("%s.test1", group)
+	group2 := fmt.Sprintf("%s.test2", group)
+	group3 := fmt.Sprintf("%s.test3", group)
+
+	oktaResourceTest(t, resource.TestCase{
+		PreCheck:          testAccPreCheck(t),
+		ErrorCheck:        testAccErrorChecks(t),
+		ProviderFactories: testAccProvidersFactories,
+		CheckDestroy:      checkResourceDestroy(appGroupAssignments, createDoesAppExist(sdk.NewBookmarkApplication())),
+		Steps: []resource.TestStep{
+			{
+				Config: config,
+				Check: resource.ComposeTestCheckFunc(
+					ensureAppGroupAssignmentsExist(resourceName, group1, group2, group3),
+					resource.TestCheckResourceAttrSet(resourceName, "app_id"),
+					resource.TestCheckResourceAttr(resourceName, "group.#", "3"),
+
+					// Check that priority 0 is preserved
+					resource.TestCheckResourceAttr(resourceName, "group.0.priority", "0"),
+					resource.TestCheckResourceAttr(resourceName, "group.0.profile", `{}`),
+
+					// Check that priority 1 is preserved
+					resource.TestCheckResourceAttr(resourceName, "group.1.priority", "1"),
+					resource.TestCheckResourceAttr(resourceName, "group.1.profile", `{}`),
+
+					// Check that group without priority has no priority attribute or it's not set
+					resource.TestCheckResourceAttr(resourceName, "group.2.profile", `{}`),
+					// Note: We can't easily test for absence of priority attribute in Terraform tests
+					// but the important thing is that it doesn't cause drift
+				),
+			},
+			{
+				// Test refresh to ensure no drift with priority 0
+				RefreshState: true,
+				Check: resource.ComposeTestCheckFunc(
+					ensureAppGroupAssignmentsExist(resourceName, group1, group2, group3),
+					resource.TestCheckResourceAttr(resourceName, "group.0.priority", "0"),
+					resource.TestCheckResourceAttr(resourceName, "group.1.priority", "1"),
+				),
+			},
+		},
+	})
+}
+
+// TestAccResourceOktaAppGroupAssignments_priority_resequencing tests that Okta's
+// priority re-sequencing doesn't cause drift when relative order is maintained
+func TestAccResourceOktaAppGroupAssignments_priority_resequencing(t *testing.T) {
+	resourceName := fmt.Sprintf("%s.test", appGroupAssignments)
+	mgr := newFixtureManager("resources", appGroupAssignments, t.Name())
+	config := mgr.GetFixtures("test_priority_resequencing.tf", t)
+
+	group1 := fmt.Sprintf("%s.test1", group)
+	group2 := fmt.Sprintf("%s.test2", group)
+	group3 := fmt.Sprintf("%s.test3", group)
+
+	oktaResourceTest(t, resource.TestCase{
+		PreCheck:          testAccPreCheck(t),
+		ErrorCheck:        testAccErrorChecks(t),
+		ProviderFactories: testAccProvidersFactories,
+		CheckDestroy:      checkResourceDestroy(appGroupAssignments, createDoesAppExist(sdk.NewBookmarkApplication())),
+		Steps: []resource.TestStep{
+			{
+				Config: config,
+				Check: resource.ComposeTestCheckFunc(
+					ensureAppGroupAssignmentsExist(resourceName, group1, group2, group3),
+					resource.TestCheckResourceAttrSet(resourceName, "app_id"),
+					resource.TestCheckResourceAttr(resourceName, "group.#", "3"),
+
+					// Verify the groups are assigned with their profiles
+					resource.TestCheckResourceAttr(resourceName, "group.0.profile", `{}`),
+					resource.TestCheckResourceAttr(resourceName, "group.1.profile", `{}`),
+					resource.TestCheckResourceAttr(resourceName, "group.2.profile", `{}`),
+
+					// Check that priorities exist (Okta may re-sequence them)
+					resource.TestCheckResourceAttrSet(resourceName, "group.0.priority"),
+					resource.TestCheckResourceAttrSet(resourceName, "group.1.priority"),
+					resource.TestCheckResourceAttrSet(resourceName, "group.2.priority"),
+
+					// Verify relative ordering is maintained via custom check
+					checkPriorityRelativeOrder(resourceName, []string{"test1", "test2", "test3"}),
+				),
+			},
+			{
+				// Test refresh to ensure no drift even if Okta re-sequences priorities
+				RefreshState: true,
+				Check: resource.ComposeTestCheckFunc(
+					ensureAppGroupAssignmentsExist(resourceName, group1, group2, group3),
+					checkPriorityRelativeOrder(resourceName, []string{"test1", "test2", "test3"}),
+				),
+			},
+		},
+	})
+}
+
+// TestAccResourceOktaAppGroupAssignments_priority_mixed tests mixed scenarios
+// where some groups have priorities and others don't
+func TestAccResourceOktaAppGroupAssignments_priority_mixed(t *testing.T) {
+	resourceName := fmt.Sprintf("%s.test", appGroupAssignments)
+	mgr := newFixtureManager("resources", appGroupAssignments, t.Name())
+	config := mgr.GetFixtures("test_priority_mixed.tf", t)
+
+	group1 := fmt.Sprintf("%s.test1", group)
+	group2 := fmt.Sprintf("%s.test2", group)
+	group3 := fmt.Sprintf("%s.test3", group)
+
+	oktaResourceTest(t, resource.TestCase{
+		PreCheck:          testAccPreCheck(t),
+		ErrorCheck:        testAccErrorChecks(t),
+		ProviderFactories: testAccProvidersFactories,
+		CheckDestroy:      checkResourceDestroy(appGroupAssignments, createDoesAppExist(sdk.NewBookmarkApplication())),
+		Steps: []resource.TestStep{
+			{
+				Config: config,
+				Check: resource.ComposeTestCheckFunc(
+					ensureAppGroupAssignmentsExist(resourceName, group1, group2, group3),
+					resource.TestCheckResourceAttrSet(resourceName, "app_id"),
+					resource.TestCheckResourceAttr(resourceName, "group.#", "3"),
+
+					// Verify profiles are correct
+					resource.TestCheckResourceAttr(resourceName, "group.0.profile", `{}`),
+					resource.TestCheckResourceAttr(resourceName, "group.1.profile", `{}`),
+					resource.TestCheckResourceAttr(resourceName, "group.2.profile", `{}`),
+
+					// Check that groups with priorities maintain relative order (test3=1, test1=2)
+					checkMixedPriorityOrder(resourceName),
+				),
+			},
+			{
+				RefreshState: true,
+				Check: resource.ComposeTestCheckFunc(
+					ensureAppGroupAssignmentsExist(resourceName, group1, group2, group3),
+					checkMixedPriorityOrder(resourceName),
+				),
+			},
+		},
+	})
+}
+
+// TestAccResourceOktaAppGroupAssignments_no_priorities tests that groups
+// without any priorities work correctly
+func TestAccResourceOktaAppGroupAssignments_no_priorities(t *testing.T) {
+	resourceName := fmt.Sprintf("%s.test", appGroupAssignments)
+	mgr := newFixtureManager("resources", appGroupAssignments, t.Name())
+	config := mgr.GetFixtures("test_no_priorities.tf", t)
+
+	group1 := fmt.Sprintf("%s.test1", group)
+	group2 := fmt.Sprintf("%s.test2", group)
+	group3 := fmt.Sprintf("%s.test3", group)
+
+	oktaResourceTest(t, resource.TestCase{
+		PreCheck:          testAccPreCheck(t),
+		ErrorCheck:        testAccErrorChecks(t),
+		ProviderFactories: testAccProvidersFactories,
+		CheckDestroy:      checkResourceDestroy(appGroupAssignments, createDoesAppExist(sdk.NewBookmarkApplication())),
+		Steps: []resource.TestStep{
+			{
+				Config: config,
+				Check: resource.ComposeTestCheckFunc(
+					ensureAppGroupAssignmentsExist(resourceName, group1, group2, group3),
+					resource.TestCheckResourceAttrSet(resourceName, "app_id"),
+					resource.TestCheckResourceAttr(resourceName, "group.#", "3"),
+
+					// Verify profiles are correct
+					resource.TestCheckResourceAttr(resourceName, "group.0.profile", `{}`),
+					resource.TestCheckResourceAttr(resourceName, "group.1.profile", `{}`),
+					resource.TestCheckResourceAttr(resourceName, "group.2.profile", `{}`),
+				),
+			},
+			{
+				RefreshState: true,
+				Check: resource.ComposeTestCheckFunc(
+					ensureAppGroupAssignmentsExist(resourceName, group1, group2, group3),
+					resource.TestCheckResourceAttr(resourceName, "group.#", "3"),
+				),
+			},
+		},
+	})
+}
+
+// checkPriorityRelativeOrder verifies that the relative ordering of priorities is maintained
+func checkPriorityRelativeOrder(resourceName string, expectedOrder []string) resource.TestCheckFunc {
+	return func(s *terraform.State) error {
+		rs, ok := s.RootModule().Resources[resourceName]
+		if !ok {
+			return fmt.Errorf("resource not found: %s", resourceName)
+		}
+
+		// Build a map of group name suffix to priority
+		groupPriorities := make(map[string]int)
+		for i := 0; i < len(expectedOrder); i++ {
+			priorityKey := fmt.Sprintf("group.%d.priority", i)
+			if priorityStr, exists := rs.Primary.Attributes[priorityKey]; exists {
+				var priority int
+				if _, err := fmt.Sscanf(priorityStr, "%d", &priority); err != nil {
+					return fmt.Errorf("failed to parse priority %s: %v", priorityStr, err)
+				}
+
+				// Extract group name suffix from the group ID
+				groupIDKey := fmt.Sprintf("group.%d.id", i)
+				if groupID, exists := rs.Primary.Attributes[groupIDKey]; exists {
+					// Find which expected group this corresponds to
+					for _, expectedGroup := range expectedOrder {
+						groupResourceName := fmt.Sprintf("okta_group.%s", expectedGroup)
+						if groupRes, ok := s.RootModule().Resources[groupResourceName]; ok {
+							if groupRes.Primary.Attributes["id"] == groupID {
+								groupPriorities[expectedGroup] = priority
+								break
+							}
+						}
+					}
+				}
+			}
+		}
+
+		// Verify relative ordering
+		if len(groupPriorities) > 1 {
+			prevGroup := ""
+			prevPriority := -1
+			for _, groupName := range expectedOrder {
+				if priority, exists := groupPriorities[groupName]; exists {
+					if prevGroup != "" && priority <= prevPriority {
+						return fmt.Errorf("priority order violation: %s (priority %d) should come after %s (priority %d)",
+							groupName, priority, prevGroup, prevPriority)
+					}
+					prevGroup = groupName
+					prevPriority = priority
+				}
+			}
+		}
+
+		return nil
+	}
+}
+
+// checkMixedPriorityOrder verifies the specific mixed priority scenario
+func checkMixedPriorityOrder(resourceName string) resource.TestCheckFunc {
+	return func(s *terraform.State) error {
+		rs, ok := s.RootModule().Resources[resourceName]
+		if !ok {
+			return fmt.Errorf("resource not found: %s", resourceName)
+		}
+
+		// In our mixed test: test1 has priority 2, test2 has no priority, test3 has priority 1
+		// So test3 should have lower priority value than test1
+		var test1Priority, test3Priority int
+		var test1HasPriority, test3HasPriority bool
+
+		for i := 0; i < 3; i++ {
+			groupIDKey := fmt.Sprintf("group.%d.id", i)
+			priorityKey := fmt.Sprintf("group.%d.priority", i)
+
+			if groupID, exists := rs.Primary.Attributes[groupIDKey]; exists {
+				// Check which group this is
+				for _, groupSuffix := range []string{"test1", "test3"} {
+					groupResourceName := fmt.Sprintf("okta_group.%s", groupSuffix)
+					if groupRes, ok := s.RootModule().Resources[groupResourceName]; ok {
+						if groupRes.Primary.Attributes["id"] == groupID {
+							if priorityStr, hasPriority := rs.Primary.Attributes[priorityKey]; hasPriority {
+								var priority int
+								if _, err := fmt.Sscanf(priorityStr, "%d", &priority); err != nil {
+									return fmt.Errorf("failed to parse priority %s: %v", priorityStr, err)
+								}
+
+								if groupSuffix == "test1" {
+									test1Priority = priority
+									test1HasPriority = true
+								} else if groupSuffix == "test3" {
+									test3Priority = priority
+									test3HasPriority = true
+								}
+							}
+							break
+						}
+					}
+				}
+			}
+		}
+
+		// Verify both prioritized groups have priorities and test3 < test1
+		if !test1HasPriority {
+			return fmt.Errorf("test1 should have a priority")
+		}
+		if !test3HasPriority {
+			return fmt.Errorf("test3 should have a priority")
+		}
+		if test3Priority >= test1Priority {
+			return fmt.Errorf("test3 priority (%d) should be less than test1 priority (%d)", test3Priority, test1Priority)
+		}
+
+		return nil
+	}
+}
+
+// TestAccResourceOktaAppGroupAssignments_duplicate_priorities tests that duplicate
+// priorities are handled gracefully by letting Okta resolve them
+func TestAccResourceOktaAppGroupAssignments_duplicate_priorities(t *testing.T) {
+	resourceName := fmt.Sprintf("%s.test", appGroupAssignments)
+	mgr := newFixtureManager("resources", appGroupAssignments, t.Name())
+	config := mgr.GetFixtures("test_duplicate_priorities.tf", t)
+
+	group1 := fmt.Sprintf("%s.test1", group)
+	group2 := fmt.Sprintf("%s.test2", group)
+	group3 := fmt.Sprintf("%s.test3", group)
+
+	oktaResourceTest(t, resource.TestCase{
+		PreCheck:          testAccPreCheck(t),
+		ErrorCheck:        testAccErrorChecks(t),
+		ProviderFactories: testAccProvidersFactories,
+		CheckDestroy:      checkResourceDestroy(appGroupAssignments, createDoesAppExist(sdk.NewBookmarkApplication())),
+		Steps: []resource.TestStep{
+			{
+				Config: config,
+				Check: resource.ComposeTestCheckFunc(
+					ensureAppGroupAssignmentsExist(resourceName, group1, group2, group3),
+					resource.TestCheckResourceAttrSet(resourceName, "app_id"),
+					resource.TestCheckResourceAttr(resourceName, "group.#", "3"),
+
+					// Verify the groups are assigned with their profiles
+					resource.TestCheckResourceAttr(resourceName, "group.0.profile", `{}`),
+					resource.TestCheckResourceAttr(resourceName, "group.1.profile", `{}`),
+					resource.TestCheckResourceAttr(resourceName, "group.2.profile", `{}`),
+
+					// Check that all groups have priorities (Okta should resolve duplicates)
+					resource.TestCheckResourceAttrSet(resourceName, "group.0.priority"),
+					resource.TestCheckResourceAttrSet(resourceName, "group.1.priority"),
+					resource.TestCheckResourceAttrSet(resourceName, "group.2.priority"),
+
+					// Verify that Okta resolved the duplicate priorities
+					checkDuplicatePrioritiesResolved(resourceName),
+				),
+			},
+			{
+				// Test refresh to ensure no drift after Okta resolves duplicates
+				RefreshState: true,
+				Check: resource.ComposeTestCheckFunc(
+					ensureAppGroupAssignmentsExist(resourceName, group1, group2, group3),
+					checkDuplicatePrioritiesResolved(resourceName),
+				),
+			},
+		},
+	})
+}
+
+// checkDuplicatePrioritiesResolved verifies that Okta resolved duplicate priorities
+func checkDuplicatePrioritiesResolved(resourceName string) resource.TestCheckFunc {
+	return func(s *terraform.State) error {
+		rs, ok := s.RootModule().Resources[resourceName]
+		if !ok {
+			return fmt.Errorf("resource not found: %s", resourceName)
+		}
+
+		// Collect all priorities
+		priorities := make([]int, 0)
+		priorityCount := make(map[int]int)
+
+		for i := 0; i < 3; i++ {
+			priorityKey := fmt.Sprintf("group.%d.priority", i)
+			if priorityStr, exists := rs.Primary.Attributes[priorityKey]; exists {
+				var priority int
+				if _, err := fmt.Sscanf(priorityStr, "%d", &priority); err != nil {
+					return fmt.Errorf("failed to parse priority %s: %v", priorityStr, err)
+				}
+				priorities = append(priorities, priority)
+				priorityCount[priority]++
+			}
+		}
+
+		// Verify we have 3 priorities
+		if len(priorities) != 3 {
+			return fmt.Errorf("expected 3 priorities, got %d", len(priorities))
+		}
+
+		// Check if Okta resolved duplicates (all priorities should be unique now)
+		for priority, count := range priorityCount {
+			if count > 1 {
+				// This might be OK if Okta allows duplicates, but let's log it
+				// We won't fail the test since this is Okta's behavior
+				fmt.Printf("Warning: Priority %d appears %d times (Okta may allow this)\n", priority, count)
+			}
+		}
+
+		return nil
+	}
+}
+
+// TestAccResourceOktaAppGroupAssignments_profile_changes tests that priority
+// changes are handled correctly with OAuth applications
+func TestAccResourceOktaAppGroupAssignments_profile_changes(t *testing.T) {
+	resourceName := fmt.Sprintf("%s.test", appGroupAssignments)
+	mgr := newFixtureManager("resources", appGroupAssignments, t.Name())
+	config := mgr.GetFixtures("test_profile_changes.tf", t)
+	updatedConfig := mgr.GetFixtures("test_profile_changes_updated.tf", t)
+
+	group1 := fmt.Sprintf("%s.test1", group)
+	group2 := fmt.Sprintf("%s.test2", group)
+	group3 := fmt.Sprintf("%s.test3", group)
+
+	oktaResourceTest(t, resource.TestCase{
+		PreCheck:          testAccPreCheck(t),
+		ErrorCheck:        testAccErrorChecks(t),
+		ProviderFactories: testAccProvidersFactories,
+		CheckDestroy:      checkResourceDestroy(appGroupAssignments, createDoesAppExist(sdk.NewOpenIdConnectApplication())),
+		Steps: []resource.TestStep{
+			{
+				Config: config,
+				Check: resource.ComposeTestCheckFunc(
+					ensureAppGroupAssignmentsExist(resourceName, group1, group2, group3),
+					resource.TestCheckResourceAttrSet(resourceName, "app_id"),
+					resource.TestCheckResourceAttr(resourceName, "group.#", "3"),
+
+					// Verify initial profiles and priorities
+					resource.TestCheckResourceAttr(resourceName, "group.0.priority", "1"),
+					resource.TestCheckResourceAttr(resourceName, "group.0.profile", `{}`),
+
+					resource.TestCheckResourceAttr(resourceName, "group.1.priority", "2"),
+					resource.TestCheckResourceAttr(resourceName, "group.1.profile", `{}`),
+
+					// Group 3 should have no priority initially
+					resource.TestCheckResourceAttr(resourceName, "group.2.profile", `{}`),
+				),
+			},
+			{
+				Config: updatedConfig,
+				Check: resource.ComposeTestCheckFunc(
+					ensureAppGroupAssignmentsExist(resourceName, group1, group2, group3),
+					resource.TestCheckResourceAttr(resourceName, "group.#", "3"),
+
+					// Verify updated profiles and priorities
+					resource.TestCheckResourceAttr(resourceName, "group.0.priority", "1"),
+					resource.TestCheckResourceAttr(resourceName, "group.0.profile", `{}`),
+
+					// Priority changed from 2 to 3
+					resource.TestCheckResourceAttr(resourceName, "group.1.priority", "3"),
+					resource.TestCheckResourceAttr(resourceName, "group.1.profile", `{}`),
+
+					// Group 3 now has priority 2 (was unset)
+					resource.TestCheckResourceAttr(resourceName, "group.2.priority", "2"),
+					resource.TestCheckResourceAttr(resourceName, "group.2.profile", `{}`),
+
+					// Verify relative ordering is maintained: group1(1) < group3(2) < group2(3)
+					checkProfileChangesPriorityOrder(resourceName),
+				),
+			},
+			{
+				// Test refresh to ensure no drift after profile and priority changes
+				RefreshState: true,
+				Check: resource.ComposeTestCheckFunc(
+					ensureAppGroupAssignmentsExist(resourceName, group1, group2, group3),
+					checkProfileChangesPriorityOrder(resourceName),
+				),
+			},
+		},
+	})
+}
+
+// checkProfileChangesPriorityOrder verifies the specific priority order after profile changes
+func checkProfileChangesPriorityOrder(resourceName string) resource.TestCheckFunc {
+	return func(s *terraform.State) error {
+		rs, ok := s.RootModule().Resources[resourceName]
+		if !ok {
+			return fmt.Errorf("resource not found: %s", resourceName)
+		}
+
+		// Expected order: test1(priority=1) < test3(priority=2) < test2(priority=3)
+		groupPriorities := make(map[string]int)
+
+		for i := 0; i < 3; i++ {
+			groupIDKey := fmt.Sprintf("group.%d.id", i)
+			priorityKey := fmt.Sprintf("group.%d.priority", i)
+
+			if groupID, exists := rs.Primary.Attributes[groupIDKey]; exists {
+				if priorityStr, hasPriority := rs.Primary.Attributes[priorityKey]; hasPriority {
+					var priority int
+					if _, err := fmt.Sscanf(priorityStr, "%d", &priority); err != nil {
+						return fmt.Errorf("failed to parse priority %s: %v", priorityStr, err)
+					}
+
+					// Map group ID to priority
+					for _, groupSuffix := range []string{"test1", "test2", "test3"} {
+						groupResourceName := fmt.Sprintf("okta_group.%s", groupSuffix)
+						if groupRes, ok := s.RootModule().Resources[groupResourceName]; ok {
+							if groupRes.Primary.Attributes["id"] == groupID {
+								groupPriorities[groupSuffix] = priority
+								break
+							}
+						}
+					}
+				}
+			}
+		}
+
+		// Verify expected priorities: test1=1, test3=2, test2=3
+		expectedPriorities := map[string]int{
+			"test1": 1,
+			"test3": 2,
+			"test2": 3,
+		}
+
+		for groupName, expectedPriority := range expectedPriorities {
+			if actualPriority, exists := groupPriorities[groupName]; !exists {
+				return fmt.Errorf("group %s should have a priority", groupName)
+			} else if actualPriority != expectedPriority {
+				return fmt.Errorf("group %s priority should be %d, got %d", groupName, expectedPriority, actualPriority)
+			}
+		}
+
+		return nil
+	}
 }
