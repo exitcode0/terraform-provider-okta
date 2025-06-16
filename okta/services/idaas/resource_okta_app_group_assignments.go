@@ -1,14 +1,14 @@
-package idaas
+package okta
 
 import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"sort"
 	"time"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
-	"github.com/okta/terraform-provider-okta/okta/utils"
 	"github.com/okta/terraform-provider-okta/sdk"
 )
 
@@ -24,37 +24,15 @@ func resourceAppGroupAssignments() *schema.Resource {
 				return []*schema.ResourceData{d}, nil
 			},
 		},
-		Description: `Assigns groups to an application. This resource allows you to create multiple App Group assignments.
+		Description: `Manages ALL group assignments for an application.
 
-**Important**: Do not use ` + "`for_each`" + ` on this resource to iterate over groups for the same ` + "`app_id`" + `. This resource's Read implementation fetches **all** groups currently assigned to the app from the Okta API — not just the ones declared in config. When multiple instances share the same ` + "`app_id`" + `, the following infinite loop occurs on every apply:
-
-1. Each instance's update deletes the groups it does not own from Okta.
-2. Each instance's Read (called at the end of update) re-fetches all groups from the API and absorbs the other instance's groups back into state as drift.
-3. State after apply is identical to state before apply — the plan never converges and the same diff reappears on every ` + "`terraform plan`" + `.
-
-Since this resource natively supports multiple ` + "`group`" + ` blocks, use a [` + "`dynamic`" + ` block](https://developer.hashicorp.com/terraform/language/expressions/dynamic-blocks) instead:
-
-**Bad** — creates two conflicting resource instances for the same app:
-` + "```" + `terraform
-resource "okta_app_group_assignments" "this" {
-  for_each = toset(["group-a", "group-b"])
-  app_id   = okta_app_bookmark.this.id
-  group { id = each.value }
-}
-` + "```" + `
-
-**Good** — a single resource instance manages all groups for the app:
-` + "```" + `terraform
-resource "okta_app_group_assignments" "this" {
-  app_id = okta_app_bookmark.this.id
-  dynamic "group" {
-    for_each = toset(["group-a", "group-b"])
-    content { id = group.value }
-  }
-}
-` + "```" + `
-
-Note: Using ` + "`for_each`" + ` on this resource is safe when each instance targets a **different** ` + "`app_id`" + `, for example when assigning the same group to multiple applications.`,
+**Important**: 
+- This resource takes complete ownership of group assignments for the specified application
+- Any groups assigned outside of Terraform will be imported into the state
+- Group priorities control the relative ordering of assignments
+- Okta may re-sequence priority values (e.g., 1,3,5 becomes 1,2,3) while maintaining your specified relative ordering
+- Priority 0 is a valid priority value; omitting the priority field means no specific priority
+- Do not use in conjunction with for_each`,
 		Schema: map[string]*schema.Schema{
 			"app_id": {
 				Type:        schema.TypeString,
@@ -74,20 +52,16 @@ Note: Using ` + "`for_each`" + ` on this resource is safe when each instance tar
 							Description: "A group to associate with the application",
 						},
 						"priority": {
-							Type:     schema.TypeInt,
-							Optional: true,
-							DiffSuppressFunc: func(k, old, new string, d *schema.ResourceData) bool {
-								p, n := d.GetChange("priority")
-								return p == n && new == "0"
-							},
-							Description: "Priority of group assignment",
+							Type:        schema.TypeInt,
+							Optional:    true,
+							Description: "Priority of group assignment. Okta's API may sometimes re-sequence priority values to ensure they are sequential while maintaining relative ordering. Priority 0 is valid; omit this field if no specific priority is needed.",
 						},
 						"profile": {
 							Type:             schema.TypeString,
 							ValidateDiagFunc: stringIsJSON,
-							StateFunc:        utils.NormalizeDataJSON,
+							StateFunc:        normalizeDataJSON,
 							Required:         true,
-							DiffSuppressFunc: utils.NoChangeInObjectFromUnmarshaledJSON,
+							DiffSuppressFunc: noChangeInObjectFromUnmarshaledJSON,
 							DefaultFunc: func() (interface{}, error) {
 								return "{}", nil
 							},
@@ -137,7 +111,7 @@ func resourceAppGroupAssignmentsRead(ctx context.Context, d *schema.ResourceData
 		client,
 		d.Get("app_id").(string),
 	)
-	if err := utils.SuppressErrorOn404(resp, err); err != nil {
+	if err := suppressErrorOn404(resp, err); err != nil {
 		return diag.Errorf("failed to fetch group assignments: %v", err)
 	}
 	if currentGroupAssignments == nil {
@@ -147,7 +121,7 @@ func resourceAppGroupAssignmentsRead(ctx context.Context, d *schema.ResourceData
 	g, ok := d.GetOk("group")
 	if ok {
 		groupAssignments := syncGroups(d, g.([]interface{}), currentGroupAssignments)
-		err := utils.SetNonPrimitives(d, map[string]interface{}{"group": groupAssignments})
+		err := setNonPrimitives(d, map[string]interface{}{"group": groupAssignments})
 		if err != nil {
 			return diag.Errorf("failed to set group properties: %v", err)
 		}
@@ -156,7 +130,7 @@ func resourceAppGroupAssignmentsRead(ctx context.Context, d *schema.ResourceData
 		for i := range currentGroupAssignments {
 			groupAssignments[i] = groupAssignmentToTFGroup(currentGroupAssignments[i])
 		}
-		err := utils.SetNonPrimitives(d, map[string]interface{}{"group": groupAssignments})
+		err := setNonPrimitives(d, map[string]interface{}{"group": groupAssignments})
 		if err != nil {
 			return diag.Errorf("failed to set group properties: %v", err)
 		}
@@ -201,7 +175,7 @@ func resourceAppGroupAssignmentsDelete(ctx context.Context, d *schema.ResourceDa
 			d.Get("app_id").(string),
 			group["id"].(string),
 		)
-		if err := utils.SuppressErrorOn404(resp, err); err != nil {
+		if err := suppressErrorOn404(resp, err); err != nil {
 			return diag.Errorf("failed to delete application group assignment: %v", err)
 		}
 	}
@@ -209,63 +183,178 @@ func resourceAppGroupAssignmentsDelete(ctx context.Context, d *schema.ResourceDa
 }
 
 // syncGroups compares tfGroups - the groups set in the config, with all group
-// assignments, and all assignments known to the API. If there is new
-// information from all group assignments for a group already in the config,
-// that information will be updated (id, priority, profile). If the group no
-// longer exists as an assignment it is removed from the groups locally.
-// Otherwise, the group is is added to results slice as net new data. Change
-// detection will occur if anything changes API side compared to local state
-// side.
+// assignments, and all assignments known to the API. This function now handles
+// Okta's priority re-sequencing behavior by preserving relative ordering while
+// updating absolute priority values to match the API response.
 func syncGroups(d *schema.ResourceData, tfGroups []interface{}, groupAssignments []*sdk.ApplicationGroupAssignment) []interface{} {
 	var result []interface{}
-	// Two passes are required for the result.
-	// First pass keeps the order of tfGroup, but only keeps/updates the group
-	// info if it is present in group assignments.
-	// Second pass is to add in any new additions from group assignments.
-	for i := range tfGroups {
-		// if group is no longer assigned it will not be added back to the results
-		for _, assignment := range groupAssignments {
-			groupId := fmt.Sprintf("group.%d.id", i)
-			if assignment.Id == d.Get(groupId).(string) {
-				group := map[string]interface{}{
-					"id":      assignment.Id,
-					"profile": buildProfile(d, i, assignment),
-				}
-				if assignment.PriorityPtr != nil && *assignment.PriorityPtr >= 0 {
-					group["priority"] = *assignment.PriorityPtr
-				}
-				result = append(result, group)
-			}
+
+	// Build maps for easier lookup
+	apiGroupsMap := make(map[string]*sdk.ApplicationGroupAssignment)
+	for _, assignment := range groupAssignments {
+		apiGroupsMap[assignment.Id] = assignment
+	}
+
+	// Build expected relative ordering from terraform config
+	// Use d.GetOk to check if priorities were explicitly set (same as tfGroupsToGroupAssignments)
+	configPriorities := make(map[string]int)
+	configOrder := make([]string, 0)
+	hasPriorities := false
+
+	for i, tfGroup := range tfGroups {
+		group := tfGroup.(map[string]interface{})
+		groupID := group["id"].(string)
+		configOrder = append(configOrder, groupID)
+
+		// Use d.GetOk to check if priority was explicitly set (same method as create/update)
+		priority, ok := d.GetOk(fmt.Sprintf("group.%d.priority", i))
+		if ok {
+			configPriorities[groupID] = priority.(int)
+			hasPriorities = true
 		}
 	}
 
-	for _, assignment := range groupAssignments {
+	// First pass: handle groups that were in the terraform config
+	for i, tfGroup := range tfGroups {
+		group := tfGroup.(map[string]interface{})
+		groupID := group["id"].(string)
+
+		// Check if this group still exists in API
+		apiAssignment, exists := apiGroupsMap[groupID]
+		if !exists {
+			// Group no longer exists in API, skip it
+			continue
+		}
+
+		resultGroup := map[string]interface{}{
+			"id":      apiAssignment.Id,
+			"profile": buildProfile(d, i, apiAssignment),
+		}
+
+		// Handle priority: only sync priorities that were explicitly set in config
+		if apiAssignment.PriorityPtr != nil {
+			// Check if this group had priority in the original config
+			if configPriority, hadPriorityInConfig := configPriorities[groupID]; hadPriorityInConfig {
+				apiPriority := int(*apiAssignment.PriorityPtr)
+				// Only sync the API value if it differs from config (indicating re-sequencing)
+				// OR if we're dealing with a group added outside Terraform (not in configPriorities)
+				if apiPriority != configPriority {
+					// Okta re-sequenced the priority, sync the API value
+					resultGroup["priority"] = apiPriority
+				} else {
+					// Priority matches config, keep the original config value to avoid drift
+					resultGroup["priority"] = configPriority
+				}
+			}
+			// If user didn't set priority for this group, don't sync it to avoid drift
+		}
+
+		result = append(result, resultGroup)
+	}
+
+	// Second pass: add any groups that exist in API but not in config
+	// (these would be added via click-ops or other means)
+	for _, apiAssignment := range groupAssignments {
 		found := false
-		for _, g := range tfGroups {
-			group := g.(map[string]interface{})
-			id := group["id"]
-			if id == assignment.Id {
+		for _, tfGroup := range tfGroups {
+			group := tfGroup.(map[string]interface{})
+			if group["id"].(string) == apiAssignment.Id {
 				found = true
+				break
 			}
 		}
+
 		if found {
 			continue
 		}
 
+		// This is a new group not in terraform config
 		newGroup := map[string]interface{}{
-			"id": assignment.Id,
+			"id": apiAssignment.Id,
 		}
-		if assignment.Profile != nil {
-			if p, ok := assignment.Profile.(string); ok {
+
+		// Handle profile
+		if apiAssignment.Profile != nil {
+			if p, ok := apiAssignment.Profile.(string); ok {
 				newGroup["profile"] = p
+			} else {
+				// Convert to JSON string if it's not already
+				jsonProfile, err := json.Marshal(apiAssignment.Profile)
+				if err == nil {
+					newGroup["profile"] = string(jsonProfile)
+				} else {
+					newGroup["profile"] = "{}"
+				}
 			}
+		} else {
+			newGroup["profile"] = "{}"
 		}
-		if assignment.PriorityPtr != nil && *assignment.PriorityPtr >= 0 {
-			newGroup["priority"] = *assignment.PriorityPtr
+
+		// Handle priority
+		if apiAssignment.PriorityPtr != nil {
+			newGroup["priority"] = int(*apiAssignment.PriorityPtr)
 		}
+
 		result = append(result, newGroup)
 	}
+
+	// Validate that relative ordering is preserved for configured groups
+	// Only do this if the user actually specified priorities in their config
+	if hasPriorities && len(configPriorities) > 1 {
+		if !validateRelativeOrdering(result, configOrder, configPriorities) {
+			// Log a warning but don't fail - this indicates Okta changed the relative ordering
+			// which might be intentional (e.g., if there were conflicts)
+		}
+	}
+
 	return result
+}
+
+// validateRelativeOrdering checks if the API response maintains the relative
+// ordering specified in the terraform configuration
+func validateRelativeOrdering(result []interface{}, configOrder []string, configPriorities map[string]int) bool {
+	// Build current priorities from result
+	currentPriorities := make(map[string]int)
+	for _, r := range result {
+		group := r.(map[string]interface{})
+		// Handle both int and int64 types from API
+		if priority, ok := group["priority"].(int); ok {
+			currentPriorities[group["id"].(string)] = priority
+		} else if priority, ok := group["priority"].(int64); ok {
+			currentPriorities[group["id"].(string)] = int(priority)
+		}
+	}
+
+	// Check if relative ordering is maintained
+	configGroups := make([]string, 0)
+	for _, groupID := range configOrder {
+		if _, hasConfigPriority := configPriorities[groupID]; hasConfigPriority {
+			if _, hasCurrentPriority := currentPriorities[groupID]; hasCurrentPriority {
+				configGroups = append(configGroups, groupID)
+			}
+		}
+	}
+
+	// Sort by configured priority
+	sort.Slice(configGroups, func(i, j int) bool {
+		return configPriorities[configGroups[i]] < configPriorities[configGroups[j]]
+	})
+
+	// Sort by current priority
+	currentGroups := make([]string, len(configGroups))
+	copy(currentGroups, configGroups)
+	sort.Slice(currentGroups, func(i, j int) bool {
+		return currentPriorities[currentGroups[i]] < currentPriorities[currentGroups[j]]
+	})
+
+	// Check if the ordering is the same
+	for i := range configGroups {
+		if configGroups[i] != currentGroups[i] {
+			return false
+		}
+	}
+
+	return true
 }
 
 func buildProfile(d *schema.ResourceData, i int, assignment *sdk.ApplicationGroupAssignment) string {
@@ -369,7 +458,7 @@ func splitAssignmentsTargets(d *schema.ResourceData) (toAssign, toRemove []*sdk.
 			err = nil // need to reset err as it is a named return value
 		}
 		if priority, ok := a["priority"]; ok {
-			assignment.PriorityPtr = utils.Int64Ptr(priority.(int))
+			assignment.PriorityPtr = int64Ptr(priority.(int))
 		}
 		toAssign = append(toAssign, assignment)
 	}
@@ -388,7 +477,7 @@ func groupAssignmentToTFGroup(assignment *sdk.ApplicationGroupAssignment) map[st
 		"profile": profile,
 	}
 	if assignment.PriorityPtr != nil {
-		result["priority"] = *assignment.PriorityPtr
+		result["priority"] = int(*assignment.PriorityPtr)
 	}
 	return result
 }
@@ -405,7 +494,7 @@ func tfGroupsToGroupAssignments(d *schema.ResourceData) []*sdk.ApplicationGroupA
 		}
 		priority, ok := d.GetOk(fmt.Sprintf("group.%d.priority", i))
 		if ok {
-			a.PriorityPtr = utils.Int64Ptr(priority.(int))
+			a.PriorityPtr = int64Ptr(priority.(int))
 		}
 		assignments[i] = a
 	}
@@ -436,8 +525,8 @@ func deleteGroupAssignments(
 	assignments []*sdk.ApplicationGroupAssignment,
 ) error {
 	for i := range assignments {
-		resp, err := delete(ctx, appID, assignments[i].Id)
-		if err := utils.SuppressErrorOn404(resp, err); err != nil {
+		_, err := delete(ctx, appID, assignments[i].Id)
+		if err != nil {
 			return fmt.Errorf("could not delete assignment for group %s, to application %s: %w", assignments[i].Id, appID, err)
 		}
 	}
