@@ -231,20 +231,13 @@ func syncGroups(d *schema.ResourceData, tfGroups []interface{}, groupAssignments
 			"profile": buildProfile(d, i, apiAssignment),
 		}
 
-		// Handle priority: only sync priorities that were explicitly set in config
+		// Handle priority: sync API values for groups that had priority in config
 		if apiAssignment.PriorityPtr != nil {
 			// Check if this group had priority in the original config
-			if configPriority, hadPriorityInConfig := configPriorities[groupID]; hadPriorityInConfig {
-				apiPriority := int(*apiAssignment.PriorityPtr)
-				// Only sync the API value if it differs from config (indicating re-sequencing)
-				// OR if we're dealing with a group added outside Terraform (not in configPriorities)
-				if apiPriority != configPriority {
-					// Okta re-sequenced the priority, sync the API value
-					resultGroup["priority"] = apiPriority
-				} else {
-					// Priority matches config, keep the original config value to avoid drift
-					resultGroup["priority"] = configPriority
-				}
+			if _, hadPriorityInConfig := configPriorities[groupID]; hadPriorityInConfig {
+				// Always sync the API value - this handles both re-sequencing and rejection cases
+				// If Okta rejected the change, the user will see drift and can decide how to handle it
+				resultGroup["priority"] = int(*apiAssignment.PriorityPtr)
 			}
 			// If user didn't set priority for this group, don't sync it to avoid drift
 		}
