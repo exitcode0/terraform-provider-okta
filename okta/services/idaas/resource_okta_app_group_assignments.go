@@ -47,7 +47,8 @@ func resourceAppGroupAssignments() *schema.Resource {
 						"priority": {
 							Type:        schema.TypeInt,
 							Optional:    true,
-							Description: "Priority of group assignment",
+							Computed:    true,
+							Description: "Priority of group assignment. Okta will assign a priority if one is not provided. If a group is assigned to a occupied priority, the evicted group will have it's priority increased by 1, which can potentially cause a cascade of priority changes.",
 						},
 						"profile": {
 							Type:             schema.TypeString,
@@ -105,11 +106,8 @@ func resourceAppGroupAssignmentsRead(ctx context.Context, d *schema.ResourceData
 		d.Get("app_id").(string),
 	)
 	if err := suppressErrorOn404(resp, err); err != nil {
-		return diag.Errorf("failed to fetch group assignments: %v", err)
-	}
-	if currentGroupAssignments == nil {
 		d.SetId("")
-		return nil
+		return diag.Errorf("failed to fetch group assignments: %v", err)
 	}
 	g, ok := d.GetOk("group")
 	if ok {
