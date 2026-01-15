@@ -30,7 +30,8 @@ The 'resources' field supports the following:
 	- All Users within the org
 	- All Groups within the org
 	- All Apps within the org
-	- All Apps of the same type`,
+	- All Apps of the same type
+	- ORN (Okta Resource Name) identifiers`,
 		Schema: map[string]*schema.Schema{
 			"label": {
 				Type:        schema.TypeString,
@@ -43,20 +44,10 @@ The 'resources' field supports the following:
 				Description: "A description of the Resource Set",
 			},
 			"resources": {
-				Type:          schema.TypeSet,
-				Optional:      true,
-				Elem:          &schema.Schema{Type: schema.TypeString},
-				ConflictsWith: []string{"resources_orn"},
-				ExactlyOneOf:  []string{"resources", "resources_orn"},
-				Description:   "The endpoints that reference the resources to be included in the new Resource Set. At least one endpoint must be specified when creating resource set. Only one of 'resources' or 'resources_orn' can be specified.",
-			},
-			"resources_orn": {
-				Type:          schema.TypeSet,
-				Optional:      true,
-				Elem:          &schema.Schema{Type: schema.TypeString},
-				ConflictsWith: []string{"resources"},
-				ExactlyOneOf:  []string{"resources", "resources_orn"},
-				Description:   "The orn(Okta Resource Name) that reference the resources to be included in the new Resource Set. At least one orn must be specified when creating resource set. Only one of 'resources' or 'resources_orn' can be specified.",
+				Type:        schema.TypeSet,
+				Required:    true,
+				Elem:        &schema.Schema{Type: schema.TypeString},
+				Description: "The resources to be included in the new Resource Set. Can be API endpoint URLs (e.g., 'https://org.okta.com/api/v1/groups') or ORNs (Okta Resource Names, e.g., 'orn:okta:directory:00o123:groups'). At least one resource must be specified.",
 			},
 		},
 	}
@@ -90,11 +81,7 @@ func resourceResourceSetRead(ctx context.Context, d *schema.ResourceData, meta i
 	if err != nil {
 		return diag.Errorf("failed to get list of resource set resources: %v", err)
 	}
-	if _, ok := d.GetOk("resources"); ok {
-		_ = d.Set("resources", flattenResourceSetResourcesLinks(resources))
-	} else if _, ok := d.GetOk("resources_orn"); ok {
-		_ = d.Set("resources_orn", flattenResourceSetResourcesORN(resources))
-	}
+	_ = d.Set("resources", flattenResourceSetResources(resources))
 	return nil
 }
 
@@ -107,41 +94,22 @@ func resourceResourceSetUpdate(ctx context.Context, d *schema.ResourceData, meta
 			return diag.Errorf("failed to update resource set: %v", err)
 		}
 	}
-	if !d.HasChange("resources") && !d.HasChange("resources_orn") {
+	if !d.HasChange("resources") {
 		return nil
 	}
 
-	if d.HasChange("resources") {
-		oldResources, newResources := d.GetChange("resources")
-		oldSet := oldResources.(*schema.Set)
-		newSet := newResources.(*schema.Set)
-		resourcesToAdd := utils.ConvertInterfaceArrToStringArr(newSet.Difference(oldSet).List())
-		resourcesToRemove := utils.ConvertInterfaceArrToStringArr(oldSet.Difference(newSet).List())
-		err := addResourcesToResourceSet(ctx, client, d.Id(), resourcesToAdd)
-		if err != nil {
-			return diag.FromErr(err)
-		}
-		err = removeResourcesFromResourceSet(ctx, client, d.Id(), resourcesToRemove)
-		if err != nil {
-			return diag.FromErr(err)
-		}
+	oldResources, newResources := d.GetChange("resources")
+	oldSet := oldResources.(*schema.Set)
+	newSet := newResources.(*schema.Set)
+	resourcesToAdd := utils.ConvertInterfaceArrToStringArr(newSet.Difference(oldSet).List())
+	resourcesToRemove := utils.ConvertInterfaceArrToStringArr(oldSet.Difference(newSet).List())
+	err := addResourcesToResourceSet(ctx, client, d.Id(), resourcesToAdd)
+	if err != nil {
+		return diag.FromErr(err)
 	}
-
-	if d.HasChange("resources_orn") {
-		oldResourcesOrn, newResourcesOrn := d.GetChange("resources_orn")
-		oldSetOrn := oldResourcesOrn.(*schema.Set)
-		newSetOrn := newResourcesOrn.(*schema.Set)
-		ornResourcesToAdd := utils.ConvertInterfaceArrToStringArr(newSetOrn.Difference(oldSetOrn).List())
-		ornResourcesToRemove := utils.ConvertInterfaceArrToStringArr(oldSetOrn.Difference(newSetOrn).List())
-
-		err := addResourcesToResourceSet(ctx, client, d.Id(), ornResourcesToAdd)
-		if err != nil {
-			return diag.FromErr(err)
-		}
-		err = removeResourcesFromResourceSet(ctx, client, d.Id(), ornResourcesToRemove)
-		if err != nil {
-			return diag.FromErr(err)
-		}
+	err = removeResourcesFromResourceSet(ctx, client, d.Id(), resourcesToRemove)
+	if err != nil {
+		return diag.FromErr(err)
 	}
 	return nil
 }
@@ -160,14 +128,7 @@ func buildResourceSet(d *schema.ResourceData, isNew bool) (*sdk.ResourceSet, err
 		Description: d.Get("description").(string),
 	}
 	if isNew {
-		resourceLinks := utils.ConvertInterfaceToStringSetNullable(d.Get("resources"))
-		resourceOrns := utils.ConvertInterfaceToStringSetNullable(d.Get("resources_orn"))
-
-		var resource []string
-		resource = append(resource, resourceLinks...)
-		resource = append(resource, resourceOrns...)
-
-		rs.Resources = resource
+		rs.Resources = utils.ConvertInterfaceToStringSetNullable(d.Get("resources"))
 		if len(rs.Resources) == 0 {
 			return nil, errors.New("at least one resource must be specified when creating resource set")
 		}
@@ -177,22 +138,24 @@ func buildResourceSet(d *schema.ResourceData, isNew bool) (*sdk.ResourceSet, err
 	return rs, nil
 }
 
-func flattenResourceSetResourcesLinks(resources []*sdk.ResourceSetResource) *schema.Set {
+// flattenResourceSetResources converts API resources to a Terraform set.
+// This function handles both URL-based resources (with _links) and ORN-based resources.
+// The API returns all resources in a unified list, so we check both fields for each resource.
+func flattenResourceSetResources(resources []*sdk.ResourceSetResource) *schema.Set {
 	var arr []interface{}
 	for _, res := range resources {
-		if res.Links != nil {
-			arr = append(arr, encodeResourceSetResourceLink(utils.LinksValue(res.Links, "self", "href")))
-		}
-	}
-	return schema.NewSet(schema.HashString, arr)
-}
+		var resourceIdentifier string
 
-func flattenResourceSetResourcesORN(resources []*sdk.ResourceSetResource) *schema.Set {
-	var arr []interface{}
-	for _, res := range resources {
+		// Prefer ORN if available (it's the canonical identifier)
 		if res.Orn != "" {
-			urlStr := res.Orn
-			arr = append(arr, urlStr)
+			resourceIdentifier = res.Orn
+		} else if res.Links != nil {
+			// Fall back to link-based identifier
+			resourceIdentifier = utils.LinksValue(res.Links, "self", "href")
+		}
+
+		if resourceIdentifier != "" {
+			arr = append(arr, encodeResourceSetResourceLink(resourceIdentifier))
 		}
 	}
 	return schema.NewSet(schema.HashString, arr)

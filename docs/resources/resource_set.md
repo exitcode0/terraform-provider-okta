@@ -10,12 +10,14 @@ description: |-
       - All Groups within the org
       - All Apps within the org
       - All Apps of the same type
+      - ORN (Okta Resource Name) identifiers
 ---
 
 # Resource: okta_resource_set
 
 Manages Resource Sets as custom collections of resources. This resource allows the creation and manipulation of Okta Resource Sets as custom collections of Okta resources. You can use Okta Resource Sets to assign Custom Roles to administrators who are scoped to the designated resources. 
-The 'resources' field supports the following:
+
+The 'resources' field supports both API endpoint URLs and ORN (Okta Resource Name) identifiers:
 	- Apps
 	- Groups
 	- All Users within a Group
@@ -23,6 +25,7 @@ The 'resources' field supports the following:
 	- All Groups within the org
 	- All Apps within the org
 	- All Apps of the same type
+	- ORN identifiers (e.g., for support cases, workflows, and other resources without REST APIs)
 
 ## Example Usage
 
@@ -72,17 +75,34 @@ resource "okta_resource_set" "test" {
   ]
 }
 
-### To Provide permissions to specific Groups via ORN
+### To Provide permissions via ORN (Okta Resource Name)
+
+data "okta_org_metadata" "org" {}
+
+resource "okta_resource_set" "support_cases" {
+  label       = "Support Cases"
+  description = "All support cases"
+  resources = [
+    format("orn:okta:support:%s:cases", data.okta_org_metadata.org.id),
+  ]
+}
+
+### Mixed URL and ORN resources
+
+data "okta_org_metadata" "org" {}
 
 locals {
-	org_id = "00onr127891saSQS"
+  org_url = data.okta_org_metadata.org.domains.organization
 }
-resource "okta_resource_set" "test" {
-	label       = "Specific Groups"
-	description = "Only Specific Group"
-	resources = [
-		format("orn:okta:directory:%s:groups", local.org_id),
-	]
+
+resource "okta_resource_set" "mixed" {
+  label       = "Mixed Resources"
+  description = "Both URL and ORN resources"
+  resources = [
+    "${local.org_url}/api/v1/apps",
+    format("orn:okta:directory:%s:users", data.okta_org_metadata.org.id),
+    format("orn:okta:support:%s:cases", data.okta_org_metadata.org.id),
+  ]
 }
 ```
 
@@ -93,11 +113,7 @@ resource "okta_resource_set" "test" {
 
 - `description` (String) A description of the Resource Set
 - `label` (String) Unique name given to the Resource Set
-
-### Optional
-
-- `resources` (Set of String) The endpoints that reference the resources to be included in the new Resource Set. At least one endpoint must be specified when creating resource set.
--  `resources_orn` (Set of String) The orn(Okta Resource Name) of the resources to be included in the new Resource Set. At least one orn must be specified when creating resource set.
+- `resources` (Set of String) The resources to be included in the new Resource Set. Can be API endpoint URLs (e.g., 'https://org.okta.com/api/v1/groups') or ORNs (Okta Resource Names, e.g., 'orn:okta:directory:00o123:groups'). At least one resource must be specified.
 
 ### Read-Only
 

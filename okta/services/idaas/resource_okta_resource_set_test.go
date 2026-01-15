@@ -202,7 +202,7 @@ variable "id" {
 resource "okta_resource_set" "test" {
   label       = "testAcc_replace_1991"
   description = "testing, testing"
-  resources_orn = [
+  resources = [
     "orn:okta:directory:${var.id}:users",
     "orn:okta:directory:${var.id}:groups"
   ]
@@ -217,9 +217,94 @@ resource "okta_resource_set" "test" {
 			{
 				Config: mgr.ConfigReplace(fmt.Sprintf("%s\n%s", baseConfig, step1Config)),
 				Check: resource.ComposeTestCheckFunc(
-					resource.TestCheckResourceAttr(resourceName, "resources_orn.#", "2"),
-					resource.TestCheckResourceAttr(resourceName, "resources_orn.0", fmt.Sprintf("orn:okta:directory:%s:groups", os.Getenv("TF_VAR_orgID"))),
-					resource.TestCheckResourceAttr(resourceName, "resources_orn.1", fmt.Sprintf("orn:okta:directory:%s:users", os.Getenv("TF_VAR_orgID"))),
+					resource.TestCheckResourceAttr(resourceName, "resources.#", "2"),
+					resource.TestCheckResourceAttr(resourceName, "resources.0", fmt.Sprintf("orn:okta:directory:%s:groups", os.Getenv("TF_VAR_orgID"))),
+					resource.TestCheckResourceAttr(resourceName, "resources.1", fmt.Sprintf("orn:okta:directory:%s:users", os.Getenv("TF_VAR_orgID"))),
+				),
+			},
+		},
+	})
+}
+
+// TestAccResourceOktaResourceSet_Issue_2224_orn_no_drift verifies that ORN resources
+// don't cause drift when using the unified resources field
+func TestAccResourceOktaResourceSet_Issue_2224_orn_no_drift(t *testing.T) {
+	mgr := newFixtureManager("resources", resources.OktaIDaaSResourceSet, t.Name())
+	resourceName := fmt.Sprintf("%s.test", resources.OktaIDaaSResourceSet)
+
+	baseConfig := `
+variable "id" {
+  type = string
+}
+`
+	step1Config := `
+resource "okta_resource_set" "test" {
+  label       = "testAcc_replace_2224"
+  description = "testing ORN resources"
+  resources = [
+    "orn:okta:directory:${var.id}:users"
+  ]
+}`
+
+	acctest.OktaResourceTest(t, resource.TestCase{
+		PreCheck:                 acctest.AccPreCheck(t),
+		ErrorCheck:               testAccErrorChecks(t),
+		CheckDestroy:             nil,
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactoriesForTestAcc(t),
+		Steps: []resource.TestStep{
+			{
+				Config: mgr.ConfigReplace(fmt.Sprintf("%s\n%s", baseConfig, step1Config)),
+				Check: resource.ComposeTestCheckFunc(
+					resource.TestCheckResourceAttr(resourceName, "resources.#", "1"),
+					resource.TestCheckResourceAttr(resourceName, "resources.0", fmt.Sprintf("orn:okta:directory:%s:users", os.Getenv("TF_VAR_orgID"))),
+				),
+			},
+			{
+				// Apply again to verify no drift
+				Config: mgr.ConfigReplace(fmt.Sprintf("%s\n%s", baseConfig, step1Config)),
+				Check: resource.ComposeTestCheckFunc(
+					resource.TestCheckResourceAttr(resourceName, "resources.#", "1"),
+					resource.TestCheckResourceAttr(resourceName, "resources.0", fmt.Sprintf("orn:okta:directory:%s:users", os.Getenv("TF_VAR_orgID"))),
+				),
+			},
+		},
+	})
+}
+
+// TestAccResourceOktaResourceSet_mixed_resources verifies that URL and ORN resources
+// can be mixed in the same resource set
+func TestAccResourceOktaResourceSet_mixed_resources(t *testing.T) {
+	mgr := newFixtureManager("resources", resources.OktaIDaaSResourceSet, t.Name())
+	resourceName := fmt.Sprintf("%s.test", resources.OktaIDaaSResourceSet)
+
+	baseConfig := `
+variable "hostname" {
+  type = string
+}
+variable "id" {
+  type = string
+}
+`
+	step1Config := `
+resource "okta_resource_set" "test" {
+  label       = "testAcc_replace_mixed"
+  description = "testing mixed URL and ORN resources"
+  resources = [
+    "https://${var.hostname}/api/v1/apps",
+    "orn:okta:directory:${var.id}:users"
+  ]
+}`
+
+	acctest.OktaResourceTest(t, resource.TestCase{
+		PreCheck:                 acctest.AccPreCheck(t),
+		ErrorCheck:               testAccErrorChecks(t),
+		CheckDestroy:             nil,
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactoriesForTestAcc(t),
+		Steps: []resource.TestStep{
+			{
+				Config: mgr.ConfigReplace(fmt.Sprintf("%s\n%s", baseConfig, step1Config)),
+				Check: resource.ComposeTestCheckFunc(
+					resource.TestCheckResourceAttr(resourceName, "resources.#", "2"),
 				),
 			},
 		},
