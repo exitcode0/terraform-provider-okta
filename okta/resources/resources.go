@@ -108,6 +108,7 @@ const (
 	OktaIDaaSProfileMapping                           = "okta_profile_mapping"
 	OktaIDaaSPrincipalRateLimits                      = "okta_principal_rate_limits"
 	OktaIDaaSPushProvider                             = "okta_push_provider"
+	OktaIDaaSPushProviders                            = "okta_push_providers"
 	OktaIDaaSRateLimiting                             = "okta_rate_limiting"
 	OktaIDaaSRateLimitAdminNotificationSettings       = "okta_rate_limit_admin_notification_settings"
 	OktaIDaaSRateLimitWarningThresholdPercentage      = "okta_rate_limit_warning_threshold_percentage"
