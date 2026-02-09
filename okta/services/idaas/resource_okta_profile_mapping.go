@@ -18,6 +18,12 @@ const (
 	dontPush = "DONT_PUSH"
 )
 
+// isUsernameAttribute returns true for profile mapping property keys that
+// represent the username (controlled by okta_app_saml.user_name_template).
+func isUsernameAttribute(key string) bool {
+	return key == "login" || key == "username"
+}
+
 func resourceProfileMapping() *schema.Resource {
 	return &schema.Resource{
 		CreateContext: resourceProfileMappingCreate,
@@ -75,6 +81,12 @@ func resourceProfileMapping() *schema.Resource {
 	~> **WARNING:** 'always_apply' makes use of an internal/private Okta API endpoint that could change without notice rendering this resource inoperable.`,
 				Default: false,
 			},
+			"ignore_username": {
+				Type:        schema.TypeBool,
+				Optional:    true,
+				Default:     false,
+				Description: "When true, the provider will not manage the username/login profile mapping attribute. Use this when username is controlled by the application's `user_name_template` (e.g. `okta_app_saml.user_name_template`) so the profile mapping does not overwrite it.",
+			},
 		},
 	}
 }
@@ -110,6 +122,13 @@ func resourceProfileMappingCreate(ctx context.Context, d *schema.ResourceData, m
 	}
 	d.SetId(mapping.Id)
 	newMapping := buildMapping(d)
+	if d.Get("ignore_username").(bool) {
+		for k := range newMapping.Properties {
+			if isUsernameAttribute(k) {
+				delete(newMapping.Properties, k)
+			}
+		}
+	}
 	if d.Get("delete_when_absent").(bool) {
 		newMapping.Properties = mergeProperties(newMapping.Properties, getDeleteProperties(d, mapping.Properties))
 	}
@@ -147,7 +166,16 @@ func resourceProfileMappingRead(ctx context.Context, d *schema.ResourceData, met
 			}
 		}
 	}
-	_ = d.Set("mappings", flattenMappingProperties(mapping.Properties))
+	propsToFlatten := mapping.Properties
+	if d.Get("ignore_username").(bool) {
+		propsToFlatten = make(map[string]*sdk.ProfileMappingProperty)
+		for k, v := range mapping.Properties {
+			if !isUsernameAttribute(k) {
+				propsToFlatten[k] = v
+			}
+		}
+	}
+	_ = d.Set("mappings", flattenMappingProperties(propsToFlatten))
 	return nil
 }
 
@@ -162,6 +190,13 @@ func resourceProfileMappingUpdate(ctx context.Context, d *schema.ResourceData, m
 		return diag.Errorf("no profile mappings found for source ID '%s' and target ID '%s'", sourceID, targetID)
 	}
 	newMapping := buildMapping(d)
+	if d.Get("ignore_username").(bool) {
+		for k := range newMapping.Properties {
+			if isUsernameAttribute(k) {
+				delete(newMapping.Properties, k)
+			}
+		}
+	}
 	if d.Get("delete_when_absent").(bool) {
 		newMapping.Properties = mergeProperties(newMapping.Properties, getDeleteProperties(d, mapping.Properties))
 	}
@@ -187,7 +222,7 @@ func resourceProfileMappingDelete(ctx context.Context, d *schema.ResourceData, m
 		return diag.Errorf("no profile mappings found for source ID '%s' and target ID '%s'", sourceID, targetID)
 	}
 	for k := range mapping.Properties {
-		if k == "login" {
+		if isUsernameAttribute(k) {
 			continue
 		}
 		mapping.Properties[k] = nil
@@ -202,7 +237,11 @@ func resourceProfileMappingDelete(ctx context.Context, d *schema.ResourceData, m
 func getDeleteProperties(d *schema.ResourceData, actual map[string]*sdk.ProfileMappingProperty) map[string]*sdk.ProfileMappingProperty {
 	toDelete := map[string]*sdk.ProfileMappingProperty{}
 	config := buildMappingProperties(d.Get("mappings").(*schema.Set))
+	ignoreUsername := d.Get("ignore_username").(bool)
 	for key := range actual {
+		if ignoreUsername && isUsernameAttribute(key) {
+			continue
+		}
 		if _, ok := config[key]; !ok {
 			toDelete[key] = nil
 		}

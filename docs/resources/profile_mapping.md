@@ -54,6 +54,7 @@ resource "okta_profile_mapping" "example" {
 	~> **WARNING:**: 'always_apply' is incompatible with OAuth 2.0 authentication and will be ignored when using that type of authentication.
 	~> **WARNING:** 'always_apply' makes use of an internal/private Okta API endpoint that could change without notice rendering this resource inoperable.
 - `delete_when_absent` (Boolean) When turned on this flag will trigger the provider to delete mapping properties that are not defined in config. By default, we do not delete missing properties.
+- `ignore_username` (Boolean) When true, the provider will not manage the username/login profile mapping attribute. Use this when username is controlled by the application's `user_name_template` (e.g. `okta_app_saml.user_name_template`) so the profile mapping does not overwrite it.
 - `mappings` (Block Set) (see [below for nested schema](#nestedblock--mappings))
 
 ### Read-Only
