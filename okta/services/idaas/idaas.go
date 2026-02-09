@@ -281,6 +281,7 @@ func ProviderDataSources() map[string]*schema.Resource {
 		resources.OktaIDaaSBrand:                    dataSourceBrand(),
 		resources.OktaIDaaSBrands:                   dataSourceBrands(),
 		resources.OktaIDaaSDomain:                   dataSourceDomain(),
+		resources.OktaIDaaSDomains:                  dataSourceDomains(),
 		resources.OktaIDaaSEmailCustomization:       dataSourceEmailCustomization(),
 		resources.OktaIDaaSEmailCustomizations:      dataSourceEmailCustomizations(),
 		resources.OktaIDaaSEmailSMTPServer:          dataSourceEmailSMTPServers(),
