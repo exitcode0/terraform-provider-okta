@@ -258,6 +258,7 @@ func ProviderDataSources() map[string]*schema.Resource {
 		resources.OktaIDaaSAppSignOnPolicy:          dataSourceAppSignOnPolicy(),
 		resources.OktaIDaaSAppUserAssignments:       dataSourceAppUserAssignments(),
 		resources.OktaIDaaSAuthenticator:            dataSourceAuthenticator(),
+		resources.OktaIDaaSAuthenticators:           dataSourceAuthenticators(),
 		resources.OktaIDaaSAuthServer:               dataSourceAuthServer(),
 		resources.OktaIDaaSAuthServerClaim:          dataSourceAuthServerClaim(),
 		resources.OktaIDaaSAuthServerClaims:         dataSourceAuthServerClaims(),
