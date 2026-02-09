@@ -295,6 +295,7 @@ func ProviderDataSources() map[string]*schema.Resource {
 		resources.OktaIDaaSIdpOidc:                  dataSourceIdpOidc(),
 		resources.OktaIDaaSIdpSaml:                  dataSourceIdpSaml(),
 		resources.OktaIDaaSIdpSocial:                dataSourceIdpSocial(),
+		resources.OktaIDaaSIdps:                     dataSourceIdps(),
 		resources.OktaIDaaSNetworkZone:              dataSourceNetworkZone(),
 		resources.OktaIDaaSPolicy:                   dataSourcePolicy(),
 		resources.OktaIDaaSRoleSubscription:         dataSourceRoleSubscription(),
