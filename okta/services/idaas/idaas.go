@@ -147,6 +147,7 @@ func FWProviderDataSources() []func() datasource.DataSource {
 		newPrincipalRateLimitsDataSource,
 		newSecurityEventsProviderDataSource,
 		newDeviceDataSource,
+		newDevicesDataSource,
 		newAppFeaturesDataSource,
 		newPushProviderDataSource,
 		newHookKeyDataSource,
