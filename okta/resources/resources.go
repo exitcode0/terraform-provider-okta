@@ -38,6 +38,7 @@ const (
 	OktaIDaaSAppUserSchemaProperty                    = "okta_app_user_schema_property"
 	OktaIDaaSAuthenticator                            = "okta_authenticator"
 	OktaIDaaSAuthServer                               = "okta_auth_server"
+	OktaIDaaSAuthServers                              = "okta_auth_servers"
 	OktaIDaaSAuthServerClaim                          = "okta_auth_server_claim"
 	OktaIDaaSAuthServerClaimDefault                   = "okta_auth_server_claim_default"
 	OktaIDaaSAuthServerClaims                         = "okta_auth_server_claims"
