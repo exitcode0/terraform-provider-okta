@@ -136,6 +136,7 @@ const (
 	OktaIDaaSUserRisk                                 = "okta_user_risk"
 	OktaIDaaSSecurityEventsProvider                   = "okta_security_events_provider"
 	OktaIDaaSDevice                                   = "okta_device"
+	OktaIDaaSDeviceAssurancePolicies                  = "okta_device_assurance_policies"
 	OktaIDaaSHookKey                                  = "okta_hook_key"
 	OktaIDaaSUISchema                                 = "okta_ui_schema"
 	OktaIDaaSCustomizedSignInPage                     = "okta_customized_signin_page"

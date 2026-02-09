@@ -139,6 +139,7 @@ func FWProviderDataSources() []func() datasource.DataSource {
 		newAppsDataSource,
 		newUserTypeDataSource,
 		newDeviceAssurancePolicyDataSource,
+		newDeviceAssurancePoliciesDataSource,
 		newFeaturesDataSource,
 		newRealmDataSource,
 		newRealmAssignmentDataSource,
