@@ -91,6 +91,7 @@ const (
 	OktaIDaaSNetworkZone                              = "okta_network_zone"
 	OktaIDaaSOrgConfiguration                         = "okta_org_configuration"
 	OktaIDaaSOrgSupport                               = "okta_org_support"
+	OktaIDaaSPolicies                                 = "okta_policies"
 	OktaIDaaSPolicy                                   = "okta_policy"
 	OktaIDaaSPolicyMfa                                = "okta_policy_mfa"
 	OktaIDaaSPolicyMfaDefault                         = "okta_policy_mfa_default"
