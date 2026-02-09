@@ -113,6 +113,7 @@ const (
 	OktaIDaaSRateLimitWarningThresholdPercentage      = "okta_rate_limit_warning_threshold_percentage"
 	OktaIDaaSRealm                                    = "okta_realm"
 	OktaIDaaSRealmAssignment                          = "okta_realm_assignment"
+	OktaIDaaSRealms                                   = "okta_realms"
 	OktaIDaaSResourceSet                              = "okta_resource_set"
 	OktaIDaaSRoleSubscription                         = "okta_role_subscription"
 	OktaIDaaSSecurityNotificationEmails               = "okta_security_notification_emails"

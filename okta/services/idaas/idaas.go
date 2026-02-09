@@ -141,6 +141,7 @@ func FWProviderDataSources() []func() datasource.DataSource {
 		newDeviceAssurancePolicyDataSource,
 		newFeaturesDataSource,
 		newRealmDataSource,
+		newRealmsDataSource,
 		newRealmAssignmentDataSource,
 		newRateLimitAdminNotificationSettingsDataSource,
 		newRateLimitWarningThresholdPercentageDataSource,
