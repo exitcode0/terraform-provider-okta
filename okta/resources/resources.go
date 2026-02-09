@@ -89,6 +89,7 @@ const (
 	OktaIDaaSLinkValue                                = "okta_link_value"
 	OktaIDaaSLogStream                                = "okta_log_stream"
 	OktaIDaaSNetworkZone                              = "okta_network_zone"
+	OktaIDaaSNetworkZones                             = "okta_network_zones"
 	OktaIDaaSOrgConfiguration                         = "okta_org_configuration"
 	OktaIDaaSOrgSupport                               = "okta_org_support"
 	OktaIDaaSPolicy                                   = "okta_policy"
