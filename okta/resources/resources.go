@@ -55,6 +55,7 @@ const (
 	OktaIDaaSCaptchaOrgWideSettings                   = "okta_captcha_org_wide_settings"
 	OktaIDaaSDefaultPolicy                            = "okta_default_policy"
 	OktaIDaaSDomain                                   = "okta_domain"
+	OktaIDaaSDomains                                  = "okta_domains"
 	OktaIDaaSDomainCertificate                        = "okta_domain_certificate"
 	OktaIDaaSDomainVerification                       = "okta_domain_verification"
 	OktaIDaaSEmailDomain                              = "okta_email_domain"
