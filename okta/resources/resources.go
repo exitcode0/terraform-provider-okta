@@ -135,6 +135,7 @@ const (
 	OktaIDaaSUserType                                 = "okta_user_type"
 	OktaIDaaSUserRisk                                 = "okta_user_risk"
 	OktaIDaaSSecurityEventsProvider                   = "okta_security_events_provider"
+	OktaIDaaSSecurityEventsProviders                  = "okta_security_events_providers"
 	OktaIDaaSDevice                                   = "okta_device"
 	OktaIDaaSHookKey                                  = "okta_hook_key"
 	OktaIDaaSUISchema                                 = "okta_ui_schema"
