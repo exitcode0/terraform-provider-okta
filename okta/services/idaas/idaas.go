@@ -151,6 +151,7 @@ func FWProviderDataSources() []func() datasource.DataSource {
 		newPushProviderDataSource,
 		newHookKeyDataSource,
 		newAPIServiceIntegrationDataSource,
+		newAPIServiceIntegrationsDataSource,
 		newAPITokenDataSource,
 		newAppTokenDataSource,
 		newAppConnectionsDataSource,
