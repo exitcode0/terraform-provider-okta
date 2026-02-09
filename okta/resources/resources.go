@@ -84,6 +84,7 @@ const (
 	OktaIDaaSIdpSaml                                  = "okta_idp_saml"
 	OktaIDaaSIdpSamlKey                               = "okta_idp_saml_key"
 	OktaIDaaSIdpSocial                                = "okta_idp_social"
+	OktaIDaaSIdps                                     = "okta_idps"
 	OktaIDaaSInlineHook                               = "okta_inline_hook"
 	OktaIDaaSLinkDefinition                           = "okta_link_definition"
 	OktaIDaaSLinkValue                                = "okta_link_value"
