@@ -134,6 +134,7 @@ const (
 	OktaIDaaSUserSecurityQuestions                    = "okta_user_security_questions"
 	OktaIDaaSUserType                                 = "okta_user_type"
 	OktaIDaaSUserRisk                                 = "okta_user_risk"
+	OktaIDaaSUserTypes                                = "okta_user_types"
 	OktaIDaaSSecurityEventsProvider                   = "okta_security_events_provider"
 	OktaIDaaSDevice                                   = "okta_device"
 	OktaIDaaSHookKey                                  = "okta_hook_key"
