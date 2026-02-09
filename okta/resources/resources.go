@@ -44,6 +44,7 @@ const (
 	OktaIDaaSAuthServerClients                        = "okta_auth_server_clients"
 	OktaIDaaSAuthServerKeys                           = "okta_auth_server_keys"
 	OktaIDaaSAuthServerDefault                        = "okta_auth_server_default"
+	OktaIDaaSAuthServerPolicies                       = "okta_auth_server_policies"
 	OktaIDaaSAuthServerPolicy                         = "okta_auth_server_policy"
 	OktaIDaaSAuthServerPolicyRule                     = "okta_auth_server_policy_rule"
 	OktaIDaaSAuthServerScope                          = "okta_auth_server_scope"
