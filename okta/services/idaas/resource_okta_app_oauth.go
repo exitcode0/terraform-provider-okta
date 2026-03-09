@@ -510,7 +510,7 @@ func resourceAppOAuthCreate(ctx context.Context, d *schema.ResourceData, meta in
 
 	if d.Get("type") != "service" {
 		if !d.Get("skip_authentication_policy").(bool) {
-			err = createOrUpdateAuthenticationPolicy(ctx, d, meta, app.Id)
+			err = createOrUpdateAuthenticationPolicy(ctx, d, meta, oidcApp.GetId())
 			if err != nil {
 				return diag.Errorf("failed to set authentication policy for an OAuth application: %v", err)
 			}
@@ -844,7 +844,7 @@ func resourceAppOAuthUpdate(ctx context.Context, d *schema.ResourceData, meta in
 		return diag.Errorf("failed to update groups claim for an OAuth application: %v", err)
 	}
 	if !d.Get("skip_authentication_policy").(bool) {
-		err = createOrUpdateAuthenticationPolicy(ctx, d, meta, app.Id)
+		err = createOrUpdateAuthenticationPolicy(ctx, d, meta, updatedApp.GetId())
 		if err != nil {
 			return diag.Errorf("failed to set authentication policy an OAuth application: %v", err)
 		}
