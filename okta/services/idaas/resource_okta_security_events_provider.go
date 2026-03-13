@@ -12,6 +12,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	v5okta "github.com/okta/okta-sdk-golang/v5/okta"
 	"github.com/okta/terraform-provider-okta/okta/config"
+	"github.com/okta/terraform-provider-okta/okta/utils"
 )
 
 var (
@@ -182,8 +183,8 @@ func (r *securityEventsProviderResource) Delete(ctx context.Context, request res
 		return
 	}
 
-	_, err := r.OktaIDaaSClient.OktaSDKClientV5().SSFReceiverAPI.DeleteSecurityEventsProviderInstance(ctx, data.Id.ValueString()).Execute()
-	if err != nil {
+	apiResp, err := r.OktaIDaaSClient.OktaSDKClientV5().SSFReceiverAPI.DeleteSecurityEventsProviderInstance(ctx, data.Id.ValueString()).Execute()
+	if err = utils.SuppressErrorOn404_V5(apiResp, err); err != nil {
 		response.Diagnostics.AddError(
 			"Error Deleting Security Events Provider",
 			"Could not delete Security Events Provider ID "+data.Id.ValueString()+": "+err.Error(),

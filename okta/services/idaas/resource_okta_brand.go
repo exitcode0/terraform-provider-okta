@@ -13,6 +13,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/okta/okta-sdk-golang/v4/okta"
 	"github.com/okta/terraform-provider-okta/okta/config"
+	"github.com/okta/terraform-provider-okta/okta/utils"
 )
 
 // Ensure the implementation satisfies the expected interfaces.
@@ -242,8 +243,8 @@ func (r *brandResource) Delete(ctx context.Context, req resource.DeleteRequest, 
 		return
 	}
 
-	_, err := r.OktaIDaaSClient.OktaSDKClientV3().CustomizationAPI.DeleteBrand(ctx, state.ID.ValueString()).Execute()
-	if err != nil {
+	apiResp, err := r.OktaIDaaSClient.OktaSDKClientV3().CustomizationAPI.DeleteBrand(ctx, state.ID.ValueString()).Execute()
+	if err = utils.SuppressErrorOn404_V3(apiResp, err); err != nil {
 		resp.Diagnostics.AddError(
 			"failed to delete brand",
 			err.Error(),

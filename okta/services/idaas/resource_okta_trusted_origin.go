@@ -64,7 +64,7 @@ func resourceTrustedOriginCreate(ctx context.Context, d *schema.ResourceData, me
 
 func resourceTrustedOriginRead(ctx context.Context, d *schema.ResourceData, meta interface{}) diag.Diagnostics {
 	trustedOrigin, resp, err := getOktaClientFromMetadata(meta).TrustedOrigin.GetOrigin(ctx, d.Id())
-	if err := utils.SuppressErrorOn404(resp, err); err != nil {
+	if err = utils.SuppressErrorOn404(resp, err); err != nil {
 		return diag.Errorf("failed to get trusted origin: %v", err)
 	}
 	if trustedOrigin == nil {
@@ -103,8 +103,8 @@ func resourceTrustedOriginUpdate(ctx context.Context, d *schema.ResourceData, me
 }
 
 func resourceTrustedOriginDelete(ctx context.Context, d *schema.ResourceData, meta interface{}) diag.Diagnostics {
-	_, err := getOktaClientFromMetadata(meta).TrustedOrigin.DeleteOrigin(ctx, d.Id())
-	if err != nil {
+	resp, err := getOktaClientFromMetadata(meta).TrustedOrigin.DeleteOrigin(ctx, d.Id())
+	if err = utils.SuppressErrorOn404(resp, err); err != nil {
 		return diag.Errorf("failed to delete trusted origin: %v", err)
 	}
 	return nil

@@ -188,7 +188,7 @@ func getGroups(d *schema.ResourceData) *sdk.PolicyPeopleCondition {
 func getPolicy(ctx context.Context, d *schema.ResourceData, m interface{}) (*sdk.SdkPolicy, error) {
 	logger(m).Info("getting policy", "id", d.Id())
 	policy, resp, err := getAPISupplementFromMetadata(m).GetPolicy(ctx, d.Id())
-	if err := utils.SuppressErrorOn404(resp, err); err != nil {
+	if err = utils.SuppressErrorOn404(resp, err); err != nil {
 		return nil, err
 	}
 	if policy == nil {
@@ -243,8 +243,8 @@ func deletePolicy(ctx context.Context, d *schema.ResourceData, m interface{}) er
 	}
 	logger(m).Info("deleting policy", "id", d.Id())
 	client := getOktaClientFromMetadata(m)
-	_, err := client.Policy.DeletePolicy(ctx, d.Id())
-	if err != nil {
+	resp, err := client.Policy.DeletePolicy(ctx, d.Id())
+	if err = utils.SuppressErrorOn404(resp, err); err != nil {
 		return err
 	}
 	// remove the policy resource from terraform

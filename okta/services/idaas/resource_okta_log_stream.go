@@ -17,6 +17,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/types/basetypes"
 	"github.com/okta/okta-sdk-golang/v4/okta"
 	"github.com/okta/terraform-provider-okta/okta/config"
+	"github.com/okta/terraform-provider-okta/okta/utils"
 )
 
 // Ensure the implementation satisfies the expected interfaces.
@@ -362,16 +363,16 @@ func (r *logStreamResource) Delete(ctx context.Context, req resource.DeleteReque
 		return
 	}
 
-	_, _, err := r.OktaIDaaSClient.OktaSDKClientV3().LogStreamAPI.DeactivateLogStream(ctx, data.ID.ValueString()).Execute()
-	if err != nil {
+	_, apiResp, err := r.OktaIDaaSClient.OktaSDKClientV3().LogStreamAPI.DeactivateLogStream(ctx, data.ID.ValueString()).Execute()
+	if err = utils.SuppressErrorOn404_V3(apiResp, err); err != nil {
 		resp.Diagnostics.AddError(
 			"failed to deactivate log stream",
 			err.Error(),
 		)
 		return
 	}
-	_, err = r.OktaIDaaSClient.OktaSDKClientV3().LogStreamAPI.DeleteLogStream(ctx, data.ID.ValueString()).Execute()
-	if err != nil {
+	apiResp, err = r.OktaIDaaSClient.OktaSDKClientV3().LogStreamAPI.DeleteLogStream(ctx, data.ID.ValueString()).Execute()
+	if err = utils.SuppressErrorOn404_V3(apiResp, err); err != nil {
 		resp.Diagnostics.AddError(
 			"failed to delete log stream",
 			err.Error(),

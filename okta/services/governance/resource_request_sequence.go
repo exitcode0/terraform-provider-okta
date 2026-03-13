@@ -14,6 +14,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/okta/okta-governance-sdk-golang/governance"
 	"github.com/okta/terraform-provider-okta/okta/config"
+	"github.com/okta/terraform-provider-okta/okta/utils"
 )
 
 var (
@@ -161,13 +162,12 @@ func (r *requestSequenceResource) Delete(ctx context.Context, req resource.Delet
 	}
 
 	// Delete API call logic
-	_, err := r.OktaGovernanceClient.OktaGovernanceSDKClient().RequestSequencesAPI.DeleteRequestSequenceV2(ctx, data.Id.ValueString()).Execute()
-	if err != nil {
+	apiResp, err := r.OktaGovernanceClient.OktaGovernanceSDKClient().RequestSequencesAPI.DeleteRequestSequenceV2(ctx, data.Id.ValueString()).Execute()
+	if err = utils.SuppressErrorOn404_Governance(apiResp, err); err != nil {
 		resp.Diagnostics.AddError(
 			"Error deleting Request Sequence",
 			"Could not delete Request Sequence, unexpected error: "+err.Error(),
 		)
 		return
-
 	}
 }

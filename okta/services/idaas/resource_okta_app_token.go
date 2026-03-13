@@ -9,6 +9,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/okta/terraform-provider-okta/okta/config"
+	"github.com/okta/terraform-provider-okta/okta/utils"
 )
 
 var (
@@ -119,8 +120,8 @@ func (r *appTokenResource) Delete(ctx context.Context, req resource.DeleteReques
 		return
 	}
 
-	_, err := r.OktaIDaaSClient.OktaSDKClientV5().ApplicationTokensAPI.RevokeOAuth2TokenForApplication(ctx, data.ClientID.ValueString(), data.ID.ValueString()).Execute()
-	if err != nil {
+	apiResp, err := r.OktaIDaaSClient.OktaSDKClientV5().ApplicationTokensAPI.RevokeOAuth2TokenForApplication(ctx, data.ClientID.ValueString(), data.ID.ValueString()).Execute()
+	if err = utils.SuppressErrorOn404_V5(apiResp, err); err != nil {
 		resp.Diagnostics.AddError("Error revoking application token", "Could not revoke application token, unexpected error: "+err.Error())
 		return
 	}

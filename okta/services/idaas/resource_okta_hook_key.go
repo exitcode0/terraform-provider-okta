@@ -14,6 +14,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	v5okta "github.com/okta/okta-sdk-golang/v5/okta"
 	"github.com/okta/terraform-provider-okta/okta/config"
+	"github.com/okta/terraform-provider-okta/okta/utils"
 )
 
 var (
@@ -172,8 +173,8 @@ func (r *hookKey) Delete(ctx context.Context, req resource.DeleteRequest, resp *
 	}
 
 	deleteHookKeyRequest := r.OktaIDaaSClient.OktaSDKClientV5().HookKeyAPI.DeleteHookKey(ctx, data.Id.ValueString())
-	_, err := deleteHookKeyRequest.Execute()
-	if err != nil {
+	apiResp, err := deleteHookKeyRequest.Execute()
+	if err = utils.SuppressErrorOn404_V5(apiResp, err); err != nil {
 		resp.Diagnostics.AddError("Error deleting hook key", "Could not delete  hook key, unexpected error: "+err.Error())
 		return
 	}

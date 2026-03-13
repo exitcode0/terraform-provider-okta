@@ -14,6 +14,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/okta/okta-governance-sdk-golang/governance"
 	"github.com/okta/terraform-provider-okta/okta/config"
+	"github.com/okta/terraform-provider-okta/okta/utils"
 )
 
 var (
@@ -340,11 +341,11 @@ func (r *requestConditionResource) Delete(ctx context.Context, req resource.Dele
 	// If the request condition is active, attempt to deactivate it first.
 	// Request conditions must be INACTIVE before they can be deleted.
 	if !state.Status.IsNull() && state.Status.ValueString() == "ACTIVE" {
-		_, _, err := r.OktaGovernanceClient.OktaGovernanceSDKClient().
+		_, apiResp, err := r.OktaGovernanceClient.OktaGovernanceSDKClient().
 			RequestConditionsAPI.DeactivateResourceRequestConditionV2(ctx,
 			state.ResourceId.ValueString(),
 			state.Id.ValueString()).Execute()
-		if err != nil {
+		if err = utils.SuppressErrorOn404_Governance(apiResp, err); err != nil {
 			resp.Diagnostics.AddError(
 				"Error deactivating Request condition before deletion",
 				"Could not deactivate Request condition: "+err.Error(),
@@ -354,8 +355,8 @@ func (r *requestConditionResource) Delete(ctx context.Context, req resource.Dele
 	}
 
 	// Delete API call logic
-	_, err := r.OktaGovernanceClient.OktaGovernanceSDKClient().RequestConditionsAPI.DeleteResourceRequestConditionV2(ctx, data.ResourceId.ValueString(), state.Id.ValueString()).Execute()
-	if err != nil {
+	apiResp, err := r.OktaGovernanceClient.OktaGovernanceSDKClient().RequestConditionsAPI.DeleteResourceRequestConditionV2(ctx, data.ResourceId.ValueString(), state.Id.ValueString()).Execute()
+	if err = utils.SuppressErrorOn404_Governance(apiResp, err); err != nil {
 		resp.Diagnostics.AddError(
 			"Error deleting Request conditions",
 			"Could not delete Request conditions, unexpected error: "+err.Error(),

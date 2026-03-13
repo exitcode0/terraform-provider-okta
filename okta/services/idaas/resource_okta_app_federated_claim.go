@@ -11,6 +11,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	v6okta "github.com/okta/okta-sdk-golang/v6/okta"
 	"github.com/okta/terraform-provider-okta/okta/config"
+	"github.com/okta/terraform-provider-okta/okta/utils"
 )
 
 var (
@@ -169,8 +170,8 @@ func (r *appFederatedClaim) Delete(ctx context.Context, req resource.DeleteReque
 		return
 	}
 
-	_, err := r.OktaIDaaSClient.OktaSDKClientV6().ApplicationSSOFederatedClaimsAPI.DeleteFederatedClaim(ctx, data.AppID.ValueString(), data.ID.ValueString()).Execute()
-	if err != nil {
+	apiResp, err := r.OktaIDaaSClient.OktaSDKClientV6().ApplicationSSOFederatedClaimsAPI.DeleteFederatedClaim(ctx, data.AppID.ValueString(), data.ID.ValueString()).Execute()
+	if err = utils.SuppressErrorOn404_V6(apiResp, err); err != nil {
 		resp.Diagnostics.AddError(
 			"Error deleting app federated claim",
 			"Could not delete app federated claim, unexpected error: "+err.Error(),

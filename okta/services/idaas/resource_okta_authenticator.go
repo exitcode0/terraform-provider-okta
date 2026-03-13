@@ -303,8 +303,8 @@ func resourceAuthenticatorDelete(ctx context.Context, d *schema.ResourceData, me
 		return resourceOIEOnlyFeatureError(resources.OktaIDaaSAuthenticator)
 	}
 
-	_, _, err := getOktaClientFromMetadata(meta).Authenticator.DeactivateAuthenticator(ctx, d.Id())
-	if err != nil {
+	_, resp, err := getOktaClientFromMetadata(meta).Authenticator.DeactivateAuthenticator(ctx, d.Id())
+	if err = utils.SuppressErrorOn404(resp, err); err != nil {
 		logger(meta).Warn(fmt.Sprintf("Attempted to deactivate authenticator %q as soft delete and received error: %s", d.Get("key"), err))
 	}
 

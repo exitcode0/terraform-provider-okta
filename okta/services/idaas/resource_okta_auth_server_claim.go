@@ -78,7 +78,7 @@ func resourceAuthServerClaimCreate(ctx context.Context, d *schema.ResourceData, 
 
 func resourceAuthServerClaimRead(ctx context.Context, d *schema.ResourceData, meta interface{}) diag.Diagnostics {
 	claim, resp, err := getOktaClientFromMetadata(meta).AuthorizationServer.GetOAuth2Claim(ctx, d.Get("auth_server_id").(string), d.Id())
-	if err := utils.SuppressErrorOn404(resp, err); err != nil {
+	if err = utils.SuppressErrorOn404(resp, err); err != nil {
 		return diag.Errorf("failed to get auth server claim: %v", err)
 	}
 	if claim == nil {
@@ -113,8 +113,8 @@ func resourceAuthServerClaimDelete(ctx context.Context, d *schema.ResourceData, 
 	if d.Get("value_type").(string) == "SYSTEM" && d.Get("always_include_in_token").(bool) {
 		return nil
 	}
-	_, err := getOktaClientFromMetadata(meta).AuthorizationServer.DeleteOAuth2Claim(ctx, d.Get("auth_server_id").(string), d.Id())
-	if err != nil {
+	resp, err := getOktaClientFromMetadata(meta).AuthorizationServer.DeleteOAuth2Claim(ctx, d.Get("auth_server_id").(string), d.Id())
+	if err = utils.SuppressErrorOn404(resp, err); err != nil {
 		return diag.Errorf("failed to delete auth server claim: %v", err)
 	}
 	return nil

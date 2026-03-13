@@ -11,6 +11,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/okta/terraform-provider-okta/okta/config"
+	"github.com/okta/terraform-provider-okta/okta/utils"
 )
 
 var (
@@ -256,8 +257,8 @@ func (r *uiSchemaResource) Delete(ctx context.Context, req resource.DeleteReques
 	}
 
 	// Delete API call logic
-	_, err := r.OktaIDaaSClient.OktaSDKClientV6().UISchemaAPI.DeleteUISchemas(ctx, data.ID.ValueString()).Execute()
-	if err != nil {
+	apiResp, err := r.OktaIDaaSClient.OktaSDKClientV6().UISchemaAPI.DeleteUISchemas(ctx, data.ID.ValueString()).Execute()
+	if err = utils.SuppressErrorOn404_V6(apiResp, err); err != nil {
 		resp.Diagnostics.AddError(
 			"Error deleting UISchema",
 			"Could not delete UISchema, unexpected error: "+err.Error(),

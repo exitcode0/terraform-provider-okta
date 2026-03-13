@@ -114,7 +114,7 @@ func resourceDomainCreate(ctx context.Context, d *schema.ResourceData, meta inte
 
 func resourceDomainRead(ctx context.Context, d *schema.ResourceData, meta interface{}) diag.Diagnostics {
 	domain, resp, err := getOktaV5ClientFromMetadata(meta).CustomDomainAPI.GetCustomDomain(ctx, d.Id()).Execute()
-	if err := utils.SuppressErrorOn404_V5(resp, err); err != nil {
+	if err = utils.SuppressErrorOn404_V5(resp, err); err != nil {
 		return diag.Errorf("failed to get domain: %v", err)
 	}
 	if domain == nil {
@@ -149,8 +149,8 @@ func resourceDomainRead(ctx context.Context, d *schema.ResourceData, meta interf
 
 func resourceDomainDelete(ctx context.Context, d *schema.ResourceData, meta interface{}) diag.Diagnostics {
 	logger(meta).Info("deleting domain", "id", d.Id())
-	_, err := getOktaV5ClientFromMetadata(meta).CustomDomainAPI.DeleteCustomDomain(ctx, d.Id()).Execute()
-	if err != nil {
+	resp, err := getOktaV5ClientFromMetadata(meta).CustomDomainAPI.DeleteCustomDomain(ctx, d.Id()).Execute()
+	if err = utils.SuppressErrorOn404_V5(resp, err); err != nil {
 		return diag.Errorf("failed to delete domain: %v", err)
 	}
 	return nil

@@ -284,7 +284,7 @@ func resourceAppSignOnPolicyRuleRead(ctx context.Context, d *schema.ResourceData
 	}
 
 	rule, resp, err := getAPISupplementFromMetadata(meta).GetAppSignOnPolicyRule(ctx, d.Get("policy_id").(string), d.Id())
-	if err := utils.SuppressErrorOn404(resp, err); err != nil {
+	if err = utils.SuppressErrorOn404(resp, err); err != nil {
 		return diag.Errorf("failed to get app sign on policy rule: %v", err)
 	}
 	if rule == nil {
@@ -412,8 +412,8 @@ func resourceAppSignOnPolicyRuleDelete(ctx context.Context, d *schema.ResourceDa
 		// You cannot delete a default rule in a policy
 		return nil
 	}
-	_, err := getAPISupplementFromMetadata(meta).DeleteAppSignOnPolicyRule(ctx, d.Get("policy_id").(string), d.Id())
-	if err != nil {
+	resp, err := getAPISupplementFromMetadata(meta).DeleteAppSignOnPolicyRule(ctx, d.Get("policy_id").(string), d.Id())
+	if err = utils.SuppressErrorOn404(resp, err); err != nil {
 		return diag.Errorf("failed to delete app sign-on policy rule: %v", err)
 	}
 	return nil

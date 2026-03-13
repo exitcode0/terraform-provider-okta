@@ -10,6 +10,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	v5okta "github.com/okta/okta-sdk-golang/v5/okta"
 	"github.com/okta/terraform-provider-okta/okta/config"
+	"github.com/okta/terraform-provider-okta/okta/utils"
 )
 
 var (
@@ -173,8 +174,8 @@ func (r *devicesResource) Delete(ctx context.Context, req resource.DeleteRequest
 		return
 	}
 
-	_, err := r.OktaIDaaSClient.OktaSDKClientV5().DeviceAPI.DeleteDevice(ctx, data.Id.ValueString()).Execute()
-	if err != nil {
+	apiResp, err := r.OktaIDaaSClient.OktaSDKClientV5().DeviceAPI.DeleteDevice(ctx, data.Id.ValueString()).Execute()
+	if err = utils.SuppressErrorOn404_V5(apiResp, err); err != nil {
 		resp.Diagnostics.AddError(
 			"Error Deleting Device",
 			"Could not delete device with Id "+data.Id.ValueString()+": "+err.Error(),

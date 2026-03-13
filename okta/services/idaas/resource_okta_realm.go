@@ -16,6 +16,7 @@ import (
 
 	v5okta "github.com/okta/okta-sdk-golang/v5/okta"
 	"github.com/okta/terraform-provider-okta/okta/config"
+	"github.com/okta/terraform-provider-okta/okta/utils"
 )
 
 type realmModel struct {
@@ -170,8 +171,8 @@ func (r *realmResource) Delete(ctx context.Context, req resource.DeleteRequest, 
 		return
 	}
 
-	_, err := r.config.OktaIDaaSClient.OktaSDKClientV5().RealmAPI.DeleteRealm(ctx, state.ID.ValueString()).Execute()
-	if err != nil {
+	apiResp, err := r.config.OktaIDaaSClient.OktaSDKClientV5().RealmAPI.DeleteRealm(ctx, state.ID.ValueString()).Execute()
+	if err = utils.SuppressErrorOn404_V5(apiResp, err); err != nil {
 		resp.Diagnostics.AddError("failed to delete realm: ", err.Error())
 		return
 	}

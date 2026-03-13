@@ -100,7 +100,7 @@ func resourceEmailCustomizationRead(ctx context.Context, d *schema.ResourceData,
 	}
 
 	customization, resp, err := getOktaV3ClientFromMetadata(meta).CustomizationAPI.GetEmailCustomization(ctx, etcr.brandID, etcr.templateName, d.Id()).Execute()
-	if err := utils.SuppressErrorOn404_V3(resp, err); err != nil {
+	if err = utils.SuppressErrorOn404_V3(resp, err); err != nil {
 		return diag.Errorf("failed to get email customization: %v", err)
 	}
 	if customization == nil {
@@ -170,15 +170,15 @@ func resourceEmailCustomizationDelete(ctx context.Context, d *schema.ResourceDat
 		return diag.Errorf("failed to delete email customization: %v", err)
 	}
 	if len(customizations) == 1 {
-		_, err := client.CustomizationAPI.DeleteAllCustomizations(ctx, etcr.brandID, etcr.templateName).Execute()
-		if err != nil {
+		resp, err := client.CustomizationAPI.DeleteAllCustomizations(ctx, etcr.brandID, etcr.templateName).Execute()
+		if err = utils.SuppressErrorOn404_V3(resp, err); err != nil {
 			return diag.Errorf("failed to delete email customization: %v", err)
 		}
 		return nil
 	}
 
-	_, err = client.CustomizationAPI.DeleteEmailCustomization(ctx, etcr.brandID, etcr.templateName, d.Id()).Execute()
-	if err != nil {
+	resp, err := client.CustomizationAPI.DeleteEmailCustomization(ctx, etcr.brandID, etcr.templateName, d.Id()).Execute()
+	if err = utils.SuppressErrorOn404_V3(resp, err); err != nil {
 		return diag.Errorf("failed to delete email customization: %v", err)
 	}
 

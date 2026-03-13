@@ -123,7 +123,7 @@ func resourcePolicyRuleIdpDiscoveryRead(ctx context.Context, d *schema.ResourceD
 	}
 	logger(meta).Info("reading IdP discovery policy rule", "id", d.Id(), "policy_id", policyID)
 	rule, resp, err := getAPISupplementFromMetadata(meta).GetIdpDiscoveryRule(ctx, policyID, d.Id())
-	if err := utils.SuppressErrorOn404(resp, err); err != nil {
+	if err = utils.SuppressErrorOn404(resp, err); err != nil {
 		return diag.Errorf("failed to get IDP discovery policy rule: %v", err)
 	}
 	if rule == nil {
@@ -209,8 +209,8 @@ func resourcePolicyRuleIdpDiscoveryDelete(ctx context.Context, d *schema.Resourc
 		return diag.Errorf("'policy_id' field should be set")
 	}
 	logger(meta).Info("deleting IdP discovery policy rule", "id", d.Id(), "policy_id", policyID)
-	_, err := getOktaClientFromMetadata(meta).Policy.DeletePolicyRule(ctx, policyID, d.Id())
-	if err != nil {
+	resp, err := getOktaClientFromMetadata(meta).Policy.DeletePolicyRule(ctx, policyID, d.Id())
+	if err = utils.SuppressErrorOn404(resp, err); err != nil {
 		return diag.Errorf("failed to delete IDP discovery policy rule: %v", err)
 	}
 	return nil

@@ -64,7 +64,7 @@ func resourceUserTypeUpdate(ctx context.Context, d *schema.ResourceData, meta in
 
 func resourceUserTypeRead(ctx context.Context, d *schema.ResourceData, meta interface{}) diag.Diagnostics {
 	userType, resp, err := getOktaClientFromMetadata(meta).UserType.GetUserType(ctx, d.Id())
-	if err := utils.SuppressErrorOn404(resp, err); err != nil {
+	if err = utils.SuppressErrorOn404(resp, err); err != nil {
 		return diag.Errorf("failed to get user type: %v", err)
 	}
 	if userType == nil {
@@ -85,8 +85,8 @@ func resourceUserTypeDelete(ctx context.Context, d *schema.ResourceData, meta in
 	boc := utils.NewExponentialBackOffWithContext(ctx, 30*time.Second)
 	err := backoff.Retry(func() error {
 		resp, err := getOktaClientFromMetadata(meta).UserType.DeleteUserType(ctx, d.Id())
-		if err != nil {
-			if resp.StatusCode == http.StatusInternalServerError {
+		if err = utils.SuppressErrorOn404(resp, err); err != nil {
+			if resp != nil && resp.StatusCode == http.StatusInternalServerError {
 				return err
 			}
 			return backoff.Permanent(err)

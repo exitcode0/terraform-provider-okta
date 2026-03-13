@@ -69,7 +69,7 @@ func resourceUserFactorQuestionCreate(ctx context.Context, d *schema.ResourceDat
 func resourceUserFactorQuestionRead(ctx context.Context, d *schema.ResourceData, meta interface{}) diag.Diagnostics {
 	var uf sdk.SecurityQuestionUserFactor
 	_, resp, err := getOktaClientFromMetadata(meta).UserFactor.GetFactor(ctx, d.Get("user_id").(string), d.Id(), &uf)
-	if err := utils.SuppressErrorOn404(resp, err); err != nil {
+	if err = utils.SuppressErrorOn404(resp, err); err != nil {
 		return diag.Errorf("failed to get user question factor: %v", err)
 	}
 
@@ -103,7 +103,7 @@ func resourceUserFactorQuestionUpdate(ctx context.Context, d *schema.ResourceDat
 
 func resourceUserFactorQuestionDelete(ctx context.Context, d *schema.ResourceData, meta interface{}) diag.Diagnostics {
 	resp, err := getOktaClientFromMetadata(meta).UserFactor.DeleteFactor(ctx, d.Get("user_id").(string), d.Id())
-	if err != nil {
+	if err = utils.SuppressErrorOn404(resp, err); err != nil {
 		// disabled factor can not be removed
 		if resp != nil && resp.StatusCode == http.StatusBadRequest {
 			return nil

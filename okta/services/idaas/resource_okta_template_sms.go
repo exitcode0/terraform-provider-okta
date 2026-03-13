@@ -67,7 +67,7 @@ func resourceTemplateSmsCreate(ctx context.Context, d *schema.ResourceData, meta
 
 func resourceTemplateSmsRead(ctx context.Context, d *schema.ResourceData, meta interface{}) diag.Diagnostics {
 	temp, resp, err := getOktaClientFromMetadata(meta).SmsTemplate.GetSmsTemplate(ctx, d.Id())
-	if err := utils.SuppressErrorOn404(resp, err); err != nil {
+	if err = utils.SuppressErrorOn404(resp, err); err != nil {
 		return diag.Errorf("failed to get SMS template: %v", err)
 	}
 	if temp == nil {
@@ -90,8 +90,8 @@ func resourceTemplateSmsUpdate(ctx context.Context, d *schema.ResourceData, meta
 }
 
 func resourceTemplateSmsDelete(ctx context.Context, d *schema.ResourceData, meta interface{}) diag.Diagnostics {
-	_, err := getOktaClientFromMetadata(meta).SmsTemplate.DeleteSmsTemplate(ctx, d.Id())
-	if err != nil {
+	resp, err := getOktaClientFromMetadata(meta).SmsTemplate.DeleteSmsTemplate(ctx, d.Id())
+	if err = utils.SuppressErrorOn404(resp, err); err != nil {
 		return diag.Errorf("failed to delete SMS template: %v", err)
 	}
 	return nil

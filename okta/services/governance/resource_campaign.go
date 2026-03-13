@@ -19,6 +19,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/okta/okta-governance-sdk-golang/governance"
 	"github.com/okta/terraform-provider-okta/okta/config"
+	"github.com/okta/terraform-provider-okta/okta/utils"
 )
 
 var (
@@ -719,8 +720,8 @@ func (r *campaignResource) Delete(ctx context.Context, req resource.DeleteReques
 		return
 	}
 	// Delete API call logic
-	_, err := r.OktaGovernanceClient.OktaGovernanceSDKClient().CampaignsAPI.DeleteCampaign(ctx, data.Id.ValueString()).Execute()
-	if err != nil {
+	apiResp, err := r.OktaGovernanceClient.OktaGovernanceSDKClient().CampaignsAPI.DeleteCampaign(ctx, data.Id.ValueString()).Execute()
+	if err = utils.SuppressErrorOn404_Governance(apiResp, err); err != nil {
 		resp.Diagnostics.AddError(
 			"Error deleting Campaign",
 			"Could not delete Campaign with ID"+data.Id.ValueString()+" unexpected error: "+err.Error(),

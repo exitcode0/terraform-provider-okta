@@ -66,7 +66,7 @@ func resourceEmailSMTPCreate(ctx context.Context, d *schema.ResourceData, meta i
 
 func resourceEmailSMTPRead(ctx context.Context, d *schema.ResourceData, meta interface{}) diag.Diagnostics {
 	emailSMTP, resp, err := getOktaV5ClientFromMetadata(meta).EmailServerAPI.GetEmailServer(ctx, d.Id()).Execute()
-	if err := utils.SuppressErrorOn404_V5(resp, err); err != nil {
+	if err = utils.SuppressErrorOn404_V5(resp, err); err != nil {
 		return diag.Errorf("failed to get email domain: %v", err)
 	}
 	if resp == nil || resp.StatusCode == 404 {
@@ -98,8 +98,8 @@ func resourceEmailSMTPUpdate(ctx context.Context, d *schema.ResourceData, meta i
 }
 
 func resourceEmailSMTPDelete(ctx context.Context, d *schema.ResourceData, meta interface{}) diag.Diagnostics {
-	_, err := getOktaV5ClientFromMetadata(meta).EmailServerAPI.DeleteEmailServer(ctx, d.Id()).Execute()
-	if err != nil {
+	resp, err := getOktaV5ClientFromMetadata(meta).EmailServerAPI.DeleteEmailServer(ctx, d.Id()).Execute()
+	if err = utils.SuppressErrorOn404_V5(resp, err); err != nil {
 		return diag.Errorf("failed to delete email domain: %v", err)
 	}
 	return nil

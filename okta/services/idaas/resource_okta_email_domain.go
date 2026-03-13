@@ -92,7 +92,7 @@ func resourceEmailDomainCreate(ctx context.Context, d *schema.ResourceData, meta
 
 func resourceEmailDomainRead(ctx context.Context, d *schema.ResourceData, meta interface{}) diag.Diagnostics {
 	emailDomain, resp, err := getOktaV3ClientFromMetadata(meta).EmailDomainAPI.GetEmailDomain(ctx, d.Id()).Execute()
-	if err := utils.SuppressErrorOn404_V3(resp, err); err != nil {
+	if err = utils.SuppressErrorOn404_V3(resp, err); err != nil {
 		return diag.Errorf("failed to get email domain: %v", err)
 	}
 	if emailDomain == nil || emailDomain.GetValidationStatus() == "DELETED" {
@@ -129,14 +129,14 @@ func resourceEmailDomainUpdate(ctx context.Context, d *schema.ResourceData, meta
 
 func resourceEmailDomainDelete(ctx context.Context, d *schema.ResourceData, meta interface{}) diag.Diagnostics {
 	emailDomain, resp, err := getOktaV3ClientFromMetadata(meta).EmailDomainAPI.GetEmailDomain(ctx, d.Id()).Execute()
-	if err := utils.SuppressErrorOn404_V3(resp, err); err != nil {
+	if err = utils.SuppressErrorOn404_V3(resp, err); err != nil {
 		return diag.Errorf("failed to get email domain: %v", err)
 	}
 	if emailDomain == nil || emailDomain.GetValidationStatus() == "DELETED" {
 		return nil
 	}
-	_, err = getOktaV3ClientFromMetadata(meta).EmailDomainAPI.DeleteEmailDomain(ctx, emailDomain.GetId()).Execute()
-	if err := utils.SuppressErrorOn404_V3(resp, err); err != nil {
+	resp, err = getOktaV3ClientFromMetadata(meta).EmailDomainAPI.DeleteEmailDomain(ctx, emailDomain.GetId()).Execute()
+	if err = utils.SuppressErrorOn404_V3(resp, err); err != nil {
 		return diag.Errorf("failed to delete email domain: %v", err)
 	}
 	return nil

@@ -90,7 +90,7 @@ func resourceEventHookCreate(ctx context.Context, d *schema.ResourceData, meta i
 
 func resourceEventHookRead(ctx context.Context, d *schema.ResourceData, meta interface{}) diag.Diagnostics {
 	hook, resp, err := getOktaClientFromMetadata(meta).EventHook.GetEventHook(ctx, d.Id())
-	if err := utils.SuppressErrorOn404(resp, err); err != nil {
+	if err = utils.SuppressErrorOn404(resp, err); err != nil {
 		return diag.Errorf("failed to get event hook: %v", err)
 	}
 	if hook == nil {
@@ -128,12 +128,12 @@ func resourceEventHookUpdate(ctx context.Context, d *schema.ResourceData, meta i
 func resourceEventHookDelete(ctx context.Context, d *schema.ResourceData, meta interface{}) diag.Diagnostics {
 	client := getOktaClientFromMetadata(meta)
 
-	_, _, err := client.EventHook.DeactivateEventHook(ctx, d.Id())
-	if err != nil {
+	_, resp, err := client.EventHook.DeactivateEventHook(ctx, d.Id())
+	if err = utils.SuppressErrorOn404(resp, err); err != nil {
 		return diag.Errorf("failed to deactivate event hook: %v", err)
 	}
-	_, err = client.EventHook.DeleteEventHook(ctx, d.Id())
-	if err != nil {
+	resp, err = client.EventHook.DeleteEventHook(ctx, d.Id())
+	if err = utils.SuppressErrorOn404(resp, err); err != nil {
 		return diag.Errorf("failed to delete event hook: %v", err)
 	}
 	return nil

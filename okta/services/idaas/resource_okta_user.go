@@ -495,7 +495,7 @@ func resourceUserReadFilterCustomAttributes(ctx context.Context, d *schema.Resou
 	logger(meta).Info("reading user", "id", d.Id())
 	client := getOktaClientFromMetadata(meta)
 	user, resp, err := client.User.GetUser(ctx, d.Id())
-	if err := utils.SuppressErrorOn404(resp, err); err != nil {
+	if err = utils.SuppressErrorOn404(resp, err); err != nil {
 		return diag.Errorf("failed to get user: %v", err)
 	}
 	if user == nil {
@@ -714,8 +714,8 @@ func EnsureUserDelete(ctx context.Context, id, status string, client *sdk.Client
 		passes = 1
 	}
 	for i := 0; i < passes; i++ {
-		_, err := client.User.DeactivateOrDeleteUser(ctx, id, nil)
-		if err != nil {
+		resp, err := client.User.DeactivateOrDeleteUser(ctx, id, nil)
+		if err = utils.SuppressErrorOn404(resp, err); err != nil {
 			return fmt.Errorf("failed to deprovision or delete user from Okta: %v", err)
 		}
 	}

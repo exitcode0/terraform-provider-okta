@@ -260,8 +260,8 @@ func (r *appSignOnPolicyResource) Delete(ctx context.Context, req resource.Delet
 		}
 	}
 
-	_, err = r.OktaIDaaSClient.OktaSDKClientV5().PolicyAPI.DeletePolicy(ctx, state.ID.ValueString()).Execute()
-	if err != nil {
+	apiResp, err := r.OktaIDaaSClient.OktaSDKClientV5().PolicyAPI.DeletePolicy(ctx, state.ID.ValueString()).Execute()
+	if err = utils.SuppressErrorOn404_V5(apiResp, err); err != nil {
 		resp.Diagnostics.AddError(
 			"failed to delete access policy",
 			err.Error(),

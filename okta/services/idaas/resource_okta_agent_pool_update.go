@@ -14,6 +14,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	v6okta "github.com/okta/okta-sdk-golang/v6/okta"
 	"github.com/okta/terraform-provider-okta/okta/config"
+	"github.com/okta/terraform-provider-okta/okta/utils"
 )
 
 var (
@@ -279,13 +280,13 @@ func (r *agentPoolUpdateResource) Delete(ctx context.Context, req resource.Delet
 		return
 	}
 
-	_, err := r.OktaIDaaSClient.OktaSDKClientV5().AgentPoolsAPI.DeleteAgentPoolsUpdate(
+	apiResp, err := r.OktaIDaaSClient.OktaSDKClientV5().AgentPoolsAPI.DeleteAgentPoolsUpdate(
 		ctx,
 		state.PoolID.ValueString(),
 		state.ID.ValueString(),
 	).Execute()
 
-	if err != nil {
+	if err = utils.SuppressErrorOn404_V5(apiResp, err); err != nil {
 		resp.Diagnostics.AddError(
 			"Error deleting agent pool update",
 			fmt.Sprintf("Could not delete agent pool update %s: %s", state.ID.ValueString(), err.Error()),

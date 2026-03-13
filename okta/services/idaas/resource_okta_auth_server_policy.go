@@ -64,7 +64,7 @@ func resourceAuthServerPolicyCreate(ctx context.Context, d *schema.ResourceData,
 
 func resourceAuthServerPolicyRead(ctx context.Context, d *schema.ResourceData, meta interface{}) diag.Diagnostics {
 	policy, resp, err := getOktaClientFromMetadata(meta).AuthorizationServer.GetAuthorizationServerPolicy(ctx, d.Get("auth_server_id").(string), d.Id())
-	if err := utils.SuppressErrorOn404(resp, err); err != nil {
+	if err = utils.SuppressErrorOn404(resp, err); err != nil {
 		return diag.Errorf("failed to get auth server policy: %v", err)
 	}
 	if policy == nil {
@@ -102,8 +102,8 @@ func resourceAuthServerPolicyUpdate(ctx context.Context, d *schema.ResourceData,
 }
 
 func resourceAuthServerPolicyDelete(ctx context.Context, d *schema.ResourceData, meta interface{}) diag.Diagnostics {
-	_, err := getOktaClientFromMetadata(meta).AuthorizationServer.DeleteAuthorizationServerPolicy(ctx, d.Get("auth_server_id").(string), d.Id())
-	if err != nil {
+	resp, err := getOktaClientFromMetadata(meta).AuthorizationServer.DeleteAuthorizationServerPolicy(ctx, d.Get("auth_server_id").(string), d.Id())
+	if err = utils.SuppressErrorOn404(resp, err); err != nil {
 		return diag.Errorf("failed to delete auth server policy: %v", err)
 	}
 	return nil

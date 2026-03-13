@@ -75,7 +75,7 @@ func resourceIdpSigningKeyCreate(ctx context.Context, d *schema.ResourceData, me
 
 func resourceIdpSigningKeyRead(ctx context.Context, d *schema.ResourceData, meta interface{}) diag.Diagnostics {
 	key, resp, err := getOktaClientFromMetadata(meta).IdentityProvider.GetIdentityProviderKey(ctx, d.Id())
-	if err := utils.SuppressErrorOn404(resp, err); err != nil {
+	if err = utils.SuppressErrorOn404(resp, err); err != nil {
 		return diag.Errorf("failed to get identity provider signing key: %v", err)
 	}
 	if key == nil {
@@ -131,8 +131,8 @@ func resourceIdpSigningKeyUpdate(ctx context.Context, d *schema.ResourceData, me
 }
 
 func resourceIdpSigningKeyDelete(ctx context.Context, d *schema.ResourceData, meta interface{}) diag.Diagnostics {
-	_, err := getOktaClientFromMetadata(meta).IdentityProvider.DeleteIdentityProviderKey(ctx, d.Id())
-	if err != nil {
+	resp, err := getOktaClientFromMetadata(meta).IdentityProvider.DeleteIdentityProviderKey(ctx, d.Id())
+	if err = utils.SuppressErrorOn404(resp, err); err != nil {
 		return diag.Errorf("failed to delete identity provider signing key: %v", err)
 	}
 	return nil

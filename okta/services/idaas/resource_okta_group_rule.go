@@ -119,7 +119,7 @@ func resourceGroupRuleCreate(ctx context.Context, d *schema.ResourceData, meta i
 
 func resourceGroupRuleRead(ctx context.Context, d *schema.ResourceData, meta interface{}) diag.Diagnostics {
 	g, resp, err := getOktaClientFromMetadata(meta).Group.GetGroupRule(ctx, d.Id(), nil)
-	if err := utils.SuppressErrorOn404(resp, err); err != nil {
+	if err = utils.SuppressErrorOn404(resp, err); err != nil {
 		return diag.Errorf("failed to get group rule: %v", err)
 	}
 	if g == nil {
@@ -228,19 +228,19 @@ func resourceGroupRuleDelete(ctx context.Context, d *schema.ResourceData, meta i
 	// If the rule is active, attempt to deactivate it first.
 	if d.Get("status").(string) == StatusActive {
 		err := retry.RetryContext(ctx, retryDelay*maxRetries, func() *retry.RetryError {
-			_, err := client.Group.DeactivateGroupRule(ctx, d.Id())
+			resp, err := client.Group.DeactivateGroupRule(ctx, d.Id())
+			if err = utils.SuppressErrorOn404(resp, err); err == nil {
+				return nil
+			}
 			// If error is due to a 423 response, retry.
-			if err != nil && strings.Contains(err.Error(), "423") {
+			if strings.Contains(err.Error(), "423") {
 				return retry.RetryableError(err)
 			}
 			// suppress error for INACTIVE group rules
-			if err != nil && strings.Contains(err.Error(), "Cannot activate or deactivate a Group Rule with the status INVALID") {
+			if strings.Contains(err.Error(), "Cannot activate or deactivate a Group Rule with the status INVALID") {
 				return nil
 			}
-			if err != nil {
-				return retry.NonRetryableError(fmt.Errorf("failed to deactivate group rule before removing: %v", err))
-			}
-			return nil
+			return retry.NonRetryableError(fmt.Errorf("failed to deactivate group rule before removing: %v", err))
 		})
 		if err != nil {
 			return diag.FromErr(err)
@@ -249,14 +249,14 @@ func resourceGroupRuleDelete(ctx context.Context, d *schema.ResourceData, meta i
 	remove := d.Get("remove_assigned_users").(bool)
 	// Retry loop for DeleteGroupRule
 	err := retry.RetryContext(ctx, retryDelay*maxRetries, func() *retry.RetryError {
-		_, err := client.Group.DeleteGroupRule(ctx, d.Id(), &query.Params{RemoveUsers: &remove})
-		if err != nil && strings.Contains(err.Error(), "423") {
+		resp, err := client.Group.DeleteGroupRule(ctx, d.Id(), &query.Params{RemoveUsers: &remove})
+		if err = utils.SuppressErrorOn404(resp, err); err == nil {
+			return nil
+		}
+		if strings.Contains(err.Error(), "423") {
 			return retry.RetryableError(err)
 		}
-		if err != nil {
-			return retry.NonRetryableError(err)
-		}
-		return nil
+		return retry.NonRetryableError(err)
 	})
 	if err != nil {
 		return diag.Errorf("failed to delete group rule: %v", err)

@@ -203,12 +203,7 @@ func (r *groupOwnerResource) Delete(ctx context.Context, req resource.DeleteRequ
 	}
 
 	apiResp, err := r.OktaIDaaSClient.OktaSDKClientV5().GroupOwnerAPI.DeleteGroupOwner(ctx, state.GroupID.ValueString(), state.ID.ValueString()).Execute()
-	if err != nil {
-		// remove 404 errors from err, if it's nil after, it means the err was a 404
-		if err := utils.SuppressErrorOn404_V5(apiResp, err); err == nil {
-			// If the group no longer exists, owners were already removed; treat as successful delete
-			return
-		}
+	if err = utils.SuppressErrorOn404_V5(apiResp, err); err != nil {
 		resp.Diagnostics.AddError(
 			"failed to delete group owner "+state.ID.ValueString()+" from group",
 			err.Error(),

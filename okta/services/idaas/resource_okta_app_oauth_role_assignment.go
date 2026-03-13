@@ -11,6 +11,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/stringplanmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/okta/terraform-provider-okta/okta/config"
+	"github.com/okta/terraform-provider-okta/okta/utils"
 	"github.com/okta/terraform-provider-okta/sdk"
 )
 
@@ -192,8 +193,8 @@ func (r *appOAuthRoleAssignmentResource) Delete(ctx context.Context, req resourc
 		return
 	}
 
-	_, err := r.OktaIDaaSClient.OktaSDKSupplementClient().UnassignClientRole(ctx, data.ClientID.ValueString(), data.ID.ValueString())
-	if err != nil {
+	apiResp, err := r.OktaIDaaSClient.OktaSDKSupplementClient().UnassignClientRole(ctx, data.ClientID.ValueString(), data.ID.ValueString())
+	if err = utils.SuppressErrorOn404(apiResp, err); err != nil {
 		resp.Diagnostics.AddError("Unable to delete role assignment", err.Error())
 		return
 	}

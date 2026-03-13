@@ -11,6 +11,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	v5okta "github.com/okta/okta-sdk-golang/v5/okta"
+	"github.com/okta/terraform-provider-okta/okta/utils"
 )
 
 const (
@@ -212,8 +213,8 @@ func resourceBehaviorUpdate(ctx context.Context, d *schema.ResourceData, meta in
 func resourceBehaviorDelete(ctx context.Context, d *schema.ResourceData, meta interface{}) diag.Diagnostics {
 	logger(meta).Info("deleting behavior", "name", d.Get("name").(string))
 	deleteBehaviorDetectionRule := getOktaV5ClientFromMetadata(meta).BehaviorAPI.DeleteBehaviorDetectionRule(ctx, d.Id())
-	_, err := deleteBehaviorDetectionRule.Execute()
-	if err != nil {
+	resp, err := deleteBehaviorDetectionRule.Execute()
+	if err = utils.SuppressErrorOn404_V5(resp, err); err != nil {
 		return diag.Errorf("failed to delete behavior: %v", err)
 	}
 	return nil

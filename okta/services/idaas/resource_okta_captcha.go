@@ -68,7 +68,7 @@ func resourceCaptchaRead(ctx context.Context, d *schema.ResourceData, meta inter
 	}
 
 	captcha, resp, err := getAPISupplementFromMetadata(meta).GetCaptcha(ctx, d.Id())
-	if err := utils.SuppressErrorOn404(resp, err); err != nil {
+	if err = utils.SuppressErrorOn404(resp, err); err != nil {
 		return diag.Errorf("failed to find CAPTCHA: %v", err)
 	}
 	if captcha == nil {
@@ -99,8 +99,8 @@ func resourceCaptchaDelete(ctx context.Context, d *schema.ResourceData, meta int
 	}
 
 	logger(meta).Info("deleting Captcha", "name", d.Get("name").(string))
-	_, err := getAPISupplementFromMetadata(meta).DeleteCaptcha(ctx, d.Id())
-	if err != nil {
+	resp, err := getAPISupplementFromMetadata(meta).DeleteCaptcha(ctx, d.Id())
+	if err = utils.SuppressErrorOn404(resp, err); err != nil {
 		return diag.Errorf("failed to delete CAPTCHA: %v", err)
 	}
 	return nil

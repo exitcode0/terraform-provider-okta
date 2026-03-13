@@ -9,6 +9,7 @@ import (
 	resourceSchema "github.com/hashicorp/terraform-plugin-framework/resource/schema"
 	"github.com/okta/terraform-provider-okta/okta/config"
 	"github.com/okta/terraform-provider-okta/okta/resources"
+	"github.com/okta/terraform-provider-okta/okta/utils"
 )
 
 // Ensure the implementation satisfies the expected interfaces.
@@ -140,8 +141,8 @@ func (r *customizedSigninPageResource) Delete(ctx context.Context, req resource.
 		return
 	}
 
-	_, err := r.OktaIDaaSClient.OktaSDKClientV3().CustomizationAPI.DeleteCustomizedSignInPage(ctx, state.ID.ValueString()).Execute()
-	if err != nil {
+	apiResp, err := r.OktaIDaaSClient.OktaSDKClientV3().CustomizationAPI.DeleteCustomizedSignInPage(ctx, state.ID.ValueString()).Execute()
+	if err = utils.SuppressErrorOn404_V3(apiResp, err); err != nil {
 		resp.Diagnostics.AddError(
 			"failed to delete customized signin page",
 			err.Error(),

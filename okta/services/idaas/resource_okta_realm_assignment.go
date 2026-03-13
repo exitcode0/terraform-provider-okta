@@ -276,26 +276,30 @@ func (r *realmAssignmentResource) Delete(ctx context.Context, req resource.Delet
 	}
 
 	response, err := r.config.OktaIDaaSClient.OktaSDKClientV5().RealmAssignmentAPI.DeactivateRealmAssignment(ctx, state.ID.ValueString()).Execute()
-	if err != nil {
-		body, ioErr := io.ReadAll(response.Body)
-		defer response.Body.Close()
-		if ioErr != nil {
-			resp.Diagnostics.AddError(err.Error(), "failed to read response body")
-			return
+	if err = utils.SuppressErrorOn404_V5(response, err); err != nil {
+		detail := ""
+		if response != nil && response.Body != nil {
+			body, ioErr := io.ReadAll(response.Body)
+			defer response.Body.Close()
+			if ioErr == nil {
+				detail = string(body)
+			}
 		}
-		resp.Diagnostics.AddError("failed to deactivate realm assignment before deletion:"+err.Error(), string(body))
+		resp.Diagnostics.AddError("failed to deactivate realm assignment before deletion:"+err.Error(), detail)
 		return
 	}
 
 	response, err = r.config.OktaIDaaSClient.OktaSDKClientV5().RealmAssignmentAPI.DeleteRealmAssignment(ctx, state.ID.ValueString()).Execute()
-	if err != nil {
-		body, ioErr := io.ReadAll(response.Body)
-		defer response.Body.Close()
-		if ioErr != nil {
-			resp.Diagnostics.AddError(err.Error(), "failed to read response body")
-			return
+	if err = utils.SuppressErrorOn404_V5(response, err); err != nil {
+		detail := ""
+		if response != nil && response.Body != nil {
+			body, ioErr := io.ReadAll(response.Body)
+			defer response.Body.Close()
+			if ioErr == nil {
+				detail = string(body)
+			}
 		}
-		resp.Diagnostics.AddError("failed to delete realm assignment:"+err.Error(), string(body))
+		resp.Diagnostics.AddError("failed to delete realm assignment:"+err.Error(), detail)
 		return
 	}
 }

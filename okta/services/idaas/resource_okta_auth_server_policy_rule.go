@@ -143,7 +143,7 @@ func resourceAuthServerPolicyRuleCreate(ctx context.Context, d *schema.ResourceD
 func resourceAuthServerPolicyRuleRead(ctx context.Context, d *schema.ResourceData, meta interface{}) diag.Diagnostics {
 	authServerPolicyRule, resp, err := getOktaClientFromMetadata(meta).AuthorizationServer.GetAuthorizationServerPolicyRule(
 		ctx, d.Get("auth_server_id").(string), d.Get("policy_id").(string), d.Id())
-	if err := utils.SuppressErrorOn404(resp, err); err != nil {
+	if err = utils.SuppressErrorOn404(resp, err); err != nil {
 		return diag.Errorf("failed to get auth server policy rule: %v", err)
 	}
 	if authServerPolicyRule == nil {
@@ -233,13 +233,13 @@ func resourceAuthServerPolicyRuleDelete(ctx context.Context, d *schema.ResourceD
 	oktaMutexKV.Lock(resources.OktaIDaaSAuthServerPolicyRule)
 	defer oktaMutexKV.Unlock(resources.OktaIDaaSAuthServerPolicyRule)
 
-	_, err := getOktaClientFromMetadata(meta).AuthorizationServer.DeleteAuthorizationServerPolicyRule(
+	resp, err := getOktaClientFromMetadata(meta).AuthorizationServer.DeleteAuthorizationServerPolicyRule(
 		ctx,
 		d.Get("auth_server_id").(string),
 		d.Get("policy_id").(string),
 		d.Id(),
 	)
-	if err != nil {
+	if err = utils.SuppressErrorOn404(resp, err); err != nil {
 		return diag.Errorf("failed to delete auth server policy rule: %v", err)
 	}
 	return nil

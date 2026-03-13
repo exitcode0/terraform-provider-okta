@@ -442,7 +442,10 @@ func deleteApplication(ctx context.Context, d *schema.ResourceData, m interface{
 		// Okta Core can have eventual consistency issues, use backoff for deactivation as well
 		boc := utils.NewExponentialBackOffWithContext(ctx, 20*time.Second)
 		err := backoff.Retry(func() error {
-			_, err := client.Application.DeactivateApplication(ctx, d.Id())
+			resp, err := client.Application.DeactivateApplication(ctx, d.Id())
+			if err = utils.SuppressErrorOn404(resp, err); err == nil {
+				return nil
+			}
 			if doNotRetry(m, err) {
 				return backoff.Permanent(err)
 			}
@@ -457,7 +460,10 @@ func deleteApplication(ctx context.Context, d *schema.ResourceData, m interface{
 	// which is required before deleting the app.
 	boc := utils.NewExponentialBackOffWithContext(ctx, 30*time.Second)
 	err := backoff.Retry(func() error {
-		_, err := client.Application.DeleteApplication(ctx, d.Id())
+		resp, err := client.Application.DeleteApplication(ctx, d.Id())
+		if err = utils.SuppressErrorOn404(resp, err); err == nil {
+			return nil
+		}
 		if doNotRetry(m, err) {
 			return backoff.Permanent(err)
 		}

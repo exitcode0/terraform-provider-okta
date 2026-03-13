@@ -23,6 +23,8 @@ import (
 
 	v6okta "github.com/okta/okta-sdk-golang/v6/okta"
 
+	govokta "github.com/okta/okta-governance-sdk-golang/governance"
+
 	"github.com/cenkalti/backoff"
 	"github.com/hashicorp/go-cty/cty"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
@@ -434,6 +436,24 @@ func SuppressErrorOn404_V6(resp *v6okta.APIResponse, err error) error {
 		return nil
 	}
 	return ResponseErr_V6(resp, err)
+}
+
+func SuppressErrorOn404_Governance(resp *govokta.APIResponse, err error) error {
+	if resp != nil && resp.StatusCode == http.StatusNotFound {
+		return nil
+	}
+	return ResponseErr_Governance(resp, err)
+}
+
+func ResponseErr_Governance(resp *govokta.APIResponse, err error) error {
+	if err != nil {
+		msg := err.Error()
+		if resp != nil {
+			msg += fmt.Sprintf(", Status: %s", resp.Status)
+		}
+		return errors.New(msg)
+	}
+	return nil
 }
 
 // Useful shortcut for suppressing errors from Okta's SDK when a Org does not

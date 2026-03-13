@@ -5,6 +5,7 @@ import (
 
 	tfpath "github.com/hashicorp/terraform-plugin-framework/path"
 	"github.com/okta/terraform-provider-okta/okta/config"
+	"github.com/okta/terraform-provider-okta/okta/utils"
 
 	"github.com/hashicorp/terraform-plugin-framework/diag"
 	"github.com/hashicorp/terraform-plugin-framework/resource"
@@ -377,8 +378,8 @@ func (r *pushProviderResource) Delete(ctx context.Context, req resource.DeleteRe
 	}
 
 	// Delete existing push provider
-	_, err := r.OktaIDaaSClient.OktaSDKClientV5().PushProviderAPI.DeletePushProvider(ctx, state.ID.ValueString()).Execute()
-	if err != nil {
+	apiResp, err := r.OktaIDaaSClient.OktaSDKClientV5().PushProviderAPI.DeletePushProvider(ctx, state.ID.ValueString()).Execute()
+	if err = utils.SuppressErrorOn404_V5(apiResp, err); err != nil {
 		resp.Diagnostics.AddError(
 			"Error Deleting Push Provider",
 			"Could not delete push provider, unexpected error: "+err.Error(),

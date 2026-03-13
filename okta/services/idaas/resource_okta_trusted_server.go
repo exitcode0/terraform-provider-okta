@@ -146,8 +146,8 @@ func (r *trustedServerResource) Delete(ctx context.Context, req resource.DeleteR
 	}
 
 	for _, trustedServerID := range listTrustedServers {
-		_, err := r.OktaIDaaSClient.OktaSDKClientV3().AuthorizationServerAssocAPI.DeleteAssociatedServer(ctx, state.AuthSeverID.ValueString(), trustedServerID).Execute()
-		if err != nil {
+		apiResp, err := r.OktaIDaaSClient.OktaSDKClientV3().AuthorizationServerAssocAPI.DeleteAssociatedServer(ctx, state.AuthSeverID.ValueString(), trustedServerID).Execute()
+		if err = utils.SuppressErrorOn404_V3(apiResp, err); err != nil {
 			resp.Diagnostics.AddError(
 				fmt.Sprintf("failed to delete trusted server %v", trustedServerID),
 				err.Error(),

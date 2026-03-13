@@ -105,8 +105,8 @@ func resourceAdminRoleCustomAssignmentsDelete(ctx context.Context, d *schema.Res
 		mem := member.Links.Self.GetHref()
 		for _, v := range existingMembers {
 			if mem == v {
-				_, err := client.ResourceSetAPI.UnassignMemberFromBinding(ctx, d.Get("resource_set_id").(string), d.Get("custom_role_id").(string), member.GetId()).Execute()
-				if err != nil {
+				resp, err := client.ResourceSetAPI.UnassignMemberFromBinding(ctx, d.Get("resource_set_id").(string), d.Get("custom_role_id").(string), member.GetId()).Execute()
+				if err = utils.SuppressErrorOn404_V5(resp, err); err != nil {
 					return diag.Errorf("failed to unassign member with id %s from binding with error: %v", member.GetId(), err)
 				}
 			}

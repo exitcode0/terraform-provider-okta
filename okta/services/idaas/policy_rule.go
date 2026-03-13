@@ -172,7 +172,7 @@ func getPolicyRule(ctx context.Context, d *schema.ResourceData, m interface{}) (
 		return nil, fmt.Errorf("'policy_id' field should be set")
 	}
 	policy, resp, err := client.GetPolicy(ctx, policyID)
-	if err := utils.SuppressErrorOn404(resp, err); err != nil {
+	if err = utils.SuppressErrorOn404(resp, err); err != nil {
 		return nil, err
 	}
 	if policy == nil {
@@ -180,7 +180,7 @@ func getPolicyRule(ctx context.Context, d *schema.ResourceData, m interface{}) (
 		return nil, nil
 	}
 	rule, resp, err := client.GetPolicyRule(ctx, policyID, d.Id())
-	if err := utils.SuppressErrorOn404(resp, err); err != nil {
+	if err = utils.SuppressErrorOn404(resp, err); err != nil {
 		return nil, err
 	}
 	if rule == nil {
@@ -292,8 +292,8 @@ func deleteRule(ctx context.Context, d *schema.ResourceData, m interface{}, chec
 		if policyID == "" {
 			return fmt.Errorf("'policy_id' field should be set")
 		}
-		_, err = getOktaClientFromMetadata(m).Policy.DeletePolicyRule(ctx, policyID, d.Id())
-		if err != nil {
+		resp, err := getOktaClientFromMetadata(m).Policy.DeletePolicyRule(ctx, policyID, d.Id())
+		if err = utils.SuppressErrorOn404(resp, err); err != nil {
 			return err
 		}
 	}

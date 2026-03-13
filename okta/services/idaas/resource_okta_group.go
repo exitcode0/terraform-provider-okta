@@ -96,7 +96,7 @@ func resourceGroupCreate(ctx context.Context, d *schema.ResourceData, meta inter
 		if doNotRetry(meta, err) {
 			return backoff.Permanent(err)
 		}
-		if err := utils.SuppressErrorOn404(resp, err); err != nil {
+		if err = utils.SuppressErrorOn404(resp, err); err != nil {
 			return backoff.Permanent(err)
 		}
 		if g == nil {
@@ -115,7 +115,7 @@ func resourceGroupCreate(ctx context.Context, d *schema.ResourceData, meta inter
 func resourceGroupRead(ctx context.Context, d *schema.ResourceData, meta interface{}) diag.Diagnostics {
 	logger(meta).Info("reading group", "id", d.Id(), "name", d.Get("name").(string))
 	g, resp, err := getOktaClientFromMetadata(meta).Group.GetGroup(ctx, d.Id())
-	if err := utils.SuppressErrorOn404(resp, err); err != nil {
+	if err = utils.SuppressErrorOn404(resp, err); err != nil {
 		return diag.Errorf("failed to get group: %v", err)
 	}
 
@@ -150,8 +150,8 @@ func resourceGroupUpdate(ctx context.Context, d *schema.ResourceData, meta inter
 
 func resourceGroupDelete(ctx context.Context, d *schema.ResourceData, meta interface{}) diag.Diagnostics {
 	logger(meta).Info("deleting group", "id", d.Id(), "name", d.Get("name").(string))
-	_, err := getOktaClientFromMetadata(meta).Group.DeleteGroup(ctx, d.Id())
-	if err != nil {
+	resp, err := getOktaClientFromMetadata(meta).Group.DeleteGroup(ctx, d.Id())
+	if err = utils.SuppressErrorOn404(resp, err); err != nil {
 		return diag.Errorf("failed to delete group: %v", err)
 	}
 	return nil

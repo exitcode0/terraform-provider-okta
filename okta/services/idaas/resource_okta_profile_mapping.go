@@ -102,7 +102,7 @@ func resourceProfileMappingCreate(ctx context.Context, d *schema.ResourceData, m
 	sourceID := d.Get("source_id").(string)
 	targetID := d.Get("target_id").(string)
 	mapping, resp, err := getProfileMappingBySourceID(ctx, sourceID, targetID, meta)
-	if err := utils.SuppressErrorOn404(resp, err); err != nil {
+	if err = utils.SuppressErrorOn404(resp, err); err != nil {
 		return diag.Errorf("failed to get profile mapping: %v", err)
 	}
 	if mapping == nil {
@@ -126,7 +126,7 @@ func resourceProfileMappingCreate(ctx context.Context, d *schema.ResourceData, m
 
 func resourceProfileMappingRead(ctx context.Context, d *schema.ResourceData, meta interface{}) diag.Diagnostics {
 	mapping, resp, err := getOktaClientFromMetadata(meta).ProfileMapping.GetProfileMapping(ctx, d.Id())
-	if err := utils.SuppressErrorOn404(resp, err); err != nil {
+	if err = utils.SuppressErrorOn404(resp, err); err != nil {
 		return diag.Errorf("failed to get profile mapping: %v", err)
 	}
 	if mapping == nil {
@@ -155,7 +155,7 @@ func resourceProfileMappingUpdate(ctx context.Context, d *schema.ResourceData, m
 	sourceID := d.Get("source_id").(string)
 	targetID := d.Get("target_id").(string)
 	mapping, resp, err := getOktaClientFromMetadata(meta).ProfileMapping.GetProfileMapping(ctx, d.Id())
-	if err := utils.SuppressErrorOn404(resp, err); err != nil {
+	if err = utils.SuppressErrorOn404(resp, err); err != nil {
 		return diag.Errorf("failed to get profile mapping: %v", err)
 	}
 	if mapping == nil {
@@ -177,14 +177,12 @@ func resourceProfileMappingUpdate(ctx context.Context, d *schema.ResourceData, m
 }
 
 func resourceProfileMappingDelete(ctx context.Context, d *schema.ResourceData, meta interface{}) diag.Diagnostics {
-	sourceID := d.Get("source_id").(string)
-	targetID := d.Get("target_id").(string)
 	mapping, resp, err := getOktaClientFromMetadata(meta).ProfileMapping.GetProfileMapping(ctx, d.Id())
-	if err := utils.SuppressErrorOn404(resp, err); err != nil {
+	if err = utils.SuppressErrorOn404(resp, err); err != nil {
 		return diag.Errorf("failed to get profile mapping: %v", err)
 	}
 	if mapping == nil {
-		return diag.Errorf("no profile mappings found for source ID '%s' and target ID '%s'", sourceID, targetID)
+		return nil
 	}
 	for k := range mapping.Properties {
 		if k == "login" {

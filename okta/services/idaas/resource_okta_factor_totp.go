@@ -92,7 +92,7 @@ func resourceFactorTOTPUpdate(ctx context.Context, d *schema.ResourceData, meta 
 
 func resourceFactorTOTPRead(ctx context.Context, d *schema.ResourceData, meta interface{}) diag.Diagnostics {
 	profile, resp, err := getAPISupplementFromMetadata(meta).GetHotpFactorProfile(ctx, d.Id())
-	if err := utils.SuppressErrorOn404(resp, err); err != nil {
+	if err = utils.SuppressErrorOn404(resp, err); err != nil {
 		return diag.Errorf("failed to get TOTP factor: %v", err)
 	}
 	if profile == nil {
@@ -112,8 +112,8 @@ func resourceFactorTOTPDelete(ctx context.Context, d *schema.ResourceData, meta 
 	// NOTE: The publicly documented DELETE /api/v1/org/factors/hotp/profiles/{id} appears to only 501 at the present time.
 
 	resp, err := getAPISupplementFromMetadata(meta).DeleteHotpFactorProfile(ctx, d.Id())
-	if err != nil {
-		if resp.StatusCode == http.StatusNotImplemented {
+	if err = utils.SuppressErrorOn404(resp, err); err != nil {
+		if resp != nil && resp.StatusCode == http.StatusNotImplemented {
 			logger(meta).Warn("Okta API declares deletion of totp factors as not implemented")
 			return nil
 		}

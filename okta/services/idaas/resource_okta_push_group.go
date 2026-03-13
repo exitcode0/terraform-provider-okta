@@ -281,17 +281,17 @@ func (r *pushGroupResource) Delete(ctx context.Context, req resource.DeleteReque
 	}
 
 	if state.Status.ValueString() != "INACTIVE" {
-		_, _, err := r.config.OktaIDaaSClient.OktaSDKClientV6().GroupPushMappingAPI.UpdateGroupPushMapping(ctx, state.AppId.ValueString(), state.ID.ValueString()).Body(v6okta.UpdateGroupPushMappingRequest{
+		_, apiResp, err := r.config.OktaIDaaSClient.OktaSDKClientV6().GroupPushMappingAPI.UpdateGroupPushMapping(ctx, state.AppId.ValueString(), state.ID.ValueString()).Body(v6okta.UpdateGroupPushMappingRequest{
 			Status: "INACTIVE",
 		}).Execute()
-		if err != nil {
+		if err = utils.SuppressErrorOn404_V6(apiResp, err); err != nil {
 			resp.Diagnostics.AddError("failed to delete push group mapping: ", err.Error())
 			return
 		}
 	}
 
-	_, err := r.config.OktaIDaaSClient.OktaSDKClientV6().GroupPushMappingAPI.DeleteGroupPushMapping(ctx, state.AppId.ValueString(), state.ID.ValueString()).DeleteTargetGroup(state.DeleteTargetGroupOnDestroy.ValueBool()).Execute()
-	if err != nil {
+	apiResp, err := r.config.OktaIDaaSClient.OktaSDKClientV6().GroupPushMappingAPI.DeleteGroupPushMapping(ctx, state.AppId.ValueString(), state.ID.ValueString()).DeleteTargetGroup(state.DeleteTargetGroupOnDestroy.ValueBool()).Execute()
+	if err = utils.SuppressErrorOn404_V6(apiResp, err); err != nil {
 		resp.Diagnostics.AddError("failed to delete push group mapping: ", err.Error())
 		return
 	}
