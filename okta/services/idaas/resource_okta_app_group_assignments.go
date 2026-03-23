@@ -1,4 +1,4 @@
-package okta
+package idaas
 
 import (
 	"context"
@@ -8,6 +8,7 @@ import (
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
+	"github.com/okta/terraform-provider-okta/okta/utils"
 	"github.com/okta/terraform-provider-okta/sdk"
 )
 
@@ -23,9 +24,37 @@ func resourceAppGroupAssignments() *schema.Resource {
 				return []*schema.ResourceData{d}, nil
 			},
 		},
-		Description: `Assigns groups to an application. This resource allows you to create multiple App Group assignments. 
-		
-**Important**: Do not use in conjunction with for_each`,
+		Description: `Assigns groups to an application. This resource allows you to create multiple App Group assignments.
+
+**Important**: Do not use ` + "`for_each`" + ` on this resource to iterate over groups for the same ` + "`app_id`" + `. This resource's Read implementation fetches **all** groups currently assigned to the app from the Okta API — not just the ones declared in config. When multiple instances share the same ` + "`app_id`" + `, the following infinite loop occurs on every apply:
+
+1. Each instance's update deletes the groups it does not own from Okta.
+2. Each instance's Read (called at the end of update) re-fetches all groups from the API and absorbs the other instance's groups back into state as drift.
+3. State after apply is identical to state before apply — the plan never converges and the same diff reappears on every ` + "`terraform plan`" + `.
+
+Since this resource natively supports multiple ` + "`group`" + ` blocks, use a [` + "`dynamic`" + ` block](https://developer.hashicorp.com/terraform/language/expressions/dynamic-blocks) instead:
+
+**Bad** — creates two conflicting resource instances for the same app:
+` + "```" + `terraform
+resource "okta_app_group_assignments" "this" {
+  for_each = toset(["group-a", "group-b"])
+  app_id   = okta_app_bookmark.this.id
+  group { id = each.value }
+}
+` + "```" + `
+
+**Good** — a single resource instance manages all groups for the app:
+` + "```" + `terraform
+resource "okta_app_group_assignments" "this" {
+  app_id = okta_app_bookmark.this.id
+  dynamic "group" {
+    for_each = toset(["group-a", "group-b"])
+    content { id = group.value }
+  }
+}
+` + "```" + `
+
+Note: Using ` + "`for_each`" + ` on this resource is safe when each instance targets a **different** ` + "`app_id`" + `, for example when assigning the same group to multiple applications.`,
 		Schema: map[string]*schema.Schema{
 			"app_id": {
 				Type:        schema.TypeString,
@@ -53,9 +82,9 @@ func resourceAppGroupAssignments() *schema.Resource {
 						"profile": {
 							Type:             schema.TypeString,
 							ValidateDiagFunc: stringIsJSON,
-							StateFunc:        normalizeDataJSON,
+							StateFunc:        utils.NormalizeDataJSON,
 							Required:         true,
-							DiffSuppressFunc: noChangeInObjectFromUnmarshaledJSON,
+							DiffSuppressFunc: utils.NoChangeInObjectFromUnmarshaledJSON,
 							DefaultFunc: func() (interface{}, error) {
 								return "{}", nil
 							},
@@ -105,14 +134,17 @@ func resourceAppGroupAssignmentsRead(ctx context.Context, d *schema.ResourceData
 		client,
 		d.Get("app_id").(string),
 	)
-	if err := suppressErrorOn404(resp, err); err != nil {
-		d.SetId("")
+	if err := utils.SuppressErrorOn404(resp, err); err != nil {
 		return diag.Errorf("failed to fetch group assignments: %v", err)
+	}
+	if currentGroupAssignments == nil {
+		d.SetId("")
+		return nil
 	}
 	g, ok := d.GetOk("group")
 	if ok {
 		groupAssignments := syncGroups(d, g.([]interface{}), currentGroupAssignments)
-		err := setNonPrimitives(d, map[string]interface{}{"group": groupAssignments})
+		err := utils.SetNonPrimitives(d, map[string]interface{}{"group": groupAssignments})
 		if err != nil {
 			return diag.Errorf("failed to set group properties: %v", err)
 		}
@@ -121,7 +153,7 @@ func resourceAppGroupAssignmentsRead(ctx context.Context, d *schema.ResourceData
 		for i := range currentGroupAssignments {
 			groupAssignments[i] = groupAssignmentToTFGroup(currentGroupAssignments[i])
 		}
-		err := setNonPrimitives(d, map[string]interface{}{"group": groupAssignments})
+		err := utils.SetNonPrimitives(d, map[string]interface{}{"group": groupAssignments})
 		if err != nil {
 			return diag.Errorf("failed to set group properties: %v", err)
 		}
@@ -166,7 +198,7 @@ func resourceAppGroupAssignmentsDelete(ctx context.Context, d *schema.ResourceDa
 			d.Get("app_id").(string),
 			group["id"].(string),
 		)
-		if err := suppressErrorOn404(resp, err); err != nil {
+		if err := utils.SuppressErrorOn404(resp, err); err != nil {
 			return diag.Errorf("failed to delete application group assignment: %v", err)
 		}
 	}
@@ -349,7 +381,7 @@ func splitAssignmentsTargets(d *schema.ResourceData) (toAssign, toRemove []*sdk.
 			err = nil // need to reset err as it is a named return value
 		}
 		if priority, ok := a["priority"]; ok {
-			assignment.PriorityPtr = int64Ptr(priority.(int))
+			assignment.PriorityPtr = utils.Int64Ptr(priority.(int))
 		}
 		toAssign = append(toAssign, assignment)
 	}
@@ -385,7 +417,7 @@ func tfGroupsToGroupAssignments(d *schema.ResourceData) []*sdk.ApplicationGroupA
 		}
 		priority, ok := d.GetOk(fmt.Sprintf("group.%d.priority", i))
 		if ok {
-			a.PriorityPtr = int64Ptr(priority.(int))
+			a.PriorityPtr = utils.Int64Ptr(priority.(int))
 		}
 		assignments[i] = a
 	}
@@ -416,8 +448,8 @@ func deleteGroupAssignments(
 	assignments []*sdk.ApplicationGroupAssignment,
 ) error {
 	for i := range assignments {
-		_, err := delete(ctx, appID, assignments[i].Id)
-		if err != nil {
+		resp, err := delete(ctx, appID, assignments[i].Id)
+		if err := utils.SuppressErrorOn404(resp, err); err != nil {
 			return fmt.Errorf("could not delete assignment for group %s, to application %s: %w", assignments[i].Id, appID, err)
 		}
 	}

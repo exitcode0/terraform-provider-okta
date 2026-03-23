@@ -402,19 +402,19 @@ func TestAccResourceOktaAppGroupAssignments_1832_timeouts(t *testing.T) {
 // TestAccResourceOktaAppGroupAssignments_priority_zero tests that priority 0
 // is treated as a valid explicit priority value, distinct from unset priority
 func TestAccResourceOktaAppGroupAssignments_priority_zero(t *testing.T) {
-	resourceName := fmt.Sprintf("%s.test", appGroupAssignments)
-	mgr := newFixtureManager("resources", appGroupAssignments, t.Name())
+	resourceName := fmt.Sprintf("%s.test", resources.OktaIDaaSAppGroupAssignments)
+	mgr := newFixtureManager("resources", resources.OktaIDaaSAppGroupAssignments, t.Name())
 	config := mgr.GetFixtures("test_priority_zero.tf", t)
 
-	group1 := fmt.Sprintf("%s.test1", group)
-	group2 := fmt.Sprintf("%s.test2", group)
-	group3 := fmt.Sprintf("%s.test3", group)
+	group1 := fmt.Sprintf("%s.test1", resources.OktaIDaaSGroup)
+	group2 := fmt.Sprintf("%s.test2", resources.OktaIDaaSGroup)
+	group3 := fmt.Sprintf("%s.test3", resources.OktaIDaaSGroup)
 
-	oktaResourceTest(t, resource.TestCase{
-		PreCheck:          testAccPreCheck(t),
-		ErrorCheck:        testAccErrorChecks(t),
-		ProviderFactories: testAccProvidersFactories,
-		CheckDestroy:      checkResourceDestroy(appGroupAssignments, createDoesAppExist(sdk.NewBookmarkApplication())),
+	acctest.OktaResourceTest(t, resource.TestCase{
+		PreCheck:                 acctest.AccPreCheck(t),
+		ErrorCheck:               testAccErrorChecks(t),
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactoriesForTestAcc(t),
+		CheckDestroy:             checkResourceDestroy(resources.OktaIDaaSAppGroupAssignments, createDoesAppExist(sdk.NewBookmarkApplication())),
 		Steps: []resource.TestStep{
 			{
 				Config: config,
@@ -453,19 +453,19 @@ func TestAccResourceOktaAppGroupAssignments_priority_zero(t *testing.T) {
 // TestAccResourceOktaAppGroupAssignments_priority_resequencing tests that Okta's
 // priority re-sequencing doesn't cause drift when relative order is maintained
 func TestAccResourceOktaAppGroupAssignments_priority_resequencing(t *testing.T) {
-	resourceName := fmt.Sprintf("%s.test", appGroupAssignments)
-	mgr := newFixtureManager("resources", appGroupAssignments, t.Name())
+	resourceName := fmt.Sprintf("%s.test", resources.OktaIDaaSAppGroupAssignments)
+	mgr := newFixtureManager("resources", resources.OktaIDaaSAppGroupAssignments, t.Name())
 	config := mgr.GetFixtures("test_priority_resequencing.tf", t)
 
-	group1 := fmt.Sprintf("%s.test1", group)
-	group2 := fmt.Sprintf("%s.test2", group)
-	group3 := fmt.Sprintf("%s.test3", group)
+	group1 := fmt.Sprintf("%s.test1", resources.OktaIDaaSGroup)
+	group2 := fmt.Sprintf("%s.test2", resources.OktaIDaaSGroup)
+	group3 := fmt.Sprintf("%s.test3", resources.OktaIDaaSGroup)
 
-	oktaResourceTest(t, resource.TestCase{
-		PreCheck:          testAccPreCheck(t),
-		ErrorCheck:        testAccErrorChecks(t),
-		ProviderFactories: testAccProvidersFactories,
-		CheckDestroy:      checkResourceDestroy(appGroupAssignments, createDoesAppExist(sdk.NewBookmarkApplication())),
+	acctest.OktaResourceTest(t, resource.TestCase{
+		PreCheck:                 acctest.AccPreCheck(t),
+		ErrorCheck:               testAccErrorChecks(t),
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactoriesForTestAcc(t),
+		CheckDestroy:             checkResourceDestroy(resources.OktaIDaaSAppGroupAssignments, createDoesAppExist(sdk.NewBookmarkApplication())),
 		Steps: []resource.TestStep{
 			{
 				Config: config,
@@ -503,19 +503,19 @@ func TestAccResourceOktaAppGroupAssignments_priority_resequencing(t *testing.T) 
 // TestAccResourceOktaAppGroupAssignments_priority_mixed tests mixed scenarios
 // where some groups have priorities and others don't
 func TestAccResourceOktaAppGroupAssignments_priority_mixed(t *testing.T) {
-	resourceName := fmt.Sprintf("%s.test", appGroupAssignments)
-	mgr := newFixtureManager("resources", appGroupAssignments, t.Name())
+	resourceName := fmt.Sprintf("%s.test", resources.OktaIDaaSAppGroupAssignments)
+	mgr := newFixtureManager("resources", resources.OktaIDaaSAppGroupAssignments, t.Name())
 	config := mgr.GetFixtures("test_priority_mixed.tf", t)
 
-	group1 := fmt.Sprintf("%s.test1", group)
-	group2 := fmt.Sprintf("%s.test2", group)
-	group3 := fmt.Sprintf("%s.test3", group)
+	group1 := fmt.Sprintf("%s.test1", resources.OktaIDaaSGroup)
+	group2 := fmt.Sprintf("%s.test2", resources.OktaIDaaSGroup)
+	group3 := fmt.Sprintf("%s.test3", resources.OktaIDaaSGroup)
 
-	oktaResourceTest(t, resource.TestCase{
-		PreCheck:          testAccPreCheck(t),
-		ErrorCheck:        testAccErrorChecks(t),
-		ProviderFactories: testAccProvidersFactories,
-		CheckDestroy:      checkResourceDestroy(appGroupAssignments, createDoesAppExist(sdk.NewBookmarkApplication())),
+	acctest.OktaResourceTest(t, resource.TestCase{
+		PreCheck:                 acctest.AccPreCheck(t),
+		ErrorCheck:               testAccErrorChecks(t),
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactoriesForTestAcc(t),
+		CheckDestroy:             checkResourceDestroy(resources.OktaIDaaSAppGroupAssignments, createDoesAppExist(sdk.NewBookmarkApplication())),
 		Steps: []resource.TestStep{
 			{
 				Config: config,
@@ -547,19 +547,19 @@ func TestAccResourceOktaAppGroupAssignments_priority_mixed(t *testing.T) {
 // TestAccResourceOktaAppGroupAssignments_no_priorities tests that groups
 // without any priorities work correctly
 func TestAccResourceOktaAppGroupAssignments_no_priorities(t *testing.T) {
-	resourceName := fmt.Sprintf("%s.test", appGroupAssignments)
-	mgr := newFixtureManager("resources", appGroupAssignments, t.Name())
+	resourceName := fmt.Sprintf("%s.test", resources.OktaIDaaSAppGroupAssignments)
+	mgr := newFixtureManager("resources", resources.OktaIDaaSAppGroupAssignments, t.Name())
 	config := mgr.GetFixtures("test_no_priorities.tf", t)
 
-	group1 := fmt.Sprintf("%s.test1", group)
-	group2 := fmt.Sprintf("%s.test2", group)
-	group3 := fmt.Sprintf("%s.test3", group)
+	group1 := fmt.Sprintf("%s.test1", resources.OktaIDaaSGroup)
+	group2 := fmt.Sprintf("%s.test2", resources.OktaIDaaSGroup)
+	group3 := fmt.Sprintf("%s.test3", resources.OktaIDaaSGroup)
 
-	oktaResourceTest(t, resource.TestCase{
-		PreCheck:          testAccPreCheck(t),
-		ErrorCheck:        testAccErrorChecks(t),
-		ProviderFactories: testAccProvidersFactories,
-		CheckDestroy:      checkResourceDestroy(appGroupAssignments, createDoesAppExist(sdk.NewBookmarkApplication())),
+	acctest.OktaResourceTest(t, resource.TestCase{
+		PreCheck:                 acctest.AccPreCheck(t),
+		ErrorCheck:               testAccErrorChecks(t),
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactoriesForTestAcc(t),
+		CheckDestroy:             checkResourceDestroy(resources.OktaIDaaSAppGroupAssignments, createDoesAppExist(sdk.NewBookmarkApplication())),
 		Steps: []resource.TestStep{
 			{
 				Config: config,
@@ -702,20 +702,20 @@ func checkMixedPriorityOrder(resourceName string) resource.TestCheckFunc {
 // TestAccResourceOktaAppGroupAssignments_profile_changes tests that priority
 // changes are handled correctly with OAuth applications
 func TestAccResourceOktaAppGroupAssignments_profile_changes(t *testing.T) {
-	resourceName := fmt.Sprintf("%s.test", appGroupAssignments)
-	mgr := newFixtureManager("resources", appGroupAssignments, t.Name())
+	resourceName := fmt.Sprintf("%s.test", resources.OktaIDaaSAppGroupAssignments)
+	mgr := newFixtureManager("resources", resources.OktaIDaaSAppGroupAssignments, t.Name())
 	config := mgr.GetFixtures("test_profile_changes.tf", t)
 	updatedConfig := mgr.GetFixtures("test_profile_changes_updated.tf", t)
 
-	group1 := fmt.Sprintf("%s.test1", group)
-	group2 := fmt.Sprintf("%s.test2", group)
-	group3 := fmt.Sprintf("%s.test3", group)
+	group1 := fmt.Sprintf("%s.test1", resources.OktaIDaaSGroup)
+	group2 := fmt.Sprintf("%s.test2", resources.OktaIDaaSGroup)
+	group3 := fmt.Sprintf("%s.test3", resources.OktaIDaaSGroup)
 
-	oktaResourceTest(t, resource.TestCase{
-		PreCheck:          testAccPreCheck(t),
-		ErrorCheck:        testAccErrorChecks(t),
-		ProviderFactories: testAccProvidersFactories,
-		CheckDestroy:      checkResourceDestroy(appGroupAssignments, createDoesAppExist(sdk.NewOpenIdConnectApplication())),
+	acctest.OktaResourceTest(t, resource.TestCase{
+		PreCheck:                 acctest.AccPreCheck(t),
+		ErrorCheck:               testAccErrorChecks(t),
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactoriesForTestAcc(t),
+		CheckDestroy:             checkResourceDestroy(resources.OktaIDaaSAppGroupAssignments, createDoesAppExist(sdk.NewOpenIdConnectApplication())),
 		Steps: []resource.TestStep{
 			{
 				Config: config,
