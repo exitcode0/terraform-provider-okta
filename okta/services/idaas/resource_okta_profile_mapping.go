@@ -221,8 +221,12 @@ func resourceProfileMappingDelete(ctx context.Context, d *schema.ResourceData, m
 	if mapping == nil {
 		return diag.Errorf("no profile mappings found for source ID '%s' and target ID '%s'", sourceID, targetID)
 	}
+	ignoreUsername := d.Get("ignore_username").(bool)
 	for k := range mapping.Properties {
-		if isUsernameAttribute(k) {
+		if k == "login" {
+			continue
+		}
+		if ignoreUsername && isUsernameAttribute(k) {
 			continue
 		}
 		mapping.Properties[k] = nil
