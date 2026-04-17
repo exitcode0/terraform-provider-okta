@@ -1,5 +1,6 @@
 ---
 page_title: "Resource: okta_push_group"
+subcategory: "Directory"
 description: |-
   Creates a Push Group assignment for an Application in Okta.
 ---
@@ -7,6 +8,16 @@ description: |-
 # Resource: okta_push_group
 
 Creates a Push Group assignment for an Application in Okta.
+
+## Links
+
+- [Okta API docs](https://developer.okta.com/docs/api/openapi/okta-management/management/tag/GroupPushMapping/)
+- [Provider source](https://github.com/okta/terraform-provider-okta/blob/master/okta/services/idaas/resource_okta_push_group.go)
+- [SDK source](https://github.com/okta/okta-sdk-golang/blob/v6.1.6/okta/api_group_push_mapping.go)
+
+## Related Resources
+
+- [`okta_group`](../resources/group) — The source group
 
 ## Example Usage
 

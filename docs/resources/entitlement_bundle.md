@@ -1,18 +1,47 @@
 ---
 page_title: "Resource: okta_entitlement_bundle"
+subcategory: "Identity Governance"
 description: |-
-  Entitlement bundle allows you to manage entitlement bundles. Entitlement bundles allow you to grant multiple entitlements simultaneously to your users.
+
+  Terraform Resource for okta_entitlement_bundle.
+
 ---
 
-# Resource: okta_entitlement
+# Resource: okta_entitlement_bundle
 
-Manages Entitlement Bundles. This resource allows you to create and configure an Okta [Entitlement Bundle](https://developer.okta.com/docs/api/iga/openapi/governance.api/tag/Entitlement-Bundles/#tag/Entitlement-Bundles).
+
+Terraform Resource for okta_entitlement_bundle.
+
+
+## Links
+
+- [Okta API docs](https://developer.okta.com/docs/api/iga/openapi/governance-production-reference/entitlement-bundles)
+- [Provider source](https://github.com/okta/terraform-provider-okta/blob/master/okta/services/governance/resource_entitlement_bundle.go)
+
+## Related Resources
+
+- [`okta_entitlement`](../resources/entitlement) — Entitlements in this bundle
+- [`okta_campaign`](../resources/campaign) — Campaigns reviewing this bundle
 
 ## Example Usage
 
 ```terraform
-resource "okta_entitlement_bundle" "example" {
-  name = "example"
+resource "okta_entitlement_bundle" "test" {
+  name        = "test-entitlement-bundle"
+  description = "testing entitlement bundle"
+
+  target {
+    external_id = "0oao01ardu8r8qUP91d7"
+    type        = "APPLICATION"
+  }
+
+  entitlements {
+    id = "espzcbqd7Suwp4Y7A1d6"
+
+    values {
+      id = "entzcbqd8lcD3BRWR1d6"
+    }
+  }
 }
 ```
 
@@ -20,32 +49,48 @@ resource "okta_entitlement_bundle" "example" {
 ## Schema
 
 ### Required
-- `name` (String) The display name for an entitlement bundle.
-- `target` (Object) Representation of a resource (see [below for nested schema](#nestedblock--target))
-- `entitlements` (List) List of entitlements in the bundle (see [below for nested schema](#nestedblock--entitlements))
+
+- `name` (String) Name of the entitlement bundle
 
 ### Optional
-- `description` (String) The description of an entitlement property.
-- `target_resource_orn` (String) The ORN of the target resource. Required when updating the entitlement bundle.
-- `status` (String) The status of the entitlement bundle.
 
-<a id="nestedblock--parent"></a>
-### Nested Schema for `target`
-### Required
-- `external_id` (String) The Okta app ID of the resource.
-- `type` (String) The type of resource.
+- `description` (String) Description of the entitlement bundle
+- `entitlements` (Block Set) Collection of entitlements and their values (see [below for nested schema](#nestedblock--entitlements))
+- `status` (String) status of the entitlement bundle
+- `target` (Block, Optional) (see [below for nested schema](#nestedblock--target))
+- `target_resource_orn` (String) The ORN of the target resource. Required when updating the entitlement bundle
 
-<a id="nestedblock--values"></a>
+### Read-Only
+
+- `id` (String) Unique identifier of the entitlement bundle
+
+<a id="nestedblock--entitlements"></a>
 ### Nested Schema for `entitlements`
-### Required
-- `id` (String) The ID of the entitlement.
-- `values` (List) (see [below for nested schema](#nestedblock--values))
 
-<a id="nestedblock--values"></a>
-### Nested Schema for `values`
-### Required
-- `id` (String) The ID of the entitlement value.
+Required:
 
+- `id` (String) Entitlement ID
+
+Optional:
+
+- `values` (Block Set) (see [below for nested schema](#nestedblock--entitlements--values))
+
+<a id="nestedblock--entitlements--values"></a>
+### Nested Schema for `entitlements.values`
+
+Required:
+
+- `id` (String) Entitlement value ID
+
+
+
+<a id="nestedblock--target"></a>
+### Nested Schema for `target`
+
+Required:
+
+- `external_id` (String) External ID of the target resource
+- `type` (String) Type of the target resource
 
 ## Import
 

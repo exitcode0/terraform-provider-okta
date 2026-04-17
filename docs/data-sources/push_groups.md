@@ -1,5 +1,6 @@
 ---
 page_title: "Data Source: okta_push_groups"
+subcategory: "Directory"
 description: |-
   Gets a list of Push Group mappings for an Application in Okta.
 ---
@@ -7,6 +8,11 @@ description: |-
 # Data Source: okta_push_groups
 
 Gets a list of Push Group mappings for an Application in Okta.
+
+## Links
+
+- [Okta API docs](https://developer.okta.com/docs/api/openapi/okta-management/management/tag/GroupPushMapping/)
+- [Provider source](https://github.com/okta/terraform-provider-okta/blob/master/okta/services/idaas/data_source_okta_push_groups.go)
 
 ## Example Usage
 
@@ -40,6 +46,4 @@ Read-Only:
 - `id` (String)
 - `source_group_id` (String)
 - `status` (String)
-
-
 

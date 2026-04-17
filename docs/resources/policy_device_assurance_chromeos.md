@@ -1,18 +1,28 @@
 ---
 page_title: "Resource: okta_policy_device_assurance_chromeos"
+subcategory: "Security"
 description: |-
+
   Manages a device assurance policy for chromeos.
+
 ---
 
 # Resource: okta_policy_device_assurance_chromeos
 
+
 Manages a device assurance policy for chromeos.
+
+
+## Links
+
+- [Okta API docs](https://developer.okta.com/docs/api/openapi/okta-management/management/tag/DeviceAssurance/)
+- [Provider source](https://github.com/okta/terraform-provider-okta/blob/master/okta/services/idaas/resource_okta_device_assurance_policy_chromeos_os.go)
 
 ## Example Usage
 
 ```terraform
 resource "okta_policy_device_assurance_chromeos" "example" {
-  name                                      = "example"
+  name                                      = "testAcc-replace_with_uuid"
   tpsp_allow_screen_lock                    = true
   tpsp_browser_version                      = "15393.27.0"
   tpsp_builtin_dns_client_enabled           = true

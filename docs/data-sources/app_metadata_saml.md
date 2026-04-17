@@ -1,12 +1,22 @@
 ---
 page_title: "Data Source: okta_app_metadata_saml"
+subcategory: "Applications"
 description: |-
+
   Get a SAML application's metadata from Okta.
+
 ---
 
 # Data Source: okta_app_metadata_saml
 
+
 Get a SAML application's metadata from Okta.
+
+
+## Links
+
+- [Okta API docs](https://developer.okta.com/docs/api/openapi/okta-management/management/tag/ApplicationSSO/)
+- [Provider source](https://github.com/okta/terraform-provider-okta/blob/master/okta/services/idaas/data_source_okta_app_saml_metadata.go)
 
 ## Example Usage
 
@@ -37,5 +47,3 @@ data "okta_app_metadata_saml" "example" {
 - `id` (String) The ID of this resource.
 - `metadata` (String) Raw metadata of application.
 - `want_authn_requests_signed` (Boolean) Whether authn requests are signed.
-
-

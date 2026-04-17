@@ -1,12 +1,20 @@
 ---
 page_title: "{{.Type}}: {{.Name}}"
 description: |-
+{{ if .Description }}
 {{ .Description | plainmarkdown | trimspace | prefixlines "  " }}
+{{ else }}
+  Terraform {{.Type}} for {{.Name}}.
+{{ end }}
 ---
 
 # {{.Type}}: {{.Name}}
 
+{{ if .Description }}
 {{ .Description | trimspace }}
+{{ else }}
+Terraform {{.Type}} for {{.Name}}.
+{{ end }}
 
 {{ if .HasExample -}}
 

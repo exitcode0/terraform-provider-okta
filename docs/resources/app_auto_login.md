@@ -1,19 +1,29 @@
 ---
 page_title: "Resource: okta_app_auto_login"
+subcategory: "Applications"
 description: |-
+
   This resource allows you to create and configure an Auto Login Okta Application.
   -> During an apply if there is change in status the app will first be
   activated or deactivated in accordance with the status change. Then, all
   other arguments that changed will be applied.
+
 ---
 
 # Resource: okta_app_auto_login
+
 
 This resource allows you to create and configure an Auto Login Okta Application.
 		
 -> During an apply if there is change in status the app will first be
 activated or deactivated in accordance with the status change. Then, all
 other arguments that changed will be applied.
+
+
+## Links
+
+- [Okta API docs](https://developer.okta.com/docs/api/openapi/okta-management/management/tag/Application/)
+- [Provider source](https://github.com/okta/terraform-provider-okta/blob/master/okta/services/idaas/resource_okta_app_auto_login.go)
 
 ## Example Usage
 

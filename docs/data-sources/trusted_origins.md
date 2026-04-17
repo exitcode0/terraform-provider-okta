@@ -1,12 +1,22 @@
 ---
 page_title: "Data Source: okta_trusted_origins"
+subcategory: "Security"
 description: |-
+
   Get List of Trusted Origins using filters.
+
 ---
 
 # Data Source: okta_trusted_origins
 
+
 Get List of Trusted Origins using filters.
+
+
+## Links
+
+- [Okta API docs](https://developer.okta.com/docs/api/openapi/okta-management/management/tag/TrustedOrigin/)
+- [Provider source](https://github.com/okta/terraform-provider-okta/blob/master/okta/services/idaas/data_source_okta_trusted_origins.go)
 
 ## Example Usage
 
@@ -37,5 +47,3 @@ Read-Only:
 - `name` (String)
 - `origin` (String)
 - `scopes` (List of String)
-
-

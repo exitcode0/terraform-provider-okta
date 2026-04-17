@@ -1,18 +1,91 @@
 ---
 page_title: "Resource: okta_campaign"
+subcategory: "Identity Governance"
 description: |-
-  Access certification campaigns allow key stakeholders to periodically review users’ access to resources. Okta can then modify resource access, based on stakeholder reviews. Manage campaign tasks with the following campaign APIs.
+
+  Terraform Resource for okta_campaign.
+
 ---
 
 # Resource: okta_campaign
 
-Manages Campaign. This resource allows you to create and configure an Okta [Campaign](https://developer.okta.com/docs/api/iga/openapi/governance.api/tag/Campaigns/).
+
+Terraform Resource for okta_campaign.
+
+
+## Links
+
+- [Okta API docs](https://developer.okta.com/docs/api/iga/openapi/governance-production-reference/campaigns)
+- [Provider source](https://github.com/okta/terraform-provider-okta/blob/master/okta/services/governance/resource_campaign.go)
+- [SDK source](https://github.com/okta/okta-governance-sdk-golang/blob/v1.0.1/governance/api_campaigns.go)
+
+## Related Resources
+
+- [`okta_review`](../resources/review) — Access certification reviews
+- [`okta_entitlement`](../resources/entitlement) — Entitlements being reviewed
+- [`okta_entitlement_bundle`](../resources/entitlement_bundle) — Entitlement bundles
 
 ## Example Usage
 
 ```terraform
-resource "okta_campaign" "example" {
-  name = "example"
+resource "okta_user" "test" {
+  first_name = "TestAcc"
+  last_name  = "Smith"
+  login      = "testAcc-replace_with_uuid@example.com"
+  email      = "testAcc-replace_with_uuid@example.com"
+}
+
+resource "okta_campaign" "test" {
+  name          = "Monthly access review of sales team"
+  description   = "Multi app campaign"
+  campaign_type = "RESOURCE"
+
+  schedule_settings {
+    type             = "ONE_OFF"
+    start_date       = "2026-10-04T13:43:40.000Z"
+    duration_in_days = 21
+    time_zone        = "America/Vancouver"
+  }
+
+  resource_settings {
+    type                                    = "APPLICATION"
+    include_entitlements                    = false
+    individually_assigned_apps_only         = false
+    individually_assigned_groups_only       = false
+    only_include_out_of_policy_entitlements = false
+    target_resources {
+      resource_id                          = "0oaws4am895IZbn6Q1d7"
+      resource_type                        = "APPLICATION"
+      include_all_entitlements_and_bundles = false
+    }
+  }
+
+  principal_scope_settings {
+    type                      = "USERS"
+    include_only_active_users = false
+  }
+
+  reviewer_settings {
+    type                   = "USER"
+    reviewer_id            = okta_user.test.id
+    self_review_disabled   = true
+    justification_required = true
+    bulk_decision_disabled = true
+  }
+
+  notification_settings {
+    notify_reviewer_when_review_assigned      = false
+    notify_reviewer_at_campaign_end           = false
+    notify_reviewer_when_overdue              = false
+    notify_reviewer_during_midpoint_of_review = false
+    notify_review_period_end                  = false
+  }
+
+  remediation_settings {
+    access_approved = "NO_ACTION"
+    access_revoked  = "NO_ACTION"
+    no_response     = "NO_ACTION"
+  }
 }
 ```
 
@@ -21,166 +94,242 @@ resource "okta_campaign" "example" {
 
 ### Required
 
-- `name` (String) Name of the campaign
-- `remediation_settings` (Block Set) (see [below for nested schema](#nestedblock--remediation_settings))
-- `resource_settings` (Block Set) (see [below for nested schema](#nestedblock--resource_settings))
-- `reviewer_settings` (Block Set) (see [below for nested schema](#nestedblock--reviewer_settings))
-- `schedule_settings` (see [below for nested schema](#nestedblock--schedule_settings))
-- `notification_settings` (see [below for nested schema](#nestedblock--notification_settings))
+- `name` (String) Name of the campaign. Maintain some uniqueness when naming the campaign as it helps to identify and filter for campaigns when needed.
 
 ### Optional
 
-- `campaign_tier` (String) Indicates the minimum required SKU to manage the campaign. Enum: "BASIC", "PREMIUM".
-- `campaign_type` (String) Identifies if it is a resource campaign or a user campaign. By default, it is "RESOURCE". Enum: "RESOURCE", "USER".
-- `description` (String) Human readable description.
-- `principal_scope_settings` (Block Set) User scope specific settings (see [below for nested schema](#nestedblock--principal_scope_settings))
+- `campaign_tier` (String) Indicates the minimum required SKU to manage the campaign. Values can be `BASIC` and `PREMIUM`.
+- `campaign_type` (String) Identifies if it is a resource campaign or a user campaign. By default it is RESOURCE.Values can be `RESOURCE` and `USER`.
+- `description` (String) Description about the campaign.
+- `notification_settings` (Block, Optional) (see [below for nested schema](#nestedblock--notification_settings))
+- `principal_scope_settings` (Block, Optional) (see [below for nested schema](#nestedblock--principal_scope_settings))
+- `remediation_settings` (Block, Optional) Specify the action to be taken after a reviewer makes a decision to APPROVE or REVOKE the access, or if the campaign was CLOSED and there was no response from the reviewer. (see [below for nested schema](#nestedblock--remediation_settings))
+- `resource_settings` (Block, Optional) Resource specific properties. (see [below for nested schema](#nestedblock--resource_settings))
+- `reviewer_settings` (Block, Optional) Identifies the kind of reviewer for Access Certification. (see [below for nested schema](#nestedblock--reviewer_settings))
+- `schedule_settings` (Block, Optional) Scheduler specific settings. (see [below for nested schema](#nestedblock--schedule_settings))
+- `skip_remediation` (Boolean) If true, skip remediation when ending the campaign (only applicable if remediationSetting.noResponse=DENY).
 
 ### Read-Only
 
-- `id` (String) Campaign id
-
-<a id="nestedblock--remediation_settings"></a>
-### Nested Schema for `remediation_settings`
-Required:
-- `access_approved` (String) Specifies the action by default if the reviewer approves access. NO_ACTION indicates there is no remediation action and the user retains access.
-- `access_revoked` (String) Specifies the action if the reviewer revokes access.
-- `no_response` (String) Specifies the action if the reviewer doesn't respond to the request or if the campaign is closed before an action is taken.
-
-<a id="nestedblock--resource_settings"></a>
-### Nested Schema for `resource_settings`
-Required:
-- `type` (String) The type of Okta resource. Enum: "APPLICATION", "APPLICATION_AND_GROUP", "GROUP".
-
-Optional:
-
-- `include_admin_roles` (String) Include admin roles. Default `false`.
-- `include_entitlements` (Boolean) Include entitlements for this application. This property is only applicable if resource_type = APPLICATION and Entitlement Management is enabled.
-- `individually_assigned_apps_only` (Boolean) Only include individually assigned apps. This is only applicable if campaign type is USER.
-- `individually_assigned_groups_only` (Boolean) Only include individually assigned groups. This is only applicable if campaign type is USER.
-- `only_include_out_of_policy_entitlements` (Boolean) Only include out-of-policy entitlements. Only applicable if resource_type = APPLICATION and Entitlement Management is enabled.
-- `excluded_resources` (Array) An array of resources that are excluded from the review (see [below for nested schema](#nestedblock--excluded_resources))
-- `target_resources` (Array) Represents a resource that will be part of Access certifications. If the app is enabled for Access Certifications, it's possible to review entitlements and entitlement bundles (see [below for nested schema](#nestedblock--target_resources))
-
-<a id="nestedblock--excluded_resources"></a>
-### Nested Schema for `excluded_resources`
-Optional:
-- `resource_id` (String) The ID of the resource to exclude in the campaign.
-- `resource_type` (String) The type of resource to exclude in the campaign. Enum: "APPLICATION", "GROUP"
-
-<a id="nestedblock--target_resources"></a>
-### Nested Schema for `target_resources`
-Required:
-- `resource_id` (String) The resource ID that is being reviewed.
-- `resource_type` (String) The type of Okta resource. Enum: "APPLICATION", "GROUP"
-
-Optional:
-- `include_all_entitlements_and_bundles` (Boolean) Include all entitlements and entitlement bundles for this application. Only applicable if the resource_type = APPLICATION and Entitlement Management is enabled.
-- `entitlement_bundles` (Array) An array of entitlement bundles for this application (see [below for nested schema](#nestedblock--entitlement_bundles))
-- `entitlements` (Array) An array of entitlements associated with resourceId that should be chosen as target when creating reviews (see [below for nested schema](#nestedblock--entitlements))
-
-<a id="nestedblock--entitlement_bundles"></a>
-Required:
-- `id` (String) The ID of the entitlement bundle.
-
-<a id="nestedblock--entitlements"></a>
-Required:
-- `id` (String) The ID of the entitlement.
-
-Optional
-- `include_all_values` (Boolean) Whether to include all entitlement values. If false we must provide the values property.
-- `values` (Array) An array of entitlements associated with resourceId that should be chosen as target when creating reviews (see [below for nested schema](#nestedblock--values))
-
-<a id="nestedblock--values"></a>
-Required:
-- `id` (String) The entitlement value id.
-
-<a id="nestedblock--reviewer_settings"></a>
-### Nested Schema for `reviewer_settings`
-Required:
-- `type` (String) Identifies the kind of reviewer for Access Certification. Enum: "GROUP", "MULTI_LEVEL", "RESOURCE_OWNER"
-
-Optional:
-- `bulk_decision_disabled` (Boolean) When approving or revoking review items, bulk actions are disabled if true.
-- `fallback_reviewer_id` (String) The ID of the fallback reviewer. Required when the type=`REVIEWER_EXPRESSION` or type=`RESOURCE_OWNER`
-- `justification_required` (Boolean) When approving or revoking review items, a justification is required if true.
-- `reassignment_disabled` (Boolean) Reassignment is disabled for reviewers if true.
-- `self_review_disabled` (Boolean) This property is required to be true for resource-centric campaigns when the Okta Admin Console is one of the resources.
-- `reviewer_group_id` (String) The ID of the reviewer group to which the reviewer is assigned.
-- `reviewer_id` (String) The ID of an Okta user who will be assigned as a reviewer.
-- `reviewer_scope_expression` (String) This property is required when type=`USER`.
-- `reviewer_levels` (Array) Identifies the kind of reviewer for Access Certification (see [below for nested schema](#nestedblock--reviewer_levels))
-
-<a id="nestedblock--reviewer_levels"></a>
-### Nested Schema for `reviewer_levels`
-Required:
-- `type` (String) Identifies the kind of reviewer. Enum: "GROUP", "RESOURCE_OWNER", "REVIEWER_EXPRESSION", "USER"
-
-Optional:
-- `fallback_reviewer_id` (String) Required when the type=`REVIEWER_EXPRESSION` or type=`RESOURCE_OWNER`.
-- `reviewer_group_id` (String) The ID of the reviewer to which the reviewer is assigned.This property is required when type=`USER`.
-- `reviewer_scope_expression` (String) This property is required when type=`REVIEWER_EXPRESSION`.
-- `self_review_disabled` (Boolean) This property is used to prevent self review.
-- `start_review` (Array) The rules for which the reviews can move to that level.Max Length 2  (see [below for nested schema](#nestedblock--start_review))
-
-
-<a id="nestedblock--reviewer_levels"></a>
-### Nested Schema for `start_review`
-Optional:
-- `on_day` (int) The day of the campaign when the review starts. 0 means the first day of the campaign.
-- `when` (String) The condition for which, the lower level reviews will move to that level for further review.
-
-<a id="nestedblock--schedule_settings"></a>
-### Nested Schema for `schedule_settings`
-Required:
-- `start_date` (String) The date on which the campaign is supposed to start. Accepts date in ISO 8601 format.
-- `duration_in_days` (int) The duration (in days) that the campaign is active.
-- `time_zone` (String) The time zone in which the campaign is active.
-- `type` (String) The type of campaign being scheduled.Enum: "ONE_OFF", "RECURRING"
-
-Optional:
-- `recurrence` (Array) Scheduler specific settings (see [below for nested schema](#nestedblock--recurrence))
-
-
-<a id="nestedblock--recurrence"></a>
-### Nested Schema for `recurrence`
-Required:
-- `interval` (String) Recurrence interval specified according to ISO8061 notation for durations.
-
-Optional:
-- `ends` (String) Specifies when the recurring schedule can have an end.
-- `repeat_on_type` (String) Specifies when the recurring schedule can have an end. Enum: "LAST_WEEKDAY_AS_START_DATE", "SAME_DAY_AS_START_DATE", "SAME_WEEKDAY_AS_START_DATE"
+- `id` (String) The ID of this resource.
 
 <a id="nestedblock--notification_settings"></a>
 ### Nested Schema for `notification_settings`
+
 Required:
+
+- `notify_review_period_end` (Boolean) To indicate whether a notification should be sent to the reviewer when a given reviewer level period is about to end.
 - `notify_reviewer_at_campaign_end` (Boolean) To indicate whether a notification should be sent to the reviewers when campaign has come to an end.
 - `notify_reviewer_during_midpoint_of_review` (Boolean) To indicate whether a notification should be sent to the reviewer during the midpoint of the review process.
 - `notify_reviewer_when_overdue` (Boolean) To indicate whether a notification should be sent to the reviewer when the review is overdue.
 - `notify_reviewer_when_review_assigned` (Boolean) To indicate whether a notification should be sent to the reviewer when actionable reviews are assigned.
-- `notify_review_period_end` (Boolean) To indicate whether a notification should be sent to the reviewer when a given reviewer level period is about to end.
 
 Optional:
-- `reminders_reviewer_before_campaign_close_in_secs` (Array) Specifies times (in seconds) to send reminders to reviewers before the campaign closes. Max 3 values. Example: [86400, 172800, 604800]
+
+- `reminders_reviewer_before_campaign_close_in_secs` (List of Number) Specifies times (in seconds) to send reminders to reviewers before the campaign closes. Max 3 values. Example: [86400, 172800, 604800]
+
 
 <a id="nestedblock--principal_scope_settings"></a>
 ### Nested Schema for `principal_scope_settings`
+
 Required:
+
 - `type` (String) Specifies the type for principal_scope_settings.
 
 Optional:
-- `excluded_user_ids` (Array) An array of Okta user IDs excluded from access certification or the campaign. This field is optional. A maximum of 50 users can be specified in the array.
-- `group_ids` (Array) An array of Okta group IDs included from access certification or the campaign. userIds, groupIds or userScopeExpression is required if campaign type is USER. A maximum of 5 groups can be specified in the array.
+
+- `excluded_user_ids` (List of String) An array of Okta user IDs excluded from access certification or the campaign. This field is optional. A maximum of 50 users can be specified in the array.
+- `group_ids` (List of String) An array of Okta group IDs included from access certification or the campaign. userIds, groupIds or userScopeExpression is required if campaign type is USER. A maximum of 5 groups can be specified in the array.
 - `include_only_active_users` (Boolean) If set to true, only active Okta users are included in the campaign.
 - `only_include_users_with_sod_conflicts` (Boolean) If set to true, only includes users that have at least one SOD conflict that was caused due to entitlement(s) within Campaign scope.
-- `user_ids` (Array) An array of Okta user IDs included from access certification or the campaign. userIds, groupIds or userScopeExpression is required if campaign type is USER. A maximum of 100 users can be specified in the array.
+- `predefined_inactive_users_scope` (Block List) (see [below for nested schema](#nestedblock--principal_scope_settings--predefined_inactive_users_scope))
+- `user_ids` (List of String) An array of Okta user IDs included from access certification or the campaign. userIds, groupIds or userScopeExpression is required if campaign type is USER. A maximum of 100 users can be specified in the array.
 - `user_scope_expression` (String) The Okta expression language user expression on the resourceSettings to include users in the campaign.
-- `predefined_inactive_users_scope` (Array) (see [below for nested schema](#nestedblock--predefined_inactive_users_scope))
 
-<a id="nestedblock--predefined_inactive_users_scope"></a>
-### Nested Schema for `predefined_inactive_users_scope`
+<a id="nestedblock--principal_scope_settings--predefined_inactive_users_scope"></a>
+### Nested Schema for `principal_scope_settings.predefined_inactive_users_scope`
+
 Optional:
-`inactive_days` (int) The duration the users have not used single sign on (SSO) to access their account within the specific time frame. Minimum 30 days and maximum 365 days are supported. Minimum 30 , maximum 365.
 
+- `inactive_days` (Number) The duration the users have not used single sign on (SSO) to access their account within the specific time frame. Minimum 30 days and maximum 365 days are supported.
+
+
+
+<a id="nestedblock--remediation_settings"></a>
+### Nested Schema for `remediation_settings`
+
+Required:
+
+- `access_approved` (String) Specifies the action by default if the reviewer approves access. NO_ACTION indicates there is no remediation action and the user retains access.
+- `access_revoked` (String) Specifies the action if the reviewer revokes access. NO_ACTION indicates the user retains the same access. DENY indicates the user will have their access revoked as long as they are not assigned to a group through Group Rules.
+- `no_response` (String) Specifies the action if the reviewer doesn't respond to the request or if the campaign is closed before an action is taken.
+
+Optional:
+
+- `auto_remediation_settings` (Block, Optional) (see [below for nested schema](#nestedblock--remediation_settings--auto_remediation_settings))
+
+<a id="nestedblock--remediation_settings--auto_remediation_settings"></a>
+### Nested Schema for `remediation_settings.auto_remediation_settings`
+
+Optional:
+
+- `include_all_indirect_assignments` (Boolean) If true, all indirect assignments will be included in the campaign. If false, only direct assignments will be included.
+- `include_only` (Block List) (see [below for nested schema](#nestedblock--remediation_settings--auto_remediation_settings--include_only))
+
+<a id="nestedblock--remediation_settings--auto_remediation_settings--include_only"></a>
+### Nested Schema for `remediation_settings.auto_remediation_settings.include_only`
+
+Optional:
+
+- `resource_id` (String) The ID of the resource to include in the campaign.
+- `resource_type` (String) The type of the resource to include in the campaign. Valid values are 'APPLICATION', 'GROUP', 'ENTITLEMENT', 'ENTITLEMENT_BUNDLE'.
+
+
+
+
+<a id="nestedblock--resource_settings"></a>
+### Nested Schema for `resource_settings`
+
+Required:
+
+- `type` (String) The type of Okta resource.
+
+Optional:
+
+- `excluded_resources` (Block List) An array of resources that are excluded from the review. (see [below for nested schema](#nestedblock--resource_settings--excluded_resources))
+- `include_admin_roles` (Boolean) Include admin roles.
+- `include_entitlements` (Boolean) Include entitlements for this application. This property is only applicable if resource_type = APPLICATION and Entitlement Management is enabled.
+- `individually_assigned_apps_only` (Boolean) Only include individually assigned apps. This is only applicable if campaign type is USER.
+- `individually_assigned_groups_only` (Boolean) Only include individually assigned groups. This is only applicable if campaign type is USER.
+- `only_include_out_of_policy_entitlements` (Boolean) Only include out-of-policy entitlements. Only applicable if resource_type = APPLICATION and Entitlement Management is enabled.
+- `target_resources` (Block Set) Represents a resource that will be part of Access certifications. If the app is enabled for Access Certifications, it's possible to review entitlements and entitlement bundles. (see [below for nested schema](#nestedblock--resource_settings--target_resources))
+
+<a id="nestedblock--resource_settings--excluded_resources"></a>
+### Nested Schema for `resource_settings.excluded_resources`
+
+Optional:
+
+- `resource_id` (String) The ID of the resource to exclude in the campaign.
+- `resource_type` (String) The type of resource to exclude in the campaign.
+
+
+<a id="nestedblock--resource_settings--target_resources"></a>
+### Nested Schema for `resource_settings.target_resources`
+
+Required:
+
+- `resource_id` (String) The resource ID that is being reviewed.
+- `resource_type` (String) The type of Okta resource.
+
+Optional:
+
+- `entitlement_bundles` (Block List) An array of entitlement bundles for this application. (see [below for nested schema](#nestedblock--resource_settings--target_resources--entitlement_bundles))
+- `entitlements` (Block List) An array of entitlements associated with resourceId that should be chosen as target when creating reviews (see [below for nested schema](#nestedblock--resource_settings--target_resources--entitlements))
+- `include_all_entitlements_and_bundles` (Boolean) Include all entitlements and entitlement bundles for this application. Only applicable if the resourcetype = APPLICATION and Entitlement Management is enabled.
+
+<a id="nestedblock--resource_settings--target_resources--entitlement_bundles"></a>
+### Nested Schema for `resource_settings.target_resources.entitlement_bundles`
+
+Required:
+
+- `id` (String) The ID of the entitlement bundle.
+
+
+<a id="nestedblock--resource_settings--target_resources--entitlements"></a>
+### Nested Schema for `resource_settings.target_resources.entitlements`
+
+Required:
+
+- `id` (String) The entitlement id.
+
+Optional:
+
+- `include_all_values` (Boolean) Whether to include all entitlement values. If false we must provide the values property.
+- `values` (Block List) (see [below for nested schema](#nestedblock--resource_settings--target_resources--entitlements--values))
+
+<a id="nestedblock--resource_settings--target_resources--entitlements--values"></a>
+### Nested Schema for `resource_settings.target_resources.entitlements.values`
+
+Required:
+
+- `id` (String) The entitlement value id.
+
+
+
+
+
+<a id="nestedblock--reviewer_settings"></a>
+### Nested Schema for `reviewer_settings`
+
+Required:
+
+- `type` (String) Identifies the kind of reviewer for Access Certification.
+
+Optional:
+
+- `bulk_decision_disabled` (Boolean) When approving or revoking review items, bulk actions are disabled if true.
+- `fallback_reviewer_id` (String) The ID of the fallback reviewer. Required when the type=`REVIEWER_EXPRESSION` or type=`RESOURCE_OWNER`
+- `justification_required` (Boolean) When approving or revoking review items, a justification is required if true.
+- `reassignment_disabled` (Boolean) Reassignment is disabled for reviewers if true.
+- `reviewer_group_id` (String) The ID of the reviewer group to which the reviewer is assigned.
+- `reviewer_id` (String)
+- `reviewer_levels` (Block List) Definition of reviewer level for a given campaign. Each reviewer level defines the kind of reviewer who is going to review. (see [below for nested schema](#nestedblock--reviewer_settings--reviewer_levels))
+- `reviewer_scope_expression` (String) This property is required when type=`USER`
+- `self_review_disabled` (Boolean) This property is required to be true for resource-centric campaigns when the Okta Admin Console is one of the resources.
+
+<a id="nestedblock--reviewer_settings--reviewer_levels"></a>
+### Nested Schema for `reviewer_settings.reviewer_levels`
+
+Required:
+
+- `type` (String) Identifies the kind of reviewer.
+
+Optional:
+
+- `fallback_reviewer_id` (String) Required when the type=`REVIEWER_EXPRESSION` or type=`RESOURCE_OWNER`
+- `reviewer_group_id` (String) The ID of the reviewer group to which the reviewer is assigned.This property is required when type=`GROUP`
+- `reviewer_id` (String) The ID of the reviewer to which the reviewer is assigned.This property is required when type=`USER`.
+- `reviewer_scope_expression` (String) This property is required when type=`REVIEWER_EXPRESSION`
+- `self_review_disabled` (Boolean) This property is used to prevent self review.
+- `start_review` (Block List) The rules for which the reviews can move to that level. (see [below for nested schema](#nestedblock--reviewer_settings--reviewer_levels--start_review))
+
+<a id="nestedblock--reviewer_settings--reviewer_levels--start_review"></a>
+### Nested Schema for `reviewer_settings.reviewer_levels.start_review`
+
+Optional:
+
+- `on_day` (Number) The day of the campaign when the review starts. 0 means the first day of the campaign.
+- `when` (String) The condition for which, the lower level reviews will move to that level for further review.
+
+
+
+
+<a id="nestedblock--schedule_settings"></a>
+### Nested Schema for `schedule_settings`
+
+Required:
+
+- `duration_in_days` (Number) The duration (in days) that the campaign is active.
+- `start_date` (String) The date on which the campaign is supposed to start. Accepts date in ISO 8601 format.
+- `time_zone` (String) The time zone in which the campaign is active.
+- `type` (String) The type of campaign being scheduled.
+
+Optional:
+
+- `end_date` (String)
+- `recurrence` (Block List) (see [below for nested schema](#nestedblock--schedule_settings--recurrence))
+
+<a id="nestedblock--schedule_settings--recurrence"></a>
+### Nested Schema for `schedule_settings.recurrence`
+
+Required:
+
+- `interval` (String) Recurrence interval specified according to ISO8061 notation for durations.
+
+Optional:
+
+- `ends` (String) Specifies when the recurring schedule can have an end.
+- `repeat_on_type` (String) Specifies when the recurring schedule can have an end.
 
 ## Import
 

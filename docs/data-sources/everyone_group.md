@@ -1,7 +1,10 @@
 ---
 page_title: "Data Source: okta_everyone_group"
+subcategory: "Directory"
 description: |-
+
   Get the Everyone group from Okta.
+
 ---
 
 # Data Source: okta_everyone_group
@@ -9,6 +12,11 @@ description: |-
 Use this data source to retrieve the `Everyone` group from Okta. The 
 same can be achieved with the `okta_group` data
 source with `name = "Everyone"`. This is simply a shortcut.
+
+## Links
+
+- [Okta API docs](https://developer.okta.com/docs/api/openapi/okta-management/management/tag/Group/)
+- [Provider source](https://github.com/okta/terraform-provider-okta/blob/master/okta/services/idaas/data_source_okta_everyone_group.go)
 
 ## Example Usage
 

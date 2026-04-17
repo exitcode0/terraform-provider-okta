@@ -1,12 +1,26 @@
 ---
 page_title: "Data Source: okta_idp_social"
+subcategory: "Security"
 description: |-
+
   Get a social IdP from Okta.
+
 ---
 
 # Data Source: okta_idp_social
 
+
 Get a social IdP from Okta.
+
+
+## Links
+
+- [Okta API docs](https://developer.okta.com/docs/api/openapi/okta-management/management/tag/IdentityProvider/)
+- [Provider source](https://github.com/okta/terraform-provider-okta/blob/master/okta/services/idaas/data_source_okta_idp_social.go)
+
+## Related Resources
+
+- [`okta_policy_rule_idp_discovery`](../resources/policy_rule_idp_discovery) — IdP discovery policy rules
 
 ## Example Usage
 
@@ -51,5 +65,3 @@ data "okta_idp_social" "example" {
 - `token_url` (String) IdP Authorization Server (AS) endpoint to exchange the authorization code grant for an access token.
 - `type` (String) The type of Social IdP. See API docs [Identity Provider Type](https://developer.okta.com/docs/reference/api/idps/#identity-provider-type)
 - `username_template` (String) Okta EL Expression to generate or transform a unique username for the IdP user.
-
-

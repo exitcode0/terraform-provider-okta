@@ -1,18 +1,33 @@
 ---
 page_title: "Data Source: okta_entitlement_bundle"
+subcategory: "Identity Governance"
 description: |-
-  Gets the full representation of a entitlement bundle.
+
+  Terraform Data Source for okta_entitlement_bundle.
+
 ---
 
-# Data Source: okta_entitlement
+# Data Source: okta_entitlement_bundle
 
-Get the entitlement bundle for the given id.
+
+Terraform Data Source for okta_entitlement_bundle.
+
+
+## Links
+
+- [Okta API docs](https://developer.okta.com/docs/api/iga/openapi/governance-production-reference/entitlement-bundles)
+- [Provider source](https://github.com/okta/terraform-provider-okta/blob/master/okta/services/governance/data_source_entitlement_bundle.go)
+
+## Related Resources
+
+- [`okta_entitlement`](../resources/entitlement) — Entitlements in this bundle
+- [`okta_campaign`](../resources/campaign) — Campaigns reviewing this bundle
 
 ## Example Usage
 
 ```terraform
 data "okta_entitlement_bundle" "test" {
-  id = "<entitlement_bundle id>"
+
 }
 ```
 
@@ -20,40 +35,53 @@ data "okta_entitlement_bundle" "test" {
 ## Schema
 
 ### Required
-- `id` (String) The ID of this resource.
 
-### Read-Only
-- `name` (String) The display name for an entitlement bundle.
-- `description` (String) The description of an entitlement property.
-- `target_resource_orn` (String) The ORN of the target resource. Required when updating the entitlement bundle.
-- `status` (String) The status of the entitlement bundle.
-- `target` (Object) Representation of a resource (see [below for nested schema](#nestedatt--target))
-- `entitlements` (Array) List of entitlements in the bundle (see [below for nested schema](#nestedatt--entitlements))
-- `created` (String) The created timestamp of this resource.
-- `last_updated` (String) The last updated timestamp of this resource.
-- `created_by` (String) The ID of the user that created this resource.
-- `last_updated_by` (String) The ID of the user that last updated this resource.
-
-
-<a id="nestedatt--brands"></a>
-### Nested Schema for `entitlement`
+- `id` (String) The ID of the Entitlement Bundle to retrieve.
 
 ### Read-Only
 
-- `id` (String) The id property of an entitlement.
+- `created` (String) The ISO 8601 formatted date and time when the resource was created.
+- `created_by` (String) The id of the Okta user who created the resource.
+- `description` (String) The human-readable description.
+- `entitlements` (Block List) (see [below for nested schema](#nestedblock--entitlements))
+- `last_updated` (String) The ISO 8601 formatted date and time when the object was last updated.
+- `last_updated_by` (String) The id of the Okta user who last updated.
+- `name` (String) The name of the entitlement bundle.
+- `status` (String) The lifecycle status of an entitlement bundle:.
+- `target` (Block, Read-only) (see [below for nested schema](#nestedblock--target))
+- `target_resource_orn` (String) The Okta resource, in ORN format..
+
+<a id="nestedblock--entitlements"></a>
+### Nested Schema for `entitlements`
+
+Read-Only:
+
 - `data_type` (String) The data type of the entitlement property.
-- `description` (String) The description of an entitlement property.
+- `description` (String) The description of the entitlement property.
 - `external_value` (String) The value of an entitlement property.
+- `id` (String) The id property of an entitlement.
 - `multi_value` (Boolean) The property that determines if the entitlement property can hold multiple values.
 - `name` (String) The display name for an entitlement property.
 - `required` (Boolean) The property that determines if the entitlement property is a required attribute.
-- `values`(Array) (see [below for nested schema](#nestedblock----values))
+- `values` (Block List) (see [below for nested schema](#nestedblock--entitlements--values))
 
-<a id="nestedblock--values"></a>
-### Nested Schema for `values`
+<a id="nestedblock--entitlements--values"></a>
+### Nested Schema for `entitlements.values`
+
 Read-Only:
+
+- `description` (String) The description of the entitlement value.
+- `external_id` (String) The read-only id of an entitlement property value in the downstream application.
+- `external_value` (String) The value of an entitlement property value.
 - `id` (String) The id of an entitlement value.
 - `name` (String) The display name for an entitlement value.
-- `description` (String) The description of an entitlement value.
-- `external_id` (String) The ID of an entitlement property value in the downstream application.
-- `external_value` (String) The value of an entitlement property value.
+
+
+
+<a id="nestedblock--target"></a>
+### Nested Schema for `target`
+
+Read-Only:
+
+- `external_id` (String) The Okta app.id of the resource.
+- `type` (String) The type of the resource.

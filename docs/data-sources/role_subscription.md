@@ -1,12 +1,26 @@
 ---
 page_title: "Data Source: okta_role_subscription"
+subcategory: "Security"
 description: |-
+
   Get subscriptions of a Role with a specific type
+
 ---
 
 # Data Source: okta_role_subscription
 
+
 Get subscriptions of a Role with a specific type
+
+
+## Links
+
+- [Okta API docs](https://developer.okta.com/docs/api/openapi/okta-management/management/tag/Subscription/)
+- [Provider source](https://github.com/okta/terraform-provider-okta/blob/master/okta/services/idaas/data_source_okta_role_subscription.go)
+
+## Related Resources
+
+- [`okta_admin_role_custom`](../resources/admin_role_custom) — Custom admin roles
 
 ## Example Usage
 
@@ -29,5 +43,3 @@ data "okta_role_subscription" "example" {
 
 - `id` (String) The ID of this resource.
 - `status` (String) Status of subscription
-
-

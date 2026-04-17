@@ -1,18 +1,55 @@
 ---
 page_title: "Resource: okta_entitlement"
+subcategory: "Identity Governance"
 description: |-
-  Entitlement allows you to manage entitlements and their values. An entitlement is a permission that allows users to take specific actions within a resource, such as an app.
+
+  Terraform Resource for okta_entitlement.
+
 ---
 
 # Resource: okta_entitlement
 
-Manages Entitlement. This resource allows you to create and configure an Okta [Entitlement](https://developer.okta.com/docs/api/iga/openapi/governance.api/tag/Entitlements/).
+
+Terraform Resource for okta_entitlement.
+
+
+## Links
+
+- [Okta API docs](https://developer.okta.com/docs/api/iga/openapi/governance-production-reference/entitlements)
+- [Provider source](https://github.com/okta/terraform-provider-okta/blob/master/okta/services/governance/resource_entitlement.go)
+- [SDK source](https://github.com/okta/okta-governance-sdk-golang/blob/v1.0.1/governance/api_entitlements.go)
+
+## Related Resources
+
+- [`okta_entitlement_bundle`](../resources/entitlement_bundle) — Bundles containing this entitlement
+- [`okta_campaign`](../resources/campaign) — Campaigns reviewing this entitlement
 
 ## Example Usage
 
 ```terraform
-resource "okta_entitlement" "example" {
-  name = "example"
+resource "okta_entitlement" "test" {
+  name           = "Entitlement Bundle"
+  external_value = "Entitlement Bundle"
+  description    = "Some license entitlement"
+  multi_value    = true
+  data_type      = "array"
+
+  parent {
+    external_id = "0oatu8k9anRWwR1oq1d7"
+    type        = "APPLICATION"
+  }
+
+  values {
+    name           = "value1"
+    description    = "description for value1"
+    external_value = "value_1"
+  }
+
+  values {
+    name           = "value2"
+    description    = "description for value2"
+    external_value = "value_2"
+  }
 }
 ```
 
@@ -20,33 +57,42 @@ resource "okta_entitlement" "example" {
 ## Schema
 
 ### Required
-- `data_type` (String) The data type of the entitlement property. If the entitlement property is multivalued, the data type is replaced with an array. Enum: "array", "string".
+
+- `data_type` (String) The data type of the entitlement property.
 - `external_value` (String) The value of an entitlement property.
 - `multi_value` (Boolean) The property that determines if the entitlement property can hold multiple values.
-- `name` (String) The display name for an entitlement property.
-- `parent` (Object) Representation of a resource (see [below for nested schema](#nestedblock--parent))
-- `values` (List) (see [below for nested schema](#nestedblock--values))
 
 ### Optional
 
-- `description` (String) The description of an entitlement property.
+- `description` (String) The description of the entitlement property.
+- `name` (String) The name of the entitlement property.
+- `parent` (Block, Optional) Representation of a resource. (see [below for nested schema](#nestedblock--parent))
+- `parent_resource_orn` (String) The Okta app instance, in ORN format.
+- `value` (String) The value of the entitlement property.
+- `values` (Block List) (see [below for nested schema](#nestedblock--values))
+
+### Read-Only
+
+- `id` (String) The id property of an entitlement.
 
 <a id="nestedblock--parent"></a>
 ### Nested Schema for `parent`
-### Required
-- `external_id` (String) The Okta app ID of the resource.
+
+Required:
+
+- `external_id` (String) The Okta app.id of the resource.
 - `type` (String) The type of resource.
+
 
 <a id="nestedblock--values"></a>
 ### Nested Schema for `values`
-### Required
+
+Optional:
+
+- `description` (String) The description of the entitlement value.
 - `external_value` (String) The value of an entitlement property value.
+- `id` (String) Collection of entitlement values.
 - `name` (String) The display name for an entitlement value.
-
-### Optional
-
-- `description` (String) The description of an entitlement value.
-
 
 ## Import
 

@@ -1,12 +1,26 @@
 ---
 page_title: "Data Source: okta_theme"
+subcategory: "Customizations"
 description: |-
+
   Get a single Theme of a Brand of an Okta Organization.
+
 ---
 
 # Data Source: okta_theme
 
+
 Get a single Theme of a Brand of an Okta Organization.
+
+
+## Links
+
+- [Okta API docs](https://developer.okta.com/docs/api/openapi/okta-management/management/tag/Themes/)
+- [Provider source](https://github.com/okta/terraform-provider-okta/blob/master/okta/services/idaas/data_source_okta_theme.go)
+
+## Related Resources
+
+- [`okta_brand`](../resources/brand) — Parent brand
 
 ## Example Usage
 
@@ -43,5 +57,3 @@ data "okta_theme" "test" {
 - `secondary_color_contrast_hex` (String) Secondary color contrast hex code
 - `secondary_color_hex` (String) Secondary color hex code
 - `sign_in_page_touch_point_variant` (String) Variant for the Okta Sign-In Page (`OKTA_DEFAULT`, `BACKGROUND_SECONDARY_COLOR`, `BACKGROUND_IMAGE`)
-
-

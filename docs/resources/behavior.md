@@ -1,12 +1,27 @@
 ---
 page_title: "Resource: okta_behavior"
+subcategory: "Security"
 description: |-
+
   This resource allows you to create and configure a behavior.
+
 ---
 
 # Resource: okta_behavior
 
+
 This resource allows you to create and configure a behavior.
+
+
+## Links
+
+- [Okta API docs](https://developer.okta.com/docs/api/openapi/okta-management/management/tag/Behavior/)
+- [Provider source](https://github.com/okta/terraform-provider-okta/blob/master/okta/services/idaas/resource_okta_behavior.go)
+- [SDK source](https://github.com/okta/okta-sdk-golang/blob/v5.0.6/okta/api_behavior.go)
+
+## Related Resources
+
+- [`okta_policy_rule_signon`](../resources/policy_rule_signon) — Sign-on policy rules that reference behavior rules
 
 ## Example Usage
 

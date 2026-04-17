@@ -1,16 +1,26 @@
 ---
 page_title: "Resource: okta_app_saml_app_settings"
+subcategory: "Applications"
 description: |-
+
   Manages app settings of the SAML application.
   This resource allows you to manage app settings of the SAML Application . It's basically the same as
-  appsettingsjson field in oktaappsaml resource and can be used in cases where settings require to be managed separately.
+  app_settings_json field in okta_app_saml resource and can be used in cases where settings require to be managed separately.
+
 ---
 
 # Resource: okta_app_saml_app_settings
 
+
 Manages app settings of the SAML application.
 This resource allows you to manage app settings of the SAML Application . It's basically the same as
 app_settings_json field in okta_app_saml resource and can be used in cases where settings require to be managed separately.
+
+
+## Links
+
+- [Okta API docs](https://developer.okta.com/docs/api/openapi/okta-management/management/tag/Application/)
+- [Provider source](https://github.com/okta/terraform-provider-okta/blob/master/okta/services/idaas/resource_okta_app_saml_app_settings.go)
 
 ## Example Usage
 

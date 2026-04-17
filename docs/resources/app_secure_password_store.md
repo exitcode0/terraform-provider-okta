@@ -1,21 +1,31 @@
 ---
 page_title: "Resource: okta_app_secure_password_store"
+subcategory: "Applications"
 description: |-
+
   Creates a Secure Password Store Application.
-      This resource allows you to create and configure a Secure Password Store Application.
-      -> During an apply if there is change in 'status' the app will first be
-      activated or deactivated in accordance with the 'status' change. Then, all
-      other arguments that changed will be applied.
+  This resource allows you to create and configure a Secure Password Store Application.
+  -> During an apply if there is change in 'status' the app will first be
+  activated or deactivated in accordance with the 'status' change. Then, all
+  other arguments that changed will be applied.
+
 ---
 
 # Resource: okta_app_secure_password_store
 
+
 Creates a Secure Password Store Application.
-	
+
 		This resource allows you to create and configure a Secure Password Store Application.
 		-> During an apply if there is change in 'status' the app will first be
 		activated or deactivated in accordance with the 'status' change. Then, all
 		other arguments that changed will be applied.
+
+
+## Links
+
+- [Okta API docs](https://developer.okta.com/docs/api/openapi/okta-management/management/tag/Application/)
+- [Provider source](https://github.com/okta/terraform-provider-okta/blob/master/okta/services/idaas/resource_okta_app_secure_password_store.go)
 
 ## Example Usage
 

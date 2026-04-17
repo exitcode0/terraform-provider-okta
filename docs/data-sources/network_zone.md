@@ -1,12 +1,28 @@
 ---
 page_title: "Data Source: okta_network_zone"
+subcategory: "Security"
 description: |-
+
   Gets Okta Network Zone.
+
 ---
 
 # Data Source: okta_network_zone
 
+
 Gets Okta Network Zone.
+
+
+## Links
+
+- [Okta API docs](https://developer.okta.com/docs/api/openapi/okta-management/management/tag/NetworkZone/)
+- [Provider source](https://github.com/okta/terraform-provider-okta/blob/master/okta/services/idaas/data_source_okta_network_zone.go)
+- [SDK source](https://github.com/okta/okta-sdk-golang/blob/v6.1.6/okta/api_network_zone.go)
+
+## Related Resources
+
+- [`okta_policy_rule_signon`](../resources/policy_rule_signon) — Sign-on policy rules that reference network zones
+- [`okta_policy_rule_idp_discovery`](../resources/policy_rule_idp_discovery) — IdP discovery rules that reference network zones
 
 ## Example Usage
 
@@ -35,7 +51,6 @@ data "okta_network_zone" "example" {
 - `gateways` (Set of String) Array of values in CIDR/range form depending on the way it's been declared (i.e. CIDR will contain /suffix). Please check API docs for examples. Use with type `IP`
 - `proxies` (Set of String) Array of values in CIDR/range form depending on the way it's been declared (i.e. CIDR will contain /suffix). Please check API docs for examples. Can not be set if `usage` is set to `BLOCKLIST`. Use with type `IP`
 - `status` (String) Network Status - can either be ACTIVE or INACTIVE only
+- `system` (Boolean) Indicates a system Network Zone
 - `type` (String) Type of the Network Zone - can be `IP`, `DYNAMIC` or `DYNAMIC_V2` only
 - `usage` (String) Zone's purpose: POLICY or BLOCKLIST
-
-

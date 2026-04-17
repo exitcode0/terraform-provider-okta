@@ -1,12 +1,22 @@
 ---
 page_title: "Data Source: okta_email_template"
+subcategory: "Customizations"
 description: |-
+
   Get a single Email Template for a Brand belonging to an Okta organization.
+
 ---
 
 # Data Source: okta_email_template
 
+
 Get a single Email Template for a Brand belonging to an Okta organization.
+
+
+## Links
+
+- [Okta API docs](https://developer.okta.com/docs/api/openapi/okta-management/management/tag/EmailCustomization/)
+- [Provider source](https://github.com/okta/terraform-provider-okta/blob/master/okta/services/idaas/data_source_okta_email_template.go)
 
 ## Example Usage
 
@@ -32,5 +42,3 @@ data "okta_email_template" "forgot_password" {
 
 - `id` (String) The ID of this resource.
 - `links` (String) Link relations for this object - JSON HAL - Discoverable resources related to the email template
-
-

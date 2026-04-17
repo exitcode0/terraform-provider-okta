@@ -1,12 +1,22 @@
 ---
 page_title: "Resource: okta_threat_insight_settings"
+subcategory: "Security"
 description: |-
+
   Manages Okta Threat Insight Settings. This resource allows you to configure Threat Insight Settings.
+
 ---
 
 # Resource: okta_threat_insight_settings
 
+
 Manages Okta Threat Insight Settings. This resource allows you to configure Threat Insight Settings.
+
+
+## Links
+
+- [Okta API docs](https://developer.okta.com/docs/api/openapi/okta-management/management/tag/ThreatInsight/)
+- [Provider source](https://github.com/okta/terraform-provider-okta/blob/master/okta/services/idaas/resource_okta_threat_insight_settings.go)
 
 ## Example Usage
 

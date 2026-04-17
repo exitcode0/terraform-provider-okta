@@ -1,12 +1,28 @@
 ---
 page_title: "Resource: okta_network_zone"
+subcategory: "Security"
 description: |-
+
   Creates an Okta Network Zone. This resource allows you to create and configure an Okta Network Zone.
+
 ---
 
 # Resource: okta_network_zone
 
+
 Creates an Okta Network Zone. This resource allows you to create and configure an Okta Network Zone.
+
+
+## Links
+
+- [Okta API docs](https://developer.okta.com/docs/api/openapi/okta-management/management/tag/NetworkZone/)
+- [Provider source](https://github.com/okta/terraform-provider-okta/blob/master/okta/services/idaas/resource_okta_network_zone.go)
+- [SDK source](https://github.com/okta/okta-sdk-golang/blob/v6.1.6/okta/api_network_zone.go)
+
+## Related Resources
+
+- [`okta_policy_rule_signon`](../resources/policy_rule_signon) — Sign-on policy rules that reference network zones
+- [`okta_policy_rule_idp_discovery`](../resources/policy_rule_idp_discovery) — IdP discovery rules that reference network zones
 
 ## Example Usage
 
@@ -46,13 +62,14 @@ resource "okta_network_zone" "example" {
 - `ip_service_categories_exclude` (Set of String) List of ip service excluded. Use with type `DYNAMIC_V2`
 - `ip_service_categories_include` (Set of String) List of ip service included. Use with type `DYNAMIC_V2`
 - `proxies` (Set of String) Array of values in CIDR/range form depending on the way it's been declared (i.e. CIDR will contain /suffix). Please check API docs for examples. Can not be set if `usage` is set to `BLOCKLIST`. Use with type `IP`
+- `set_usage_as_exempt_list` (Boolean) Set this parameter to true in your request when you update the DefaultExemptIpZone to allow IPs through the blocklist.
 - `status` (String) Network Status - can either be `ACTIVE` or `INACTIVE` only
 - `usage` (String) Usage of the Network Zone - can be either `POLICY` or `BLOCKLIST`. By default, it is `POLICY`
-- `set_usage_as_exempt_list` (Boolean) Set this parameter to true in your request when you update the `DefaultExemptIpZone` to allow IPs through the blocklist.
 
 ### Read-Only
 
 - `id` (String) The ID of this resource.
+- `system` (Boolean) Indicates a system Network Zone
 
 ## Import
 

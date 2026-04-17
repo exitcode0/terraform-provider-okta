@@ -1,12 +1,27 @@
 ---
 page_title: "Data Source: okta_auth_server_policy"
+subcategory: "Security"
 description: |-
+
   Get an authorization server policy from Okta.
+
 ---
 
 # Data Source: okta_auth_server_policy
 
+
 Get an authorization server policy from Okta.
+
+
+## Links
+
+- [Okta API docs](https://developer.okta.com/docs/api/openapi/okta-management/management/tag/AuthorizationServerPolicies/)
+- [Provider source](https://github.com/okta/terraform-provider-okta/blob/master/okta/services/idaas/data_source_okta_auth_server_policy.go)
+
+## Related Resources
+
+- [`okta_auth_server`](../resources/auth_server) — Parent authorization server
+- [`okta_auth_server_policy_rule`](../resources/auth_server_policy_rule) — Rules for this policy
 
 ## Example Usage
 
@@ -31,5 +46,3 @@ data "okta_auth_server_policy" "example" {
 - `description` (String) Description of authorization server policy.
 - `id` (String) The ID of this resource.
 - `priority` (Number) Priority of the auth server policy
-
-

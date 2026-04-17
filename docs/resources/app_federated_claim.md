@@ -1,30 +1,53 @@
 ---
 page_title: "Resource: okta_app_federated_claim"
+subcategory: "Applications"
 description: |-
-  Manages a federated claim for an Okta application.
-  Federated claims allow you to pass user information from Okta to your app integrations.
+
+  Terraform Resource for okta_app_federated_claim.
+
 ---
 
 # Resource: okta_app_federated_claim
 
-Manages a federated claim for an Okta application.
 
-Federated claims allow you to pass user information from Okta to your app integrations.
+Terraform Resource for okta_app_federated_claim.
+
+
+## Links
+
+- [Okta API docs](https://developer.okta.com/docs/api/openapi/okta-management/management/tag/ApplicationSSOFederatedClaims/)
+- [Provider source](https://github.com/okta/terraform-provider-okta/blob/master/okta/services/idaas/resource_okta_app_federated_claim.go)
+
+## Related Resources
+
+- [`okta_app_oauth`](../resources/app_oauth) — OAuth application
 
 ## Example Usage
 
 ```terraform
 resource "okta_app_saml" "test_app" {
-  label                    = "example"
-  sso_url                  = "https://example.com"
-  recipient                = "https://example.com"
-  destination              = "https://example.com"
-  audience                 = "https://example.com/audience"
-  subject_name_id_template = "$${user.userName}"
-  subject_name_id_format   = "urn:oasis:names:tc:SAML:1.1:nameid-format:emailAddress"
-  response_signed          = true
-  signature_algorithm      = "RSA_SHA256"
-  digest_algorithm         = "SHA256"
+  label                     = "testAcc_replace_with_uuid-federated_claim"
+  sso_url                   = "http://google.com"
+  recipient                 = "http://here.com"
+  destination               = "http://its-about-the-journey.com"
+  audience                  = "http://audience.com"
+  subject_name_id_template  = "$${user.userName}"
+  subject_name_id_format    = "urn:oasis:names:tc:SAML:1.1:nameid-format:emailAddress"
+  response_signed           = true
+  signature_algorithm       = "RSA_SHA256"
+  digest_algorithm          = "SHA256"
+  honor_force_authn         = false
+  authn_context_class_ref   = "urn:oasis:names:tc:SAML:2.0:ac:classes:PasswordProtectedTransport"
+  single_logout_issuer      = "https://dunshire.okta.com"
+  single_logout_url         = "https://dunshire.okta.com/logout"
+  single_logout_certificate = "MIIFnDCCA4QCCQDBSLbiON2T1zANBgkqhkiG9w0BAQsFADCBjzELMAkGA1UEBhMCVVMxDjAMBgNV\r\nBAgMBU1haW5lMRAwDgYDVQQHDAdDYXJpYm91MRcwFQYDVQQKDA5Tbm93bWFrZXJzIEluYzEUMBIG\r\nA1UECwwLRW5naW5lZXJpbmcxDTALBgNVBAMMBFNub3cxIDAeBgkqhkiG9w0BCQEWEWVtYWlsQGV4\r\nYW1wbGUuY29tMB4XDTIwMTIwMzIyNDY0M1oXDTMwMTIwMTIyNDY0M1owgY8xCzAJBgNVBAYTAlVT\r\nMQ4wDAYDVQQIDAVNYWluZTEQMA4GA1UEBwwHQ2FyaWJvdTEXMBUGA1UECgwOU25vd21ha2VycyBJ\r\nbmMxFDASBgNVBAsMC0VuZ2luZWVyaW5nMQ0wCwYDVQQDDARTbm93MSAwHgYJKoZIhvcNAQkBFhFl\r\nbWFpbEBleGFtcGxlLmNvbTCCAiIwDQYJKoZIhvcNAQEBBQADggIPADCCAgoCggIBANMmWDjXPdoa\r\nPyzIENqeY9njLan2FqCbQPSestWUUcb6NhDsJVGSQ7XR+ozQA5TaJzbP7cAJUj8vCcbqMZsgOQAu\r\nO/pzYyQEKptLmrGvPn7xkJ1A1xLkp2NY18cpDTeUPueJUoidZ9EJwEuyUZIktzxNNU1pA1lGijiu\r\n2XNxs9d9JR/hm3tCu9Im8qLVB4JtX80YUa6QtlRjWR/H8a373AYCOASdoB3c57fIPD8ATDNy2w/c\r\nfCVGiyKDMFB+GA/WTsZpOP3iohRp8ltAncSuzypcztb2iE+jijtTsiC9kUA2abAJqqpoCJubNShi\r\nVff4822czpziS44MV2guC9wANi8u3Uyl5MKsU95j01jzadKRP5S+2f0K+n8n4UoV9fnqZFyuGAKd\r\nCJi9K6NlSAP+TgPe/JP9FOSuxQOHWJfmdLHdJD+evoKi9E55sr5lRFK0xU1Fj5Ld7zjC0pXPhtJf\r\nsgjEZzD433AsHnRzvRT1KSNCPkLYomznZo5n9rWYgCQ8HcytlQDTesmKE+s05E/VSWNtH84XdDrt\r\nieXwfwhHfaABSu+WjZYxi9CXdFCSvXhsgufUcK4FbYAHl/ga/cJxZc52yFC7Pcq0u9O2BSCjYPdQ\r\nDAHs9dhT1RhwVLM8RmoAzgxyyzau0gxnAlgSBD9FMW6dXqIHIp8yAAg9cRXhYRTNAgMBAAEwDQYJ\r\nKoZIhvcNAQELBQADggIBADofEC1SvG8qa7pmKCjB/E9Sxhk3mvUO9Gq43xzwVb721Ng3VYf4vGU3\r\nwLUwJeLt0wggnj26NJweN5T3q9T8UMxZhHSWvttEU3+S1nArRB0beti716HSlOCDx4wTmBu/D1MG\r\nt/kZYFJw+zuzvAcbYct2pK69AQhD8xAIbQvqADJI7cCK3yRry+aWtppc58P81KYabUlCfFXfhJ9E\r\nP72ffN4jVHpX3lxxYh7FKAdiKbY2FYzjsc7RdgKI1R3iAAZUCGBTvezNzaetGzTUjjl/g1tcVYij\r\nltH9ZOQBPlUMI88lxUxqgRTerpPmAJH00CACx4JFiZrweLM1trZyy06wNDQgLrqHr3EOagBF/O2h\r\nhfTehNdVr6iq3YhKWBo4/+RL0RCzHMh4u86VbDDnDn4Y6HzLuyIAtBFoikoKM6UHTOa0Pqv2bBr5\r\nwbkRkVUxl9yJJw/HmTCdfnsM9dTOJUKzEglnGF2184Gg+qJDZB6fSf0EAO1F6sTqiSswl+uHQZiy\r\nDaZzyU7Gg5seKOZ20zTRaX3Ihj9Zij/ORnrARE7eM/usKMECp+7syUwAUKxDCZkGiUdskmOhhBGL\r\nJtbyK3F2UvoJoLsm3pIcvMak9KwMjSTGJB47ABUP1+w+zGcNk0D5Co3IJ6QekiLfWJyQ+kKsWLKt\r\nzOYQQatrnBagM7MI2/T4\r\n"
+
+  attribute_statements {
+    type         = "GROUP"
+    name         = "groups"
+    filter_type  = "REGEX"
+    filter_value = ".*"
+  }
 }
 
 resource "okta_app_federated_claim" "example" {
@@ -34,63 +57,23 @@ resource "okta_app_federated_claim" "example" {
 }
 ```
 
-### Multiple Claims Example
-
-```terraform
-resource "okta_app_saml" "test_app" {
-  label                    = "example"
-  sso_url                  = "https://example.com"
-  recipient                = "https://example.com"
-  destination              = "https://example.com"
-  audience                 = "https://example.com/audience"
-  subject_name_id_template = "$${user.userName}"
-  subject_name_id_format   = "urn:oasis:names:tc:SAML:1.1:nameid-format:emailAddress"
-  response_signed          = true
-  signature_algorithm      = "RSA_SHA256"
-  digest_algorithm         = "SHA256"
-}
-
-resource "okta_app_federated_claim" "last_name" {
-  app_id     = okta_app_saml.test_app.id
-  name       = "lastName"
-  expression = "user.profile.lastName"
-}
-
-resource "okta_app_federated_claim" "first_name" {
-  app_id     = okta_app_saml.test_app.id
-  name       = "firstName"
-  expression = "user.profile.firstName"
-}
-
-resource "okta_app_federated_claim" "department" {
-  app_id     = okta_app_saml.test_app.id
-  name       = "department"
-  expression = "user.profile.department"
-}
-```
-
+<!-- schema generated by tfplugindocs -->
 ## Schema
 
 ### Required
 
-- `app_id` (String) The ID of the application to add the federated claim to.
-- `expression` (String) The Okta Expression Language expression to be evaluated at runtime. See [Okta Expression Language](https://developer.okta.com/docs/reference/okta-expression-language/) for more information.
+- `app_id` (String) `app_id` used to specify the app ID.
+- `expression` (String) The Okta Expression Language expression to be evaluated at runtime.
 - `name` (String) The name of the claim to be used in the produced token.
 
 ### Read-Only
 
-- `id` (String) The unique identifier for the federated claim. This is a combination of `app_id` and the claim ID separated by a forward slash (`/`).
+- `id` (String) `id` used to specify the app feature ID. Its a combination of `app_id` and `name` separated by a forward slash (/).
 
 ## Import
 
-An app federated claim can be imported using the format `app_id/id`:
+Import is supported using the following syntax:
 
 ```shell
-terraform import okta_app_federated_claim.example <app_id>/<id>
-```
-
-Example:
-
-```shell
-terraform import okta_app_federated_claim.example 0oa1234567890abcdef/clm1234567890abcdef
+terraform import okta_app_federated_claim.test <app_id/id>
 ```

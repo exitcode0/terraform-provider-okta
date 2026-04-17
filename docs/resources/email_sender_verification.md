@@ -1,12 +1,27 @@
 ---
 page_title: "Resource: okta_email_sender_verification"
+subcategory: "Customizations"
 description: |-
+
   Verifies the email sender. The resource won't be created if the email sender could not be verified.
+
 ---
 
 # Resource: okta_email_sender_verification
 
+
 Verifies the email sender. The resource won't be created if the email sender could not be verified.
+
+
+## Links
+
+- [Okta API docs](https://developer.okta.com/docs/api/openapi/okta-management/management/tag/EmailDomain/)
+- [Provider source](https://github.com/okta/terraform-provider-okta/blob/master/okta/services/idaas/resource_okta_email_sender_verification.go)
+- [SDK source](https://github.com/okta/terraform-provider-okta/blob/master/sdk/api_email_domain.go)
+
+## Related Resources
+
+- [`okta_email_sender`](../resources/email_sender) — Parent email sender
 
 ~> **DEPRECATED** The api for this resource has been deprecated. Please use `okta_email_domain_verification` instead.
 

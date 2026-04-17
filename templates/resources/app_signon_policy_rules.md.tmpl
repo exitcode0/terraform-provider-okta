@@ -1,0 +1,57 @@
+---
+page_title: "{{.Type}}: {{.Name}}"
+subcategory: "Applications"
+description: |-
+{{ if .Description }}
+{{ .Description | plainmarkdown | trimspace | prefixlines "  " }}
+{{ else }}
+  Terraform {{.Type}} for {{.Name}}.
+{{ end }}
+---
+
+# {{.Type}}: {{.Name}}
+
+{{ if .Description }}
+{{ .Description | trimspace }}
+{{ else }}
+Terraform {{.Type}} for {{.Name}}.
+{{ end }}
+
+~> **IMPORTANT:** This resource uses name-first matching to identify and update rules. When migrating from individual `okta_app_signon_policy_rule` resources, ensure rule names remain consistent to enable safe adoption without data loss.
+
+~> **NOTE ON RENAMING RULES:** If you rename a rule without explicitly preserving its `id`, the provider will treat it as a deletion of the old rule and creation of a new rule. To rename a rule while preserving its configuration and ID, you must explicitly set the `id` attribute in your configuration before changing the `name`.
+
+## Links
+
+- [Okta API docs](https://developer.okta.com/docs/api/openapi/okta-management/management/tag/ApplicationPolicies/)
+- [Provider source](https://github.com/okta/terraform-provider-okta/blob/master/okta/services/idaas/resource_okta_app_signon_policy_rules.go)
+
+## Related Resources
+
+- [`okta_app_signon_policy`](../resources/app_signon_policy) — Parent sign-on policy
+
+{{ if .HasExample -}}
+
+## Example Usage
+
+{{ tffile .ExampleFile }}
+
+{{- end }}
+
+## Priority and system rules
+
+- Okta evaluates rules in priority order (lower number = higher priority).
+- Every policy includes a system *Catch-all Rule* that cannot be modified.
+- Avoid managing the Catch-all Rule via Terraform.
+
+{{ .SchemaMarkdown | trimspace }}
+
+{{ if .HasImport -}}
+
+## Import
+
+Import is supported using the following syntax:
+
+{{ codefile "shell" .ImportFile }}
+
+{{- end }}

@@ -1,12 +1,26 @@
 ---
 page_title: "Resource: okta_link_value"
+subcategory: "Directory"
 description: |-
+
   Manages users relationships. Link value operations allow you to create relationships between primary and associated users.
+
 ---
 
 # Resource: okta_link_value
 
+
 Manages users relationships. Link value operations allow you to create relationships between primary and associated users.
+
+
+## Links
+
+- [Okta API docs](https://developer.okta.com/docs/api/openapi/okta-management/management/tag/UserLinkedObject/)
+- [Provider source](https://github.com/okta/terraform-provider-okta/blob/master/okta/services/idaas/resource_okta_link_value.go)
+
+## Related Resources
+
+- [`okta_link_definition`](../resources/link_definition) — Parent link definition
 
 ## Example Usage
 

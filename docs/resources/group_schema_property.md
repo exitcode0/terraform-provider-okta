@@ -1,24 +1,38 @@
 ---
 page_title: "Resource: okta_group_schema_property"
+subcategory: "Directory"
 description: |-
+
   Creates a Group Schema property.
   This resource allows you to create and configure a custom group schema property.
   IMPORTANT: With 'enum', list its values as strings even though the 'type'
-  may be something other than string. This is a limitation of the schema defintion
+  may be something other than string. This is a limitation of the schema definition
   in the Terraform Plugin SDK runtime and we juggle the type correctly when making
-  Okta API calls. Same holds for the 'const' value of 'oneof' as well as the
-  'array*' variation of 'enum' and 'one_of'.
+  Okta API calls. Same holds for the 'const' value of 'one_of' as well as the
+  'array_*' variation of 'enum' and 'one_of'.
+
 ---
 
 # Resource: okta_group_schema_property
 
+
 Creates a Group Schema property.
 This resource allows you to create and configure a custom group schema property.
 **IMPORTANT:** With 'enum', list its values as strings even though the 'type'
-may be something other than string. This is a limitation of the schema defintion
+may be something other than string. This is a limitation of the schema definition
 in the Terraform Plugin SDK runtime and we juggle the type correctly when making
 Okta API calls. Same holds for the 'const' value of 'one_of' as well as the
 'array_*' variation of 'enum' and 'one_of'.
+
+
+## Links
+
+- [Okta API docs](https://developer.okta.com/docs/api/openapi/okta-management/management/tag/Schema/)
+- [Provider source](https://github.com/okta/terraform-provider-okta/blob/master/okta/services/idaas/resource_okta_group_custom_schema_property.go)
+
+## Related Resources
+
+- [`okta_group`](../resources/group) — Groups using this schema
 
 ## Example Usage
 

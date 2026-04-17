@@ -1,12 +1,27 @@
 ---
 page_title: "Resource: okta_idp_saml"
+subcategory: "Security"
 description: |-
+
   Creates a SAML Identity Provider. This resource allows you to create and configure a SAML Identity Provider.
+
 ---
 
 # Resource: okta_idp_saml
 
+
 Creates a SAML Identity Provider. This resource allows you to create and configure a SAML Identity Provider.
+
+
+## Links
+
+- [Okta API docs](https://developer.okta.com/docs/api/openapi/okta-management/management/tag/IdentityProvider/)
+- [Provider source](https://github.com/okta/terraform-provider-okta/blob/master/okta/services/idaas/resource_okta_idp_saml.go)
+
+## Related Resources
+
+- [`okta_idp_saml_key`](../resources/idp_saml_key) — SAML signing keys
+- [`okta_policy_rule_idp_discovery`](../resources/policy_rule_idp_discovery) — IdP discovery policy rules
 
 ## Example Usage
 
@@ -45,6 +60,7 @@ resource "okta_idp_saml" "example" {
 - `groups_assignment` (Set of String) List of Okta Group IDs to add an IdP user as a member with the `ASSIGN` `groups_action`.
 - `groups_attribute` (String) IdP user profile attribute name (case-insensitive) for an array value that contains group memberships.
 - `groups_filter` (Set of String) Whitelist of Okta Group identifiers that are allowed for the `APPEND` or `SYNC` `groups_action`.
+- `honor_persistent_name_id` (Boolean) Determines if the IdP should persist account linking when the incoming assertion NameID format is urn:oasis:names:tc:SAML:2.0:nameid-format:persistent
 - `issuer_mode` (String) Indicates whether Okta uses the original Okta org domain URL, or a custom domain URL
 - `max_clock_skew` (Number) Maximum allowable clock-skew when processing messages from the IdP.
 - `name_format` (String) The name identifier format to use. By default `urn:oasis:names:tc:SAML:1.1:nameid-format:unspecified`.
@@ -62,6 +78,7 @@ resource "okta_idp_saml" "example" {
 - `subject_match_attribute` (String) Okta user profile attribute for matching transformed IdP username. Only for matchType `CUSTOM_ATTRIBUTE`.
 - `subject_match_type` (String) Determines the Okta user profile attribute match conditions for account linking and authentication of the transformed IdP username. By default, it is set to `USERNAME`. It can be set to `USERNAME`, `EMAIL`, `USERNAME_OR_EMAIL` or `CUSTOM_ATTRIBUTE`.
 - `suspended_action` (String) Action for a previously suspended IdP user during authentication. Can be `NONE` or `REACTIVATE`. Default: `NONE`
+- `trust_claims` (Boolean) Indicates whether to trust authentication claims from the IdP.
 - `username_template` (String) Okta EL Expression to generate or transform a unique username for the IdP user. Default: `idpuser.email`
 
 ### Read-Only

@@ -1,12 +1,22 @@
 ---
 page_title: "Data Source: okta_auth_server_scopes"
+subcategory: "Security"
 description: |-
+
   Get a list of authorization server scopes from Okta.
+
 ---
 
 # Data Source: okta_auth_server_scopes
 
+
 Get a list of authorization server scopes from Okta.
+
+
+## Links
+
+- [Okta API docs](https://developer.okta.com/docs/api/openapi/okta-management/management/tag/AuthorizationServerScopes/)
+- [Provider source](https://github.com/okta/terraform-provider-okta/blob/master/okta/services/idaas/data_source_okta_auth_server_scopes.go)
 
 ## Example Usage
 
@@ -42,5 +52,3 @@ Read-Only:
 - `name` (String)
 - `optional` (Boolean)
 - `system` (Boolean)
-
-

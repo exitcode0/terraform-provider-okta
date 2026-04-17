@@ -1,13 +1,24 @@
 ---
 page_title: "Resource: okta_feature"
+subcategory: "Settings"
 description: |-
+
   Manages feature
+
 ---
 
-# Resource: okta_brand
+# Resource: okta_feature
 
-Manages brand. This resource allows you to toggle an Okta Feature.
-		
+
+Manages feature
+
+
+## Links
+
+- [Okta API docs](https://developer.okta.com/docs/api/openapi/okta-management/management/tag/Feature/)
+- [Provider source](https://github.com/okta/terraform-provider-okta/blob/master/okta/services/idaas/resource_okta_feature.go)
+- [SDK source](https://github.com/okta/okta-sdk-golang/blob/v5.0.6/okta/api_feature.go)
+
 ## Example Usage
 
 ```terraform
@@ -29,22 +40,22 @@ resource "okta_feature" "test" {
 
 ### Optional
 
-- `mode` (Boolean) Indicates if you want to force enable or disable a feature. Value is `true` meaning force
 - `life_cycle` (String) Whether to `ENABLE` or `DISABLE` the feature
+- `mode` (Boolean) Indicates if you want to force enable or disable a feature. Value is `true` meaning force
 
 ### Read-Only
 
-- `id` (String) The ID of the feature.
+- `description` (String) Brief description of the feature and what it provides.
+- `id` (String) The ID of the resource. This ID is simply the feature.
 - `name` (String) Name of the feature.
-- `description` (String) Name of the feature.
-- `status` (String) The feature status.
+- `stage` (Object) Current release cycle stage of a feature. (see [below for nested schema](#nestedatt--stage))
+- `status` (String) The feature status
 - `type` (String) Type of feature.
-- `stage` (Map of String) Current release cycle stage of a feature.
 
-## Import
+<a id="nestedatt--stage"></a>
+### Nested Schema for `stage`
 
-Import is supported using the following syntax:
+Read-Only:
 
-```shell
-terraform import okta_feature.example <id>
-```
+- `state` (String)
+- `value` (String)

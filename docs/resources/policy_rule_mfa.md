@@ -1,12 +1,27 @@
 ---
 page_title: "Resource: okta_policy_rule_mfa"
+subcategory: "Security"
 description: |-
+
   Creates an MFA Policy Rule. This resource allows you to create and configure an MFA Policy Rule.
+
 ---
 
 # Resource: okta_policy_rule_mfa
 
+
 Creates an MFA Policy Rule. This resource allows you to create and configure an MFA Policy Rule.
+
+
+## Links
+
+- [Okta API docs](https://developer.okta.com/docs/api/openapi/okta-management/management/tag/Policy/)
+- [Provider source](https://github.com/okta/terraform-provider-okta/blob/master/okta/services/idaas/resource_okta_policy_rule_mfa.go)
+
+## Related Resources
+
+- [`okta_policy_mfa`](../resources/policy_mfa) — Parent MFA policy
+- [`okta_authenticator`](../resources/authenticator) — Authenticators
 
 ## Example Usage
 
@@ -162,11 +177,8 @@ Required:
 
 Optional:
 
+- `id` (String)
 - `name` (String)
-
-Read-Only:
-
-- `id` (String) The ID of this resource.
 
 
 <a id="nestedblock--app_include"></a>
@@ -178,11 +190,8 @@ Required:
 
 Optional:
 
+- `id` (String)
 - `name` (String)
-
-Read-Only:
-
-- `id` (String) The ID of this resource.
 
 ## Import
 

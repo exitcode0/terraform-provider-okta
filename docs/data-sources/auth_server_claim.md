@@ -1,12 +1,27 @@
 ---
 page_title: "Data Source: okta_auth_server_claim"
+subcategory: "Security"
 description: |-
+
   Get authorization server claim from Okta.
+
 ---
 
 # Data Source: okta_auth_server_claim
 
+
 Get authorization server claim from Okta.
+
+
+## Links
+
+- [Okta API docs](https://developer.okta.com/docs/api/openapi/okta-management/management/tag/AuthorizationServerClaims/)
+- [Provider source](https://github.com/okta/terraform-provider-okta/blob/master/okta/services/idaas/data_source_okta_auth_server_claim.go)
+
+## Related Resources
+
+- [`okta_auth_server`](../resources/auth_server) — Parent authorization server
+- [`okta_auth_server_scope`](../resources/auth_server_scope) — Scopes referenced by claims
 
 ## Example Usage
 
@@ -37,5 +52,3 @@ data "okta_auth_server_claim" "test" {
 - `status` (String) Status of the claim.
 - `value` (String) Value of the claim.
 - `value_type` (String) Specifies whether the Claim is an Okta EL expression (`EXPRESSION`), a set of groups (`GROUPS`), or a system claim (`SYSTEM`)
-
-

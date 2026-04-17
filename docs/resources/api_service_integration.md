@@ -1,28 +1,36 @@
-                                                                                  ---
+---
 page_title: "Resource: okta_api_service_integration"
+subcategory: "Applications"
 description: |-
-  
+
+  Terraform Resource for okta_api_service_integration.
+
 ---
 
 # Resource: okta_api_service_integration
 
 
+Terraform Resource for okta_api_service_integration.
 
-This API provides operations to manage API service integration instances in your org.
 
+## Links
+
+- [Okta API docs](https://developer.okta.com/docs/api/openapi/okta-management/management/tag/ApiServiceIntegrations/)
+- [Provider source](https://github.com/okta/terraform-provider-okta/blob/master/okta/services/idaas/resource_okta_api_service_integration.go)
+- [SDK source](https://github.com/okta/okta-sdk-golang/blob/v5.0.6/okta/api_api_service_integrations.go)
 
 ## Example Usage
 
 ```terraform
-resource "okta_api_service_integration" example{
+resource "okta_api_service_integration" "example" {
   type = "anzennaapiservice"
-  granted_scopes{
+  granted_scopes {
     scope = "okta.users.read"
   }
-  granted_scopes{
+  granted_scopes {
     scope = "okta.groups.read"
   }
-  granted_scopes{
+  granted_scopes {
     scope = "okta.logs.read"
   }
 }
@@ -34,17 +42,22 @@ resource "okta_api_service_integration" example{
 ### Required
 
 - `type` (String) The type of the API service integration. This string is an underscore-concatenated, lowercased API service integration name.
-- `grant_scopes` (List of String) The list of Okta management scopes granted to the API Service Integration instance(see [below for nested schema](#nestedblock--grant_scopes)).
+
+### Optional
+
+- `granted_scopes` (Block Set) The list of Okta management scopes granted to the API Service Integration instance. (see [below for nested schema](#nestedblock--granted_scopes))
 
 ### Read-Only
 
-- `id` (String) The ID of this resource.
+- `id` (String) The ID of the API service integration
 - `name` (String) The name of the API service integration that corresponds with the type property.
 
-<a id="nestedblock--grant_scopes"></a>
-### Nested Schema for `grant_scopes`
+<a id="nestedblock--granted_scopes"></a>
+### Nested Schema for `granted_scopes`
+
 Required:
-- `scope` (String) The Okta management scope granted to the API Service Integration instance. See [Okta Management Scopes](https://developer.okta.com/docs/api/oauth2/#okta-admin-management) for a list of all possible scopes.
+
+- `scope` (String) The scope of the API service integration
 
 ## Import
 

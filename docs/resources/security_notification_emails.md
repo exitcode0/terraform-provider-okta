@@ -1,18 +1,28 @@
 ---
 page_title: "Resource: okta_security_notification_emails"
+subcategory: "Security"
 description: |-
+
   Manages Security Notification Emails
-          This resource allows you to configure Security Notification Emails.
-          ~> WARNING: This resource is available only when using a SSWS API token in the provider config, it is incompatible with OAuth 2.0 authentication.
-          ~> WARNING: This resource makes use of an internal/private Okta API endpoint that could change without notice rendering this resource inoperable.
+  This resource allows you to configure Security Notification Emails.
+  ~> WARNING: This resource is available only when using a SSWS API token in the provider config, it is incompatible with OAuth 2.0 authentication.
+  ~> WARNING: This resource makes use of an internal/private Okta API endpoint that could change without notice rendering this resource inoperable.
+
 ---
 
 # Resource: okta_security_notification_emails
+
 
 Manages Security Notification Emails
 		This resource allows you to configure Security Notification Emails.
 		~> **WARNING:** This resource is available only when using a SSWS API token in the provider config, it is incompatible with OAuth 2.0 authentication.
 		~> **WARNING:** This resource makes use of an internal/private Okta API endpoint that could change without notice rendering this resource inoperable.
+
+
+## Links
+
+- [Okta API docs](https://developer.okta.com/docs/api/openapi/okta-management/management/tag/OrgSettingCommunication/)
+- [Provider source](https://github.com/okta/terraform-provider-okta/blob/master/okta/services/idaas/resource_okta_security_notification_emails.go)
 
 ## Example Usage
 

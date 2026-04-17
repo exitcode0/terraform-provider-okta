@@ -1,14 +1,18 @@
 ---
 page_title: "Resource: okta_policy_rule_idp_discovery"
+subcategory: "Security"
 description: |-
+
   Creates an IdP Discovery Policy Rule.
   This resource allows you to create and configure an IdP Discovery Policy Rule.
   -> If you receive the error 'You do not have permission to access the feature
   you are requesting' contact support mailto:dev-inquiries@okta.com and
   request feature flag 'ADVANCED_SSO' be applied to your org.
+
 ---
 
 # Resource: okta_policy_rule_idp_discovery
+
 
 Creates an IdP Discovery Policy Rule.
 
@@ -16,6 +20,20 @@ This resource allows you to create and configure an IdP Discovery Policy Rule.
 -> If you receive the error 'You do not have permission to access the feature
 you are requesting' [contact support](mailto:dev-inquiries@okta.com) and
 request feature flag 'ADVANCED_SSO' be applied to your org.
+
+
+## Links
+
+- [Okta API docs](https://developer.okta.com/docs/api/openapi/okta-management/management/tag/Policy/)
+- [Provider source](https://github.com/okta/terraform-provider-okta/blob/master/okta/services/idaas/resource_okta_policy_rule_idp_discovery.go)
+- [SDK source](https://github.com/okta/okta-sdk-golang/blob/v6.1.6/okta/api_policy.go)
+
+## Related Resources
+
+- [`okta_idp_oidc`](../resources/idp_oidc) — OIDC identity providers
+- [`okta_idp_saml`](../resources/idp_saml) — SAML identity providers
+- [`okta_idp_social`](../resources/idp_social) — Social identity providers
+- [`okta_network_zone`](../resources/network_zone) — Network zones used in conditions
 
 ## Example Usage
 
@@ -30,15 +48,16 @@ data "okta_policy" "idp_discovery_policy" {
 resource "okta_policy_rule_idp_discovery" "example" {
   policy_id                 = data.okta_policy.idp_discovery_policy.id
   name                      = "example"
-  idp_providers {
-    id   = "<idp id>"
-    type = "OIDC"
-  }
   network_connection        = "ANYWHERE"
   priority                  = 1
   status                    = "ACTIVE"
   user_identifier_type      = "ATTRIBUTE"
   user_identifier_attribute = "company"
+
+  idp_providers {
+    id   = "<idp id>"
+    type = "OIDC"
+  }
 
   app_exclude {
     id   = "<app id>"
@@ -97,7 +116,7 @@ resource "okta_policy_rule_idp_discovery" "dynamic_example" {
 - 'id' - (Optional) Use if 'type' is 'APP' to indicate the application id to include.
 - 'name' - (Optional) Use if the 'type' is 'APP_TYPE' to indicate the type of application(s) to include in instances where an entire group (i.e. 'yahoo_mail') of applications should be included.
 - 'type' - (Required) One of: 'APP', 'APP_TYPE' (see [below for nested schema](#nestedblock--app_include))
-- `idp_providers` (Block Set) Providers in discovery. Only applicable when `selection_type` is `SPECIFIC`. See `idp_providers` for details. (see [below for nested schema](#nestedblock--idp_providers))
+- `idp_providers` (Block List) (see [below for nested schema](#nestedblock--idp_providers))
 - `network_connection` (String) Network selection mode: `ANYWHERE`, `ZONE`, `ON_NETWORK`, or `OFF_NETWORK`. Default: `ANYWHERE`
 - `network_excludes` (List of String) Required if `network_connection` = `ZONE`. Indicates the network zones to exclude.
 - `network_includes` (List of String) Required if `network_connection` = `ZONE`. Indicates the network zones to include.
@@ -107,8 +126,8 @@ resource "okta_policy_rule_idp_discovery" "dynamic_example" {
 - 'os_type' - (Optional) One of: 'ANY', 'IOS', 'WINDOWS', 'ANDROID', 'OTHER', 'OSX' (see [below for nested schema](#nestedblock--platform_include))
 - `policy_id` (String) Policy ID of the Rule
 - `priority` (Number) Rule priority. This attribute can be set to a valid priority. To avoid an endless diff situation an error is thrown if an invalid property is provided. The Okta API defaults to the last (lowest) if not provided.
-- `provider_expression` (String) An Okta Expression Language expression evaluated against the Login Context to dynamically select an IdP. Only applicable when `selection_type` is `DYNAMIC`. Maps to `actions.idp.matchCriteria[0].providerExpression` in the API. Example: `login.identifier.substringAfter('@')`
-- `property_name` (String) The IdP property to match the evaluated expression against. Only applicable when `selection_type` is `DYNAMIC`. Maps to `actions.idp.matchCriteria[0].propertyName` in the API.
+- `property_name` (String) The IdP property that the evaluated expression should match against when `selection_type` is `DYNAMIC`. Maps to `actions.idp.matchCriteria[0].propertyName` in the API. If not set, the API default is used and the value is stored in state.
+- `provider_expression` (String) An Okta Expression Language expression that is evaluated against the Login Context and used to dynamically select an IdP. Only applicable when `selection_type` is `DYNAMIC`. Maps to `actions.idp.matchCriteria[0].providerExpression` in the API. Example: `login.identifier.substringAfter('@')`
 - `selection_type` (String) Determines how the IdP is selected. One of: `SPECIFIC`, `DYNAMIC`. Default: `SPECIFIC`. When `DYNAMIC`, the IdP is selected based on the evaluated `provider_expression`.
 - `should_fall_back_to_okta` (Boolean) Specifies whether to fall back to Okta if authentication with the matched IdP fails. Only applicable when `selection_type` is `DYNAMIC`. Default: `false`.
 - `status` (String) Policy Rule Status: `ACTIVE` or `INACTIVE`. Default: `ACTIVE`
@@ -131,11 +150,8 @@ Required:
 
 Optional:
 
+- `id` (String)
 - `name` (String)
-
-Read-Only:
-
-- `id` (String) The ID of this resource.
 
 
 <a id="nestedblock--app_include"></a>
@@ -147,20 +163,18 @@ Required:
 
 Optional:
 
+- `id` (String)
 - `name` (String)
 
-Read-Only:
-
-- `id` (String) The ID of this resource.
 
 <a id="nestedblock--idp_providers"></a>
 ### Nested Schema for `idp_providers`
 
 Optional:
 
-- `type` (String)
+- `id` (String) The identifier for the Idp the rule should route to if all conditions are met.
+- `type` (String) Type of IdP. One of: `AMAZON`, `APPLE`, `DISCORD`, `FACEBOOK`, `GITHUB`, `GITLAB`, `GOOGLE`, `IDV_CLEAR`, `IDV_INCODE`, `IDV_PERSONA`, `LINKEDIN`, `LOGINGOV`, `LOGINGOV_SANDBOX`, `MICROSOFT`, `OIDC`, `PAYPAL`, `PAYPAL_SANDBOX`, `SALESFORCE`, `SAML2`, `SPOTIFY`, `X509`, `XERO`, `YAHOO`, `YAHOOJP`, Default: `OKTA`
 
-- `id` (String)
 
 <a id="nestedblock--platform_include"></a>
 ### Nested Schema for `platform_include`

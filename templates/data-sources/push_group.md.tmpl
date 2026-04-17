@@ -1,5 +1,6 @@
 ---
 page_title: "Data Source: okta_push_group"
+subcategory: "Directory"
 description: |-
   Get a Push Group assignment for an Application in Okta.
 ---
@@ -7,6 +8,15 @@ description: |-
 # Data Source: okta_push_group
 
 Get a Push Group assignment for an Application in Okta.
+
+## Links
+
+- [Okta API docs](https://developer.okta.com/docs/api/openapi/okta-management/management/tag/GroupPushMapping/)
+- [Provider source](https://github.com/okta/terraform-provider-okta/blob/master/okta/services/idaas/data_source_okta_push_group.go)
+
+## Related Resources
+
+- [`okta_group`](../resources/group) — The source group
 
 ## Example Usage
 

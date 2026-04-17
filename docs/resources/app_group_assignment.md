@@ -1,12 +1,26 @@
 ---
 page_title: "Resource: okta_app_group_assignment"
+subcategory: "Applications"
 description: |-
+
   Assigns a group to an application. This resource allows you to create an App Group assignment.
+
 ---
 
 # Resource: okta_app_group_assignment
 
+
 Assigns a group to an application. This resource allows you to create an App Group assignment.
+
+
+## Links
+
+- [Okta API docs](https://developer.okta.com/docs/api/openapi/okta-management/management/tag/ApplicationGroups/)
+- [Provider source](https://github.com/okta/terraform-provider-okta/blob/master/okta/services/idaas/resource_okta_app_group_assignment.go)
+
+## Related Resources
+
+- [`okta_group`](../resources/group) — The group being assigned
 
 ~> **IMPORTANT:** When the `app_group_assignment` is retained, by 
 setting `retain_assignment` to `true`, it is no longer managed by 

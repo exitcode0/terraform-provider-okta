@@ -1,0 +1,51 @@
+---
+page_title: "{{.Type}}: {{.Name}}"
+subcategory: "Identity Governance"
+description: |-
+{{ if .Description }}
+{{ .Description | plainmarkdown | trimspace | prefixlines "  " }}
+{{ else }}
+  Terraform {{.Type}} for {{.Name}}.
+{{ end }}
+---
+
+# {{.Type}}: {{.Name}}
+
+{{ if .Description }}
+{{ .Description | trimspace }}
+{{ else }}
+Terraform {{.Type}} for {{.Name}}.
+{{ end }}
+
+## Links
+
+- [Okta API docs](https://developer.okta.com/docs/api/iga/openapi/governance-production-requests-admin-v1-reference/requests)
+- [Provider source](https://github.com/okta/terraform-provider-okta/blob/master/okta/services/governance/resource_request_v2.go)
+- [SDK source](https://github.com/okta/okta-governance-sdk-golang/blob/v1.0.1/governance/api_requests.go)
+
+## Related Resources
+
+- [`okta_request_condition`](../resources/request_condition) — Request conditions
+- [`okta_request_sequence`](../resources/request_sequence) — Request approval sequences
+- [`okta_request_setting_organization`](../resources/request_setting_organization) — Organization-level request settings
+- [`okta_request_setting_resource`](../resources/request_setting_resource) — Resource-level request settings
+
+{{ if .HasExample -}}
+
+## Example Usage
+
+{{ tffile .ExampleFile }}
+
+{{- end }}
+
+{{ .SchemaMarkdown | trimspace }}
+
+{{ if .HasImport -}}
+
+## Import
+
+Import is supported using the following syntax:
+
+{{ codefile "shell" .ImportFile }}
+
+{{- end }}

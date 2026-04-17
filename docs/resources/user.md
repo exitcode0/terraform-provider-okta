@@ -1,12 +1,31 @@
 ---
 page_title: "Resource: okta_user"
+subcategory: "Directory"
 description: |-
+
   Creates an Okta User. This resource allows you to create and configure an Okta User.
+
 ---
 
 # Resource: okta_user
 
+
 Creates an Okta User. This resource allows you to create and configure an Okta User.
+
+
+## Links
+
+- [Okta API docs](https://developer.okta.com/docs/api/openapi/okta-management/management/tag/User/)
+- [Provider source](https://github.com/okta/terraform-provider-okta/blob/master/okta/services/idaas/resource_okta_user.go)
+
+## Related Resources
+
+- [`okta_user_type`](../resources/user_type) — Custom user types
+- [`okta_user_group_memberships`](../resources/user_group_memberships) — Group membership management
+- [`okta_user_admin_roles`](../resources/user_admin_roles) — Admin role assignments
+- [`okta_user_base_schema_property`](../resources/user_base_schema_property) — Base profile schema properties
+- [`okta_user_schema_property`](../resources/user_schema_property) — Custom profile schema properties
+- [`okta_group`](../resources/group) — Groups the user belongs to
 
 ## Example Usage
 
@@ -71,7 +90,7 @@ resource "okta_user" "test2" {
 - `city` (String) User city
 - `cost_center` (String) User cost center
 - `country_code` (String) User country code
-- `custom_profile_attributes` (String) JSON formatted custom attributes for a user. It must be JSON due to various types Okta allows. You must first add the custom property to the user profile schema before you reference it. You can use the Profile Editor in the Admin Console or the [Schemas](https://developer.okta.com/docs/api/openapi/okta-management/management/tag/UISchema/#tag/UISchema) API to manage schema extensions.
+- `custom_profile_attributes` (String) JSON formatted custom attributes for a user. It must be JSON due to various types Okta allows.
 - `custom_profile_attributes_to_ignore` (Set of String) List of custom_profile_attribute keys that should be excluded from being managed by Terraform. This is useful in situations where specific custom fields may contain sensitive information and should be managed outside of Terraform.
 - `department` (String) User department
 - `display_name` (String) User display name, suitable to show end users
@@ -105,9 +124,9 @@ resource "okta_user" "test2" {
 - `street_address` (String) User street address
 - `timezone` (String) User default timezone
 - `title` (String) User title
+- `type` (Block List, Max: 1) User type. When specified, the user will be assigned to the specified user type. (see [below for nested schema](#nestedblock--type))
 - `user_type` (String) User employee type
 - `zip_code` (String) User zipcode or postal code
-- `type` (Block Set, Max: 1) Specifies a user type other than the default user type (see [below for nested schema](#nestedblock--type))
 
 ### Read-Only
 
@@ -128,12 +147,13 @@ Optional:
 - `salt_order` (String) Specifies whether salt was pre- or postfixed to the password before hashing
 - `work_factor` (Number) Governs the strength of the hash and the time required to compute it. Only required for BCRYPT algorithm
 
+
 <a id="nestedblock--type"></a>
 ### Nested Schema for `type`
 
-Optional:
+Required:
 
-- `id` (String) ID of the user_type
+- `id` (String) User type ID
 
 ## Import
 

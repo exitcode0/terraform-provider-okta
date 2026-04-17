@@ -1,12 +1,22 @@
 ---
 page_title: "Resource: okta_template_sms"
+subcategory: "Customizations"
 description: |-
+
   Creates an Okta SMS Template. This resource allows you to create and configure an Okta SMS Template.
+
 ---
 
 # Resource: okta_template_sms
 
+
 Creates an Okta SMS Template. This resource allows you to create and configure an Okta SMS Template.
+
+
+## Links
+
+- [Okta API docs](https://developer.okta.com/docs/api/openapi/okta-management/management/tag/Template/)
+- [Provider source](https://github.com/okta/terraform-provider-okta/blob/master/okta/services/idaas/resource_okta_template_sms.go)
 
 ## Example Usage
 

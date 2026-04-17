@@ -1,11 +1,36 @@
 ---
 page_title: "Resource: okta_app_group_assignments"
+subcategory: "Applications"
 description: |-
+
   Assigns groups to an application. This resource allows you to create multiple App Group assignments.
-  Important: Do not use `for_each` on this resource to iterate over groups for the same `app_id`. Use `dynamic` blocks inside a single resource instance instead.
+  Important: Do not use for_each on this resource to iterate over groups for the same app_id. This resource's Read implementation fetches all groups currently assigned to the app from the Okta API — not just the ones declared in config. When multiple instances share the same app_id, the following infinite loop occurs on every apply:
+  Each instance's update deletes the groups it does not own from Okta.Each instance's Read (called at the end of update) re-fetches all groups from the API and absorbs the other instance's groups back into state as drift.State after apply is identical to state before apply — the plan never converges and the same diff reappears on every terraform plan.
+  Since this resource natively supports multiple group blocks, use a dynamic block https://developer.hashicorp.com/terraform/language/expressions/dynamic-blocks instead:
+  Bad — creates two conflicting resource instances for the same app:
+
+  resource "okta_app_group_assignments" "this" {
+    for_each = toset(["group-a", "group-b"])
+    app_id   = okta_app_bookmark.this.id
+    group { id = each.value }
+  }
+
+  Good — a single resource instance manages all groups for the app:
+
+  resource "okta_app_group_assignments" "this" {
+    app_id = okta_app_bookmark.this.id
+    dynamic "group" {
+      for_each = toset(["group-a", "group-b"])
+      content { id = group.value }
+    }
+  }
+
+  Note: Using for_each on this resource is safe when each instance targets a different app_id, for example when assigning the same group to multiple applications.
+
 ---
 
 # Resource: okta_app_group_assignments
+
 
 Assigns groups to an application. This resource allows you to create multiple App Group assignments.
 
@@ -37,7 +62,17 @@ resource "okta_app_group_assignments" "this" {
 }
 ```
 
-> **Note:** Using `for_each` on this resource is safe when each instance targets a **different** `app_id`, for example when assigning the same group to multiple applications.
+Note: Using `for_each` on this resource is safe when each instance targets a **different** `app_id`, for example when assigning the same group to multiple applications.
+
+
+## Links
+
+- [Okta API docs](https://developer.okta.com/docs/api/openapi/okta-management/management/tag/ApplicationGroups/)
+- [Provider source](https://github.com/okta/terraform-provider-okta/blob/master/okta/services/idaas/resource_okta_app_group_assignments.go)
+
+## Related Resources
+
+- [`okta_group`](../resources/group) — The groups being assigned
 
 ## Example Usage
 
@@ -73,15 +108,6 @@ resource "okta_app_group_assignments" "example" {
 - `id` (String) The ID of this resource.
 
 <a id="nestedblock--group"></a>
-<a id="nestedblock--timeouts"></a>
-### Nested Schema for `timeouts`
-
-Optional:
-
-- `create` (String)
-- `read` (String)
-- `update` (String)
-
 ### Nested Schema for `group`
 
 Required:
@@ -92,6 +118,16 @@ Optional:
 
 - `priority` (Number) Priority of group assignment
 - `profile` (String) JSON document containing [application profile](https://developer.okta.com/docs/reference/api/apps/#profile-object)
+
+
+<a id="nestedblock--timeouts"></a>
+### Nested Schema for `timeouts`
+
+Optional:
+
+- `create` (String)
+- `read` (String)
+- `update` (String)
 
 ## Import
 

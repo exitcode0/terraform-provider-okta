@@ -1,18 +1,33 @@
 ---
 page_title: "Resource: okta_policy_mfa_default"
+subcategory: "Security"
 description: |-
+
   Configures default MFA Policy.
   This resource allows you to configure default MFA Policy.
-  ~> Requires Org Feature Flag 'OKTAMFAPOLICY'. Contact support mailto:dev-inquiries@okta.com to have this feature flag enabled.
-  ~> Unless Org Feature Flag 'ENGENABLEOPTIONALPASSWORDENROLLMENT' is disabled 'oktapassword' or 'oktaemail' must be present and its 'enroll' value set to 'REQUIRED'. Contact support mailto:dev-inquiries@okta.com to have this feature flag disabled.
+  ~> Requires Org Feature Flag 'OKTA_MFA_POLICY'. Contact support mailto:dev-inquiries@okta.com to have this feature flag enabled.
+  ~> Unless Org Feature Flag 'ENG_ENABLE_OPTIONAL_PASSWORD_ENROLLMENT' is disabled 'okta_password' or 'okta_email' must be present and its 'enroll' value set to 'REQUIRED'. Contact support mailto:dev-inquiries@okta.com to have this feature flag disabled.
+
 ---
 
 # Resource: okta_policy_mfa_default
+
 
 Configures default MFA Policy.
 This resource allows you to configure default MFA Policy.
 ~> Requires Org Feature Flag 'OKTA_MFA_POLICY'. [Contact support](mailto:dev-inquiries@okta.com) to have this feature flag ***enabled***.
 ~> Unless Org Feature Flag 'ENG_ENABLE_OPTIONAL_PASSWORD_ENROLLMENT' is ***disabled*** 'okta_password' or 'okta_email' must be present and its 'enroll' value set to 'REQUIRED'. [Contact support](mailto:dev-inquiries@okta.com) to have this feature flag ***disabled***.
+
+
+## Links
+
+- [Okta API docs](https://developer.okta.com/docs/api/openapi/okta-management/management/tag/Policy/)
+- [Provider source](https://github.com/okta/terraform-provider-okta/blob/master/okta/services/idaas/resource_okta_policy_mfa_default.go)
+
+## Related Resources
+
+- [`okta_policy_rule_mfa`](../resources/policy_rule_mfa) — Rules for the default MFA policy
+- [`okta_authenticator`](../resources/authenticator) — Authenticators configured for MFA
 
 ## Example Usage
 
@@ -50,6 +65,7 @@ resource "okta_policy_mfa_default" "oie_example" {
 
 ### Optional
 
+- `custom_app` (List of Map of String) List of custom authenticators, specify entry like {"enroll": "OPTIONAL", "id": "<id_of_custom_app>"} to mark specific custom app optional, list must contain at least 1 entry.
 - `duo` (Map of String)
 - `external_idp` (Map of String, Deprecated)
 - `external_idps` (Set of Map of String)
@@ -70,6 +86,7 @@ resource "okta_policy_mfa_default" "oie_example" {
 - `phone_number` (Map of String)
 - `rsa_token` (Map of String)
 - `security_question` (Map of String)
+- `smart_card_idp` (Map of String)
 - `symantec_vip` (Map of String)
 - `webauthn` (Map of String)
 - `yubikey_token` (Map of String)

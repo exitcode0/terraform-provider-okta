@@ -1,16 +1,30 @@
 ---
 page_title: "Resource: okta_app_user"
+subcategory: "Applications"
 description: |-
+
   Creates an Application User.
-          This resource allows you to create and configure an Application User.
-          ~> IMPORTANT: When the 'oktaappuser' is retained, by setting 'retain_assignment' to 'true', it is no longer managed by Terraform after it is destroyed. To truly delete the assignment, you will need to remove it either through the Okta Console or API. This argument exists for the use case where the same user is assigned in multiple places in order to prevent a single destruction removing all of them.
+  This resource allows you to create and configure an Application User.
+  ~> IMPORTANT: When the 'okta_app_user' is retained, by setting 'retain_assignment' to 'true', it is no longer managed by Terraform after it is destroyed. To truly delete the assignment, you will need to remove it either through the Okta Console or API. This argument exists for the use case where the same user is assigned in multiple places in order to prevent a single destruction removing all of them.
+
 ---
 
 # Resource: okta_app_user
 
+
 Creates an Application User.
 		This resource allows you to create and configure an Application User.
 		~> **IMPORTANT:** When the 'okta_app_user' is retained, by setting 'retain_assignment' to 'true', it is no longer managed by Terraform after it is destroyed. To truly delete the assignment, you will need to remove it either through the Okta Console or API. This argument exists for the use case where the same user is assigned in multiple places in order to prevent a single destruction removing all of them.
+
+
+## Links
+
+- [Okta API docs](https://developer.okta.com/docs/api/openapi/okta-management/management/tag/ApplicationUsers/)
+- [Provider source](https://github.com/okta/terraform-provider-okta/blob/master/okta/services/idaas/resource_okta_app_user.go)
+
+## Related Resources
+
+- [`okta_user`](../resources/user) — The user being assigned
 
 ## Example Usage
 

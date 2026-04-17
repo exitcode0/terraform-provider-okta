@@ -1,12 +1,26 @@
 ---
 page_title: "Resource: okta_admin_role_targets"
+subcategory: "Security"
 description: |-
-  
+
+  Terraform Resource for okta_admin_role_targets.
+
 ---
 
 # Resource: okta_admin_role_targets
 
 
+Terraform Resource for okta_admin_role_targets.
+
+
+## Links
+
+- [Okta API docs](https://developer.okta.com/docs/api/openapi/okta-management/management/tag/RoleBTargetAdmin/)
+- [Provider source](https://github.com/okta/terraform-provider-okta/blob/master/okta/services/idaas/resource_okta_admin_role_targets.go)
+
+## Related Resources
+
+- [`okta_admin_role_custom`](../resources/admin_role_custom) — The custom role
 
 Manages targets for administrator roles.
 
@@ -20,7 +34,6 @@ Note 2: You can target a mixture of both App and App Instance targets, but can't
         instances of an App and then a subset of that same App. For example, you can't specify that an admin has access
         to manage all instances of a Salesforce app and then also specific configurations of the Salesforce app.
 ```
-
 
 ## Example Usage
 

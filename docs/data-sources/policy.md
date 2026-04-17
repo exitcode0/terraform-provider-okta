@@ -1,12 +1,22 @@
 ---
 page_title: "Data Source: okta_policy"
+subcategory: "Security"
 description: |-
+
   Get a policy from Okta.
+
 ---
 
 # Data Source: okta_policy
 
+
 Get a policy from Okta.
+
+
+## Links
+
+- [Okta API docs](https://developer.okta.com/docs/api/openapi/okta-management/management/tag/Policy/)
+- [Provider source](https://github.com/okta/terraform-provider-okta/blob/master/okta/services/idaas/data_source_okta_policy.go)
 
 ## Example Usage
 
@@ -29,5 +39,3 @@ data "okta_policy" "example" {
 
 - `id` (String) The ID of this resource.
 - `status` (String) Status of the policy
-
-

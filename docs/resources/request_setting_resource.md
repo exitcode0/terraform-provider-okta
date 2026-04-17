@@ -1,25 +1,39 @@
 ---
 page_title: "Resource: okta_request_setting_resource"
+subcategory: "Identity Governance"
 description: |-
-  Request settings are useful for managing your org's access requests. Request settings can be read and updated at the org and resource level.
+
+  Terraform Resource for okta_request_setting_resource.
+
 ---
 
 # Resource: okta_request_setting_resource
 
-Manages request settings. This resource allows you to read and configure an Okta [request-setting](https://developer.okta.com/docs/api/iga/openapi/governance.requests.admin.v2/tag/Request-Settings/#tag/Request-Settings/operation/getRequestSettingsV2).
+
+Terraform Resource for okta_request_setting_resource.
+
+
+## Links
+
+- [Okta API docs](https://developer.okta.com/docs/api/iga/openapi/governance-production-requests-admin-v2-reference/request-settings)
+- [Provider source](https://github.com/okta/terraform-provider-okta/blob/master/okta/services/governance/resource_request_setting_resource.go)
+
+## Related Resources
+
+- [`okta_request_v2`](../resources/request_v2) — Access requests
 
 ## Example Usage
 
 ```terraform
-resource "okta_request_setting_resource" "test"{
-  resource_id="<resource_id>"
+resource "okta_request_setting_resource" "test" {
+  id = "0oaoum6j3cElINe1z1d7"
   risk_settings {
     default_setting {
-      request_submission_type= "ALLOWED_WITH_OVERRIDES"
-      approval_sequence_id="<approval_sequence_id>"
+      request_submission_type = "ALLOWED_WITH_OVERRIDES"
+      approval_sequence_id    = "68920b41386747a673869356"
     }
   }
-  request_on_behalf_of_settings{
+  request_on_behalf_of_settings {
     allowed = true
   }
 }
@@ -30,47 +44,54 @@ resource "okta_request_setting_resource" "test"{
 
 ### Required
 
-- `resource_id`(String)
+- `id` (String) The id of the resource in Okta ID format.
 
 ### Optional
 
-- `request_on_behalf_of_settings` (Object)Specifies if and for whom a requester may request the resource for.(see [below for nested schema](#nestedblock--request_on_behalf_of_settings))
-- `risk_settings` (Object) Risk settings for the resource.(see [below for nested schema](#nestedblock--risk_settings))
+- `request_on_behalf_of_settings` (Block, Optional) Specifies if and for whom a requester may request the resource for. (see [below for nested schema](#nestedblock--request_on_behalf_of_settings))
+- `risk_settings` (Block, Optional) Risk settings that are valid for an access request when a risk has been detected for the resource and requesting user. (see [below for nested schema](#nestedblock--risk_settings))
 
 <a id="nestedblock--request_on_behalf_of_settings"></a>
 ### Nested Schema for `request_on_behalf_of_settings`
 
 Optional:
 
-- `allowed` (Boolean) Indicates that users who can request this resource could also request for another requester of the same resource. This property can only be true.
-- `only_for` (String) Which requesters the resource requester can request on behalf of. Enum: `DIRECT_REPORT`.
+- `allowed` (Boolean) Indicates that users who can request this resource could also request for another requester of the same resource
+- `only_for` (Block Set) (see [below for nested schema](#nestedblock--request_on_behalf_of_settings--only_for))
+
+<a id="nestedblock--request_on_behalf_of_settings--only_for"></a>
+### Nested Schema for `request_on_behalf_of_settings.only_for`
+
+Optional:
+
+- `type` (String) Which requesters the resource requester can request on behalf of. If onlyFor is not specified then any requester may request a resource on the behalf of any other user
+
+
 
 <a id="nestedblock--risk_settings"></a>
 ### Nested Schema for `risk_settings`
+
 Optional:
-- `default_setting` (Object) Default request submission type and approval sequence for the resource.(see [below for nested schema](#nestedblock--default_setting))
 
-<a id="nestedblock--default_setting"></a>
-### Nested Schema for `default_setting`
+- `default_setting` (Block, Optional) Default risk settings that are valid for an access request when a risk has been detected for the resource and requesting user. (see [below for nested schema](#nestedblock--risk_settings--default_setting))
+
+<a id="nestedblock--risk_settings--default_setting"></a>
+### Nested Schema for `risk_settings.default_setting`
+
 Optional:
-- `request_submission_type`(String) Enum: `RESTRICTED`, `ALLOWED_WITH_OVERRIDES`, `ALLOWED_WITH_NO_OVERRIDES`.
-- `error`(List) Enum: `INVALID_SEQUENCE`.
-- `approval_sequence_id`(String) The ID of the approval sequence to use for this resource. This property is required if request_submission_type is `ALLOWED_WITH_OVERRIDES`.
-- `access_duration_settings`(Object) Access duration settings for the resource.(see [below for nested schema](#nestedblock--access_duration_settings))
 
+- `access_duration_settings` (Block, Optional) Settings that control who may specify the access duration allowed by this request condition or risk settings, as well as what duration may be requested. (see [below for nested schema](#nestedblock--risk_settings--default_setting--access_duration_settings))
+- `approval_sequence_id` (String) The ID of the approval sequence.
+- `request_submission_type` (String)
 
-<a id="nestedblock--access_duration_settings"></a>
-### Nested Schema for `access_duration_settings`
-Required:
+Read-Only:
 
-- `type`(String) Enum: `ADMIN_FIXED_DURATION`, `REQUESTER_SPECIFIED_DURATION`.
-- `duration`(String) The duration set by the admin for access durations. Use ISO8061 notation for duration values.
+- `error` (List of String)
 
+<a id="nestedblock--risk_settings--default_setting--access_duration_settings"></a>
+### Nested Schema for `risk_settings.default_setting.access_duration_settings`
 
-## Import
+Optional:
 
-Import is supported using the following syntax:
-
-```shell
-terraform import okta_request_setting_resource.example "<resource_id>"
-```
+- `duration` (String)
+- `type` (String)

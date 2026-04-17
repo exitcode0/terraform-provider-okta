@@ -1,12 +1,26 @@
 ---
 page_title: "Data Source: okta_behavior"
+subcategory: "Security"
 description: |-
+
   Get a behavior by name or ID.
+
 ---
 
 # Data Source: okta_behavior
 
+
 Get a behavior by name or ID.
+
+
+## Links
+
+- [Okta API docs](https://developer.okta.com/docs/api/openapi/okta-management/management/tag/Behavior/)
+- [Provider source](https://github.com/okta/terraform-provider-okta/blob/master/okta/services/idaas/data_source_okta_behavior.go)
+
+## Related Resources
+
+- [`okta_policy_rule_signon`](../resources/policy_rule_signon) — Sign-on policy rules that reference behavior rules
 
 ## Example Usage
 
@@ -29,5 +43,3 @@ data "okta_behavior" "example" {
 - `settings` (Map of String) Map of behavior settings.
 - `status` (String) Behavior status.
 - `type` (String) Behavior type.
-
-

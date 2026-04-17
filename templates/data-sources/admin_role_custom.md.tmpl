@@ -1,0 +1,39 @@
+---
+page_title: "{{.Type}}: {{.Name}}"
+subcategory: "Security"
+description: |-
+{{ if .Description }}
+{{ .Description | plainmarkdown | trimspace | prefixlines "  " }}
+{{ else }}
+  Terraform {{.Type}} for {{.Name}}.
+{{ end }}
+---
+
+# {{.Type}}: {{.Name}}
+
+{{ if .Description }}
+{{ .Description | trimspace }}
+{{ else }}
+Terraform {{.Type}} for {{.Name}}.
+{{ end }}
+
+## Links
+
+- [Okta API docs](https://developer.okta.com/docs/api/openapi/okta-management/management/tag/RoleECustom/)
+- [Provider source](https://github.com/okta/terraform-provider-okta/blob/master/okta/services/idaas/data_source_okta_admin_role_custom.go)
+
+## Related Resources
+
+- [`okta_admin_role_custom_assignments`](../resources/admin_role_custom_assignments) — Role assignments
+- [`okta_resource_set`](../resources/resource_set) — Resource sets for the custom role
+- [`okta_admin_role_targets`](../resources/admin_role_targets) — Role targets
+
+{{ if .HasExample -}}
+
+## Example Usage
+
+{{ tffile .ExampleFile }}
+
+{{- end }}
+
+{{ .SchemaMarkdown | trimspace }}

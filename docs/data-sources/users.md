@@ -1,12 +1,22 @@
 ---
 page_title: "Data Source: okta_users"
+subcategory: "Directory"
 description: |-
+
   Get a list of users from Okta.
+
 ---
 
 # Data Source: okta_users
 
+
 Get a list of users from Okta.
+
+
+## Links
+
+- [Okta API docs](https://developer.okta.com/docs/api/openapi/okta-management/management/tag/User/)
+- [Provider source](https://github.com/okta/terraform-provider-okta/blob/master/okta/services/idaas/data_source_okta_users.go)
 
 ## Example Usage
 
@@ -114,7 +124,13 @@ Read-Only:
 - `street_address` (String)
 - `timezone` (String)
 - `title` (String)
+- `type` (List of Object) (see [below for nested schema](#nestedobjatt--users--type))
 - `user_type` (String)
 - `zip_code` (String)
 
+<a id="nestedobjatt--users--type"></a>
+### Nested Schema for `users.type`
 
+Read-Only:
+
+- `id` (String)

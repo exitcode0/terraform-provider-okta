@@ -1,12 +1,26 @@
 ---
 page_title: "Resource: okta_email_domain_verification"
+subcategory: "Customizations"
 description: |-
+
   Verifies the email domain. The resource won't be created if the email domain could not be verified.
+
 ---
 
 # Resource: okta_email_domain_verification
 
+
 Verifies the email domain. The resource won't be created if the email domain could not be verified.
+
+
+## Links
+
+- [Okta API docs](https://developer.okta.com/docs/api/openapi/okta-management/management/tag/EmailDomain/)
+- [Provider source](https://github.com/okta/terraform-provider-okta/blob/master/okta/services/idaas/resource_okta_email_domain_verification.go)
+
+## Related Resources
+
+- [`okta_email_domain`](../resources/email_domain) — Parent email domain
 
 ## Example Usage
 

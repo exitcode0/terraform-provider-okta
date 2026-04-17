@@ -1,12 +1,22 @@
 ---
 page_title: "Data Source: okta_auth_server_claims"
+subcategory: "Security"
 description: |-
+
   Get a list of authorization server claims from Okta.
+
 ---
 
 # Data Source: okta_auth_server_claims
 
+
 Get a list of authorization server claims from Okta.
+
+
+## Links
+
+- [Okta API docs](https://developer.okta.com/docs/api/openapi/okta-management/management/tag/AuthorizationServerClaims/)
+- [Provider source](https://github.com/okta/terraform-provider-okta/blob/master/okta/services/idaas/data_source_okta_auth_server_claims.go)
 
 ## Example Usage
 
@@ -41,5 +51,3 @@ Read-Only:
 - `status` (String)
 - `value` (String)
 - `value_type` (String)
-
-

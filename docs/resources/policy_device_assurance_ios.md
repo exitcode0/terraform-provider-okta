@@ -1,18 +1,28 @@
 ---
 page_title: "Resource: okta_policy_device_assurance_ios"
+subcategory: "Security"
 description: |-
+
   Manages a device assurance policy for ios.
+
 ---
 
 # Resource: okta_policy_device_assurance_ios
 
+
 Manages a device assurance policy for ios.
+
+
+## Links
+
+- [Okta API docs](https://developer.okta.com/docs/api/openapi/okta-management/management/tag/DeviceAssurance/)
+- [Provider source](https://github.com/okta/terraform-provider-okta/blob/master/okta/services/idaas/resource_okta_device_assurance_policy_ios_os.go)
 
 ## Example Usage
 
 ```terraform
 resource "okta_policy_device_assurance_ios" "example" {
-  name            = "example"
+  name            = "testAcc-replace_with_uuid"
   os_version      = "12.4.5"
   jailbreak       = false
   screenlock_type = toset(["BIOMETRIC"])

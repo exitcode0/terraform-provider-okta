@@ -1,12 +1,27 @@
 ---
 page_title: "Resource: okta_user_factor_question"
+subcategory: "Directory"
 description: |-
+
   Creates security question factor for a user. This resource allows you to create and configure security question factor for a user.
+
 ---
 
 # Resource: okta_user_factor_question
 
+
 Creates security question factor for a user. This resource allows you to create and configure security question factor for a user.
+
+
+## Links
+
+- [Okta API docs](https://developer.okta.com/docs/api/openapi/okta-management/management/tag/UserFactor/)
+- [Provider source](https://github.com/okta/terraform-provider-okta/blob/master/okta/services/idaas/resource_okta_user_factor_question.go)
+
+## Related Resources
+
+- [`okta_user`](../resources/user) — The user
+- [`okta_factor`](../resources/factor) — Factor configuration
 
 ## Example Usage
 

@@ -1,12 +1,22 @@
 ---
 page_title: "Data Source: okta_email_templates"
+subcategory: "Customizations"
 description: |-
+
   Get the email templates belonging to a brand in an Okta organization.
+
 ---
 
 # Data Source: okta_email_templates
 
+
 Get the email templates belonging to a brand in an Okta organization.
+
+
+## Links
+
+- [Okta API docs](https://developer.okta.com/docs/api/openapi/okta-management/management/tag/EmailCustomization/)
+- [Provider source](https://github.com/okta/terraform-provider-okta/blob/master/okta/services/idaas/data_source_okta_email_templates.go)
 
 ## Example Usage
 
@@ -38,5 +48,3 @@ Read-Only:
 
 - `links` (String)
 - `name` (String)
-
-

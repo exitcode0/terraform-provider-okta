@@ -1,12 +1,26 @@
 ---
 page_title: "Data Source: okta_email_customization"
+subcategory: "Customizations"
 description: |-
+
   Get the email customization of an email template belonging to a brand in an Okta organization.
+
 ---
 
 # Data Source: okta_email_customization
 
+
 Get the email customization of an email template belonging to a brand in an Okta organization.
+
+
+## Links
+
+- [Okta API docs](https://developer.okta.com/docs/api/openapi/okta-management/management/tag/EmailCustomization/)
+- [Provider source](https://github.com/okta/terraform-provider-okta/blob/master/okta/services/idaas/data_source_okta_email_customization.go)
+
+## Related Resources
+
+- [`okta_brand`](../resources/brand) — Parent brand
 
 ## Example Usage
 
@@ -43,5 +57,3 @@ data "okta_email_customization" "forgot_password_en" {
 - `language` (String) The language supported by the customization
 - `links` (String) Link relations for this object - JSON HAL - Discoverable resources related to the email template
 - `subject` (String) The subject of the customization
-
-

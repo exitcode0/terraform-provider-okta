@@ -1,12 +1,26 @@
 ---
 page_title: "Resource: okta_idp_saml_key"
+subcategory: "Security"
 description: |-
+
   This resource allows you to create and configure a SAML Identity Provider Signing Key.
+
 ---
 
 # Resource: okta_idp_saml_key
 
+
 This resource allows you to create and configure a SAML Identity Provider Signing Key.
+
+
+## Links
+
+- [Okta API docs](https://developer.okta.com/docs/api/openapi/okta-management/management/tag/IdentityProviderKeys/)
+- [Provider source](https://github.com/okta/terraform-provider-okta/blob/master/okta/services/idaas/resource_okta_idp_saml_key.go)
+
+## Related Resources
+
+- [`okta_idp_saml`](../resources/idp_saml) — SAML identity providers using this key
 
 Identity Provider Signing Key can not be updated, it can only be created or removed. Thus, in situation
 where Identity Provider Signing Key should be updated, one can not simply change `x5c` and apply the changes.

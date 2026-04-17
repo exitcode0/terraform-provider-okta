@@ -1,34 +1,29 @@
 ---
 page_title: "Data Source: okta_end_user_my_requests"
+subcategory: "Identity Governance"
 description: |-
-  Get an End User Request from Okta Identity Governance.
+
+  Terraform Data Source for okta_end_user_my_requests.
+
 ---
 
 # Data Source: okta_end_user_my_requests
 
-Get an End User Request from Okta Identity Governance. This data source allows you to retrieve information about existing access requests in the Okta Identity Governance system.
 
-Use this data source to fetch details about a specific request, including its current status, field values, and other metadata.
+Terraform Data Source for okta_end_user_my_requests.
 
--> **Note:** This data source is part of Okta Identity Governance functionality and requires appropriate licensing and configuration.
+
+## Links
+
+- [Okta API docs](https://developer.okta.com/docs/api/iga/openapi/governance-production-enduser-reference/my-requests)
+- [Provider source](https://github.com/okta/terraform-provider-okta/blob/master/okta/services/governance/data_source_end_user_my_requests.go)
 
 ## Example Usage
 
 ```terraform
-# Get a request by its catalog entry ID and request ID
 data "okta_end_user_my_requests" "example" {
-  entry_id   = "cen123456789abcdefgh"
-  id = "reqABCDEFG0123456789"
-}
-
-# Output the request status
-output "request_status" {
-  value = data.okta_end_user_my_requests.example.status
-}
-
-# Output specific field values
-output "request_field_values" {
-  value = data.okta_end_user_my_requests.example.requester_field_values
+  entry_id = "ce123456789abcdefghi"
+  id       = "req123abcd456ghijklm"
 }
 ```
 
@@ -37,50 +32,94 @@ output "request_field_values" {
 
 ### Required
 
-- `entry_id` (String) The ID of the catalog entry to retrieve.
-- `id` (String) The ID of the request to retrieve.
+- `entry_id` (String) The ID of the catalog entry
+- `id` (String) The ID of the request
+
+### Optional
+
+- `requester_field_values` (Block List) The requester input fields required by the approval system.
+Note: The fields required are determined by the approval system. (see [below for nested schema](#nestedblock--requester_field_values))
+- `risk_assessment` (Block, Optional) A risk assessment indicates whether request submission is allowed or restricted and contains the risk rules that lead to possible conflicts for the requested resource. (see [below for nested schema](#nestedblock--risk_assessment))
 
 ### Read-Only
 
-- `entry_id` (String) The ID of the catalog entry for which the request was made.
-- `requester_field_values` (List of Object) The requester input fields and their values from the request. (see [below for nested schema](#nestedatt--requester_field_values))
-- `status` (String) The current status of the request. Possible values include: `APPROVED`, `CANCELED`, `DENIED`, `EXPIRED`, `PENDING`, `REJECTED`, `SUBMITTED`
+- `access_duration` (String) How long the requester retains access after their request is approved and fulfilled.
+Specified in ISO 8601 duration format.
+- `created` (String) The ISO 8601 formatted date and time when the resource was created
+- `created_by` (String) The id of the Okta user who created the resource
+- `grant_status` (String) The grant status of the request
+- `granted` (String) The date the approved access was granted. Only set if request.status is APPROVED.
+- `last_updated` (String) The ISO 8601 formatted date and time when the object was last updated
+- `last_updated_by` (String) The id of the Okta user who last updated the object
+- `requested` (Block, Read-only) A representation of the resource in request (see [below for nested schema](#nestedblock--requested))
+- `requested_by` (Block, Read-only) A representation of a principal (see [below for nested schema](#nestedblock--requested_by))
+- `requested_for` (Block, Read-only) A representation of a principal (see [below for nested schema](#nestedblock--requested_for))
+- `resolved` (String) The date the request was resolved. The property may transition from having a value to null if the request is reopened.
+- `revocation_scheduled` (String) The date the granted access is scheduled for recovation. Only set if request.accessDuration exists, and request.grantStatus is GRANTED.
+- `revocation_status` (String) The revocation status of the request, possible values are 'FAILED' 'PENDING' 'REVOKED'
+- `revoked` (String) The date the granted access was revoked. Only set if request.grantStatus is GRANTED and request.revocationStatus is REVOKED.
+- `status` (String) The status of the request
 
-<a id="nestedatt--requester_field_values"></a>
+<a id="nestedblock--requester_field_values"></a>
 ### Nested Schema for `requester_field_values`
+
+Required:
+
+- `id` (String) The ID of a requesterField.
+
+Optional:
+
+- `label` (String) A human-readable description of requesterField. It's used for display purposes and is optional
+- `type` (String) Type of value for the requester field.
+- `value` (String) The value of requesterField, which depends on the type of the field
+- `values` (List of String) The values of requesterField with the type MULTISELECT.
+If the field type is MULTISELECT, this property is required.
+
+
+<a id="nestedblock--risk_assessment"></a>
+### Nested Schema for `risk_assessment`
+
+Optional:
+
+- `request_submission_type` (String) Whether request submission is allowed or restricted in the risk settings.
+- `risk_rules` (Block List) An array of resources that are excluded from the review. (see [below for nested schema](#nestedblock--risk_assessment--risk_rules))
+
+<a id="nestedblock--risk_assessment--risk_rules"></a>
+### Nested Schema for `risk_assessment.risk_rules`
+
+Optional:
+
+- `description` (String) The human readable description.
+- `name` (String) The name of a resource rule causing a conflict.
+- `resource_name` (String) Human readable name of the resource.
+
+
+
+<a id="nestedblock--requested"></a>
+### Nested Schema for `requested`
 
 Read-Only:
 
-- `id` (String) The ID of the requester field.
-- `label` (String) A human-readable description of the requester field.
-- `type` (String) Type of value for the requester field. Valid values: `DURATION`, `ISO_DATE`, `MULTISELECT`, `OKTA_USER_ID`, `SELECT`, `TEXT`.
-- `value` (String) The value of the requester field (for single-value fields).
-- `values` (List of String) The values of the requester field (for MULTISELECT type fields).
+- `access_scope_id` (String) ID of the access scope
+- `access_scope_type` (String) The access scope type
+- `entry_id` (String) The ID of the resource catalog entry.
+- `resource_id` (String) The requested resource ID
+- `resource_type` (String) The requested resource type.
 
-## Field Type Reference
 
-### Field Types and Values
+<a id="nestedblock--requested_by"></a>
+### Nested Schema for `requested_by`
 
-- **TEXT**: Contains free-form text input in the `value` attribute
-- **SELECT**: Contains single selection value in the `value` attribute
-- **MULTISELECT**: Contains multiple selection values in the `values` attribute (list)
-- **DURATION**: Contains time duration specification in the `value` attribute (e.g., "5 days", "2 weeks")
-- **ISO_DATE**: Contains date specification in ISO format in the `value` attribute
-- **OKTA_USER_ID**: Contains Okta user ID in the `value` attribute
+Read-Only:
 
-### Usage Notes
+- `external_id` (String) The Okta user id
+- `type` (String) The type of principal
 
-- For `MULTISELECT` type fields, the values will be in the `values` attribute as a list
-- For all other field types, the value will be in the `value` attribute as a string
-- The `label` and `type` attributes provide metadata about the field structure
-- Field definitions and requirements are determined by the approval system configuration
 
-## Limitations and Considerations
+<a id="nestedblock--requested_for"></a>
+### Nested Schema for `requested_for`
 
-1. **Read-Only**: This data source only retrieves existing request information and cannot modify requests.
+Read-Only:
 
-2. **Identity Governance Licensing**: This data source requires Okta Identity Governance licensing and proper configuration.
-
-3. **Request Lifecycle**: The data reflects the current state of the request in the approval workflow.
-
-4. **Field Structure**: The field structure and available types depend on the approval system configuration in Okta Identity Governance.
+- `external_id` (String) The Okta user id
+- `type` (String) The type of principal

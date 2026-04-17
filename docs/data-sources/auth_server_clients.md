@@ -1,20 +1,30 @@
 ---
 page_title: "Data Source: okta_auth_server_clients"
+subcategory: "Security"
 description: |-
-  Get OAuth 2.0 refresh token information for an authorization server client from Okta.
+
+  Terraform Data Source for okta_auth_server_clients.
+
 ---
 
 # Data Source: okta_auth_server_clients
 
-Get OAuth 2.0 refresh token information for an authorization server client from Okta.
+
+Terraform Data Source for okta_auth_server_clients.
+
+
+## Links
+
+- [Okta API docs](https://developer.okta.com/docs/api/openapi/okta-management/management/tag/AuthorizationServerClients/)
+- [Provider source](https://github.com/okta/terraform-provider-okta/blob/master/okta/services/idaas/data_source_okta_auth_server_clients.go)
 
 ## Example Usage
 
 ```terraform
-data "okta_auth_server_clients" "example" {
-  id              = "oar123456abcdefghijklm"
-  auth_server_id  = "aus123456abcdefghijklm"
-  client_id       = "0oa123456abcdefghijklm"
+data "okta_auth_server_clients" "test" {
+  id             = "oar123456abcdefghijklm"
+  auth_server_id = "aus123456abcdefghijklm"
+  client_id      = "0oa123456abcdefghijklm"
 }
 ```
 

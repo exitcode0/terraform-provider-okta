@@ -1,26 +1,36 @@
 ---
 page_title: "Resource: okta_app_user_schema_property"
+subcategory: "Applications"
 description: |-
+
   Creates an Application User Schema property.
   This resource allows you to create and configure a custom user schema property and associate it with an application.
   Make sure that the app instance is 'active' before creating the schema property, because in some cases API might return '404' error.
   IMPORTANT: With 'enum', list its values as strings even though the 'type'
-  may be something other than string. This is a limitation of the schema defintion
+  may be something other than string. This is a limitation of the schema definition
   in the Terraform Plugin SDK runtime and we juggle the type correctly when making
-  Okta API calls. Same holds for the 'const' value of 'oneof' as well as the
-  'array*' variation of 'enum' and 'one_of'
+  Okta API calls. Same holds for the 'const' value of 'one_of' as well as the
+  'array_*' variation of 'enum' and 'one_of'
+
 ---
 
 # Resource: okta_app_user_schema_property
+
 
 Creates an Application User Schema property.
 This resource allows you to create and configure a custom user schema property and associate it with an application.
 Make sure that the app instance is 'active' before creating the schema property, because in some cases API might return '404' error.
 **IMPORTANT:** With 'enum', list its values as strings even though the 'type'
-may be something other than string. This is a limitation of the schema defintion
+may be something other than string. This is a limitation of the schema definition
 in the Terraform Plugin SDK runtime and we juggle the type correctly when making
 Okta API calls. Same holds for the 'const' value of 'one_of' as well as the
 'array_*' variation of 'enum' and 'one_of'
+
+
+## Links
+
+- [Okta API docs](https://developer.okta.com/docs/api/openapi/okta-management/management/tag/Schema/)
+- [Provider source](https://github.com/okta/terraform-provider-okta/blob/master/okta/services/idaas/resource_okta_app_user_custom_schema_property.go)
 
 ## Example Usage
 
@@ -33,15 +43,6 @@ resource "okta_app_user_schema_property" "example" {
   description = "My custom property name"
   master      = "OKTA"
   scope       = "SELF"
-  array_enum =  ["1", "2"]	
-  array_one_of {
-    const = "1"
-    title = "one"
-  }
-  array_one_of {
-    const = "2"
-    title = "two"
-  }	
 }
 ```
 
@@ -61,7 +62,7 @@ resource "okta_app_user_schema_property" "example" {
 - `array_one_of` (Block List) Display name and value an enum array can be set to.
 	- 'const' - (Required) value mapping to member of 'enum'.
 	- 'title' - (Required) display name for the enum value. (see [below for nested schema](#nestedblock--array_one_of))
-- `array_type` (String) The type of the array elements if `type` is set to `array`. Set it to `string` when array enum type is `boolean`.
+- `array_type` (String) The type of the array elements if `type` is set to `array`
 - `description` (String) The description of the user schema property.
 - `enum` (List of String) Array of values a primitive property can be set to. See `array_enum` for arrays.
 - `external_name` (String) External name of the user schema property.

@@ -1,284 +1,207 @@
-# okta_app_signon_policy_rules
+---
+page_title: "Resource: okta_app_signon_policy_rules"
+subcategory: "Applications"
+description: |-
+
+  Manages multiple app sign-on policy rules for a single policy. This resource allows you to define all rules for a policy in a single configuration block, ensuring consistent priority ordering and avoiding drift issues.
+
+---
+
+# Resource: okta_app_signon_policy_rules
+
 
 Manages multiple app sign-on policy rules for a single policy. This resource allows you to define all rules for a policy in a single configuration block, ensuring consistent priority ordering and avoiding drift issues.
 
+
 ~> **IMPORTANT:** This resource uses name-first matching to identify and update rules. When migrating from individual `okta_app_signon_policy_rule` resources, ensure rule names remain consistent to enable safe adoption without data loss.
 
-~> **NOTE ON RENAMING RULES:** If you rename a rule without explicitly preserving its `id`, the provider will treat it as a deletion of the old rule and creation of a new rule. To rename a rule while preserving its configuration and ID, you must explicitly set the `id` attribute in your configuration before changing the `name`. For example:
-```terraform
-rule {
-  id   = "rulAbc123" # Explicitly reference the existing rule ID
-  name = "New Rule Name" # New name
-  # ... other attributes
-}
-```
-After applying with the explicit `id`, you can remove it in subsequent applies and the rule will be tracked by its new name.
+~> **NOTE ON RENAMING RULES:** If you rename a rule without explicitly preserving its `id`, the provider will treat it as a deletion of the old rule and creation of a new rule. To rename a rule while preserving its configuration and ID, you must explicitly set the `id` attribute in your configuration before changing the `name`.
+
+## Links
+
+- [Okta API docs](https://developer.okta.com/docs/api/openapi/okta-management/management/tag/ApplicationPolicies/)
+- [Provider source](https://github.com/okta/terraform-provider-okta/blob/master/okta/services/idaas/resource_okta_app_signon_policy_rules.go)
+
+## Related Resources
+
+- [`okta_app_signon_policy`](../resources/app_signon_policy) — Parent sign-on policy
 
 ## Example Usage
 
 ```terraform
-resource "okta_app_signon_policy_rules" "example" {
-  policy_id = okta_app_signon_policy.example.id
+resource "okta_app_saml" "test" {
+  label                     = "testAcc_replace_with_uuid"
+  sso_url                   = "http://google.com"
+  recipient                 = "http://here.com"
+  destination               = "http://its-about-the-journey.com"
+  audience                  = "http://audience.com"
+  subject_name_id_template  = "$${user.userName}"
+  subject_name_id_format    = "urn:oasis:names:tc:SAML:1.1:nameid-format:emailAddress"
+  response_signed           = true
+  signature_algorithm       = "RSA_SHA256"
+  digest_algorithm          = "SHA256"
+  honor_force_authn         = false
+  authn_context_class_ref   = "urn:oasis:names:tc:SAML:2.0:ac:classes:PasswordProtectedTransport"
+  single_logout_issuer      = "https://dunshire.okta.com"
+  single_logout_url         = "https://dunshire.okta.com/logout"
+  single_logout_certificate = "MIIFnDCCA4QCCQDBSLbiON2T1zANBgkqhkiG9w0BAQsFADCBjzELMAkGA1UEBhMCVVMxDjAMBgNV\r\nBAgMBU1haW5lMRAwDgYDVQQHDAdDYXJpYm91MRcwFQYDVQQKDA5Tbm93bWFrZXJzIEluYzEUMBIG\r\nA1UECwwLRW5naW5lZXJpbmcxDTALBgNVBAMMBFNub3cxIDAeBgkqhkiG9w0BCQEWEWVtYWlsQGV4\r\nYW1wbGUuY29tMB4XDTIwMTIwMzIyNDY0M1oXDTMwMTIwMTIyNDY0M1owgY8xCzAJBgNVBAYTAlVT\r\nMQ4wDAYDVQQIDAVNYWluZTEQMA4GA1UEBwwHQ2FyaWJvdTEXMBUGA1UECgwOU25vd21ha2VycyBJ\r\nbmMxFDASBgNVBAsMC0VuZ2luZWVyaW5nMQ0wCwYDVQQDDARTbm93MSAwHgYJKoZIhvcNAQkBFhFl\r\nbWFpbEBleGFtcGxlLmNvbTCCAiIwDQYJKoZIhvcNAQEBBQADggIPADCCAgoCggIBANMmWDjXPdoa\r\nPyzIENqeY9njLan2FqCbQPSestWUUcb6NhDsJVGSQ7XR+ozQA5TaJzbP7cAJUj8vCcbqMZsgOQAu\r\nO/pzYyQEKptLmrGvPn7xkJ1A1xLkp2NY18cpDTeUPueJUoidZ9EJwEuyUZIktzxNNU1pA1lGijiu\r\n2XNxs9d9JR/hm3tCu9Im8qLVB4JtX80YUa6QtlRjWR/H8a373AYCOASdoB3c57fIPD8ATDNy2w/c\r\nfCVGiyKDMFB+GA/WTsZpOP3iohRp8ltAncSuzypcztb2iE+jijtTsiC9kUA2abAJqqpoCJubNShi\r\nVff4822czpziS44MV2guC9wANi8u3Uyl5MKsU95j01jzadKRP5S+2f0K+n8n4UoV9fnqZFyuGAKd\r\nCJi9K6NlSAP+TgPe/JP9FOSuxQOHWJfmdLHdJD+evoKi9E55sr5lRFK0xU1Fj5Ld7zjC0pXPhtJf\r\nsgjEZzD433AsHnRzvRT1KSNCPkLYomznZo5n9rWYgCQ8HcytlQDTesmKE+s05E/VSWNtH84XdDrt\r\nieXwfwhHfaABSu+WjZYxi9CXdFCSvXhsgufUcK4FbYAHl/ga/cJxZc52yFC7Pcq0u9O2BSCjYPdQ\r\nDAHs9dhT1RhwVLM8RmoAzgxyyzau0gxnAlgSBD9FMW6dXqIHIp8yAAg9cRXhYRTNAgMBAAEwDQYJ\r\nKoZIhvcNAQELBQADggIBADofEC1SvG8qa7pmKCjB/E9Sxhk3mvUO9Gq43xzwVb721Ng3VYf4vGU3\r\nwLUwJeLt0wggnj26NJweN5T3q9T8UMxZhHSWvttEU3+S1nArRB0beti716HSlOCDx4wTmBu/D1MG\r\nt/kZYFJw+zuzvAcbYct2pK69AQhD8xAIbQvqADJI7cCK3yRry+aWtppc58P81KYabUlCfFXfhJ9E\r\nP72ffN4jVHpX3lxxYh7FKAdiKbY2FYzjsc7RdgKI1R3iAAZUCGBTvezNzaetGzTUjjl/g1tcVYij\r\nltH9ZOQBPlUMI88lxUxqgRTerpPmAJH00CACx4JFiZrweLM1trZyy06wNDQgLrqHr3EOagBF/O2h\r\nhfTehNdVr6iq3YhKWBo4/+RL0RCzHMh4u86VbDDnDn4Y6HzLuyIAtBFoikoKM6UHTOa0Pqv2bBr5\r\nwbkRkVUxl9yJJw/HmTCdfnsM9dTOJUKzEglnGF2184Gg+qJDZB6fSf0EAO1F6sTqiSswl+uHQZiy\r\nDaZzyU7Gg5seKOZ20zTRaX3Ihj9Zij/ORnrARE7eM/usKMECp+7syUwAUKxDCZkGiUdskmOhhBGL\r\nJtbyK3F2UvoJoLsm3pIcvMak9KwMjSTGJB47ABUP1+w+zGcNk0D5Co3IJ6QekiLfWJyQ+kKsWLKt\r\nzOYQQatrnBagM7MI2/T4\r\n"
+
+  attribute_statements {
+    type         = "GROUP"
+    name         = "groups"
+    filter_type  = "REGEX"
+    filter_value = ".*"
+  }
+}
+
+data "okta_app_signon_policy" "test" {
+  app_id = okta_app_saml.test.id
+}
+
+resource "okta_app_signon_policy_rule" "test" {
+  policy_id  = data.okta_app_signon_policy.test.id
+  name       = "testAcc_replace_with_uuid"
+  risk_score = "LOW"
+  platform_include {
+    os_expression = ""
+    os_type       = "OTHER"
+    type          = "DESKTOP"
+  }
+}
+
+resource "okta_app_signon_policy_rules" "policy_rules" {
+  policy_id = data.okta_app_signon_policy.test.id
 
   rule {
-    name                        = "High Priority Rule"
-    priority                    = 1
-    factor_mode                 = "2FA"
-    re_authentication_frequency = "PT2H"
-    status                      = "ACTIVE"
+    # Replace with actual rule ID
+    name               = "Rule1-updatedTF-23/02/26"
+    priority           = 4
+    status             = "ACTIVE"
+    factor_mode        = "2FA"
+    inactivity_period  = "PT1H"
+    network_connection = "ANYWHERE"
   }
 
   rule {
-    name       = "Low Priority Rule"
-    priority   = 2
-    factor_mode = "1FA"
-    access     = "ALLOW"
-    status     = "ACTIVE"
+    name               = "Rule2-updatedTF-23/02/26"
+    priority           = 2
+    status             = "ACTIVE"
+    factor_mode        = "2FA"
+    inactivity_period  = "PT1H"
+    network_connection = "ANYWHERE"
   }
 
   rule {
-    name   = "Deny Rule"
-    priority = 3
-    access = "DENY"
-    status = "ACTIVE"
+    name               = "Rule3-updatedTF-23/02/26"
+    priority           = 1
+    status             = "ACTIVE"
+    factor_mode        = "2FA"
+    inactivity_period  = "PT1H"
+    network_connection = "ANYWHERE"
+  }
+
+  rule {
+
+    name               = "Rule4-updatedTF-23/02/26"
+    priority           = 3
+    status             = "ACTIVE"
+    factor_mode        = "2FA"
+    inactivity_period  = "PT1H"
+    network_connection = "ANYWHERE"
+  }
+
+  rule {
+    name               = "Rule5-updatedTF-23/02/26"
+    priority           = 5
+    status             = "ACTIVE"
+    factor_mode        = "2FA"
+    inactivity_period  = "PT1H"
+    network_connection = "ANYWHERE"
+    constraints = [jsonencode(
+      {
+        "authenticationMethods" : [
+          {
+            "key" : "okta_password",
+            "method" : "password"
+          }
+        ],
+        "next" : [{
+          "authenticationMethods" : [{
+            "key" : "okta_email",
+            "method" : "email"
+          }]
+        }]
+      }
+    )]
   }
 }
 ```
 
-## Argument Reference
+## Priority and system rules
 
-### Required Arguments
+- Okta evaluates rules in priority order (lower number = higher priority).
+- Every policy includes a system *Catch-all Rule* that cannot be modified.
+- Avoid managing the Catch-all Rule via Terraform.
 
-- `policy_id` (String) - ID of the policy to manage rules for. Changing this forces a new resource.
+<!-- schema generated by tfplugindocs -->
+## Schema
 
-### Optional Arguments
+### Required
 
-- `rule` (Block Set) - List of policy rules to manage. Each rule block supports the following:
-  - `id` (String) - ID of the rule (computed, but can be specified to adopt an existing rule during migration).
-  - `name` (String, Required) - Policy rule name. Must be unique within the policy.
-  - `priority` (Number) - Priority of the rule. Lower numbers are evaluated first. When omitted, the provider will use the actual priority assigned by Okta.
-  - `status` (String) - Status of the rule: `ACTIVE` or `INACTIVE`. Defaults to `ACTIVE`.
-  - `access` (String) - Access decision: `ALLOW` or `DENY`. Defaults to `ALLOW`.
-  - `factor_mode` (String) - Number of factors required: `1FA` or `2FA`. Defaults to `2FA`.
-  - `type` (String) - Verification method type. Defaults to `ASSURANCE`.
-  - `re_authentication_frequency` (String) - Re-authentication frequency in ISO 8601 duration format (e.g., `PT2H`). Defaults to `PT2H`.
-  - `inactivity_period` (String) - Inactivity period before re-authentication in ISO 8601 duration format.
-  - `network_connection` (String) - Network selection mode: `ANYWHERE`, `ZONE`, `ON_NETWORK`, or `OFF_NETWORK`. Defaults to `ANYWHERE`.
-  - `network_includes` (List of Strings) - List of network zone IDs to include.
-  - `network_excludes` (List of Strings) - List of network zone IDs to exclude.
-  - `groups_included` (Set of Strings) - Set of group IDs to include in this rule.
-  - `groups_excluded` (Set of Strings) - Set of group IDs to exclude from this rule.
-  - `users_included` (Set of Strings) - Set of user IDs to include in this rule.
-  - `users_excluded` (Set of Strings) - Set of user IDs to exclude from this rule.
-  - `user_types_included` (Set of Strings) - Set of user type IDs to include.
-  - `user_types_excluded` (Set of Strings) - Set of user type IDs to exclude.
-  - `device_is_registered` (Boolean) - Require device to be registered with Okta Verify.
-  - `device_is_managed` (Boolean) - Require device to be managed by a device management system.
-  - `device_assurances_included` (Set of Strings) - Set of device assurance policy IDs to include.
-  - `custom_expression` (String) - Custom Okta Expression Language condition for advanced matching.
-  - `risk_score` (String) - Risk score level to match: `ANY`, `LOW`, `MEDIUM`, or `HIGH`. Defaults to `ANY`.
-  - `constraints` (List of Strings) - List of authenticator constraints as JSON-encoded strings.
-  - `platform_include` (Block Set) - Platform conditions to include. Each platform block supports:
-    - `type` (String) - Platform type: `ANY`, `MOBILE`, or `DESKTOP`.
-    - `os_type` (String) - OS type: `ANY`, `IOS`, `ANDROID`, `WINDOWS`, `OSX`, `MACOS`, `CHROMEOS`, or `OTHER`.
-    - `os_expression` (String) - Custom OS expression for advanced matching.
-  - `system` (Boolean, Computed) - Whether this is a system rule (e.g., Catch-all Rule). System rules cannot be modified.
-  - `chains` (Block List) Authentication method chains. Only supports 5 items in the array. Each chain can support maximum 3 steps. To be used only with verification method type `AUTH_METHOD_CHAIN`.(see [below for nested schema](#nestedblock--chains))
+- `policy_id` (String) ID of the policy to manage rules for.
 
+### Optional
 
-<a id="nestedblock--chains"></a>
-### Nested Schema for `chains`
+- `rule` (Block List) List of policy rules. Rules are processed in priority order (lowest number = highest priority). (see [below for nested schema](#nestedblock--rule))
+
+### Read-Only
+
+- `id` (String) The ID of this resource (same as policy_id).
+
+<a id="nestedblock--rule"></a>
+### Nested Schema for `rule`
+
+Required:
+
+- `name` (String) Policy Rule Name. Must be unique within the policy.
 
 Optional:
 
-- `authenticationMethods` (List of Authentication Methods) (see [below for nested schema](#nestedblock--authenticationMethods))
-- `next` (List) The next steps of the authentication method chain. This is an array of type `chains`. Only supports one item in the array.
-- `reauthenticateIn` (String) Specifies how often the user is prompted for authentication using duration format for the time period. This parameter can't be set at the same time as the `re_authentication_frequency` field.
+- `access` (String) Access decision: ALLOW or DENY.
+- `chains` (List of String) List of authentication method chain objects as JSON-encoded strings. Use with `type = "AUTH_METHOD_CHAIN"` only.
+- `constraints` (List of String) List of authenticator constraints as JSON-encoded strings.
+- `custom_expression` (String) Custom Okta Expression Language condition for advanced matching.
+- `device_assurances_included` (Set of String) Set of device assurance policy IDs to include.
+- `device_is_managed` (Boolean) Require device to be managed by a device management system.
+- `device_is_registered` (Boolean) Require device to be registered with Okta Verify.
+- `factor_mode` (String) Number of factors required: 1FA or 2FA.
+- `groups_excluded` (Set of String) Set of group IDs to exclude from this rule.
+- `groups_included` (Set of String) Set of group IDs to include in this rule.
+- `id` (String) ID of the rule. Can be specified to adopt an existing rule during migration.
+- `inactivity_period` (String) Inactivity period before re-authentication in ISO 8601 duration format.
+- `network_connection` (String) Network selection mode: ANYWHERE, ZONE, ON_NETWORK, or OFF_NETWORK.
+- `network_excludes` (List of String) List of network zone IDs to exclude.
+- `network_includes` (List of String) List of network zone IDs to include.
+- `platform_include` (Block List) Platform conditions to include. (see [below for nested schema](#nestedblock--rule--platform_include))
+- `priority` (Number) Priority of the rule. Lower numbers are evaluated first.
+- `re_authentication_frequency` (String) Re-authentication frequency in ISO 8601 duration format (e.g., PT2H for 2 hours). When using authentication chains with reauthenticateIn, this value is computed by the API based on the chain configuration.
+- `risk_score` (String) Risk score level to match: ANY, LOW, MEDIUM, or HIGH.
+- `status` (String) Status of the rule: ACTIVE or INACTIVE.
+- `type` (String) Verification method type.
+- `user_types_excluded` (Set of String) Set of user type IDs to exclude.
+- `user_types_included` (Set of String) Set of user type IDs to include.
+- `users_excluded` (Set of String) Set of user IDs to exclude from this rule.
+- `users_included` (Set of String) Set of user IDs to include in this rule.
 
-<a id="nestedblock--authenticationMethods"></a>
-### Nested Schema for `authenticationMethods`
-Required:
-- `key` (String) A label that identifies the authenticator.
-- `method` (String) Specifies the method used for the authenticator.
+Read-Only:
 
-## Attributes Reference
+- `system` (Boolean) Whether this is a system rule (e.g., Catch-all Rule). System rules cannot be modified.
 
-- `id` (String) - The ID of this resource (same as `policy_id`).
+<a id="nestedblock--rule--platform_include"></a>
+### Nested Schema for `rule.platform_include`
 
-## Priority Management
+Optional:
 
-~> **IMPORTANT:** When managing priorities, follow Okta's top-down synchronization strategy to avoid automatic priority shifting. Always update rules in priority order (P1 → PN) to prevent cascading shifts.
-
-### Priority Behavior
-
-- Priorities are **0-indexed** but can be any positive integer.
-- When you omit `priority` in config, Terraform will display the actual priority assigned by Okta in the state.
-- Okta allows gaps in priorities (e.g., priorities 1, 2, 5, 99 are valid).
-- **Maximum of 99 rules per policy:** You can define up to 99 custom rules. Priority 99 is reserved for the system Catch-all Rule.
-- If you update multiple rules simultaneously and priorities conflict, Okta may automatically shift priorities to resolve conflicts. To prevent this:
-  1. Use explicit, sequential priority values (1, 2, 3, 4, 5).
-  2. Avoid updating rules with the same priority.
-  3. Consider using temporary high priorities (100+) if reordering is needed.
-
-### System Rules and Catch-all Rule
-
-- **Catch-all Rule:** Every policy includes a system-level Catch-all Rule with priority 99. This is the default rule that applies if no other rules match.
-- **Immutable:** System rules (like "Catch-all Rule") cannot be modified, deleted, or have their conditions/priorities changed.
-- **Import behavior:** If you import a policy with a Catch-all Rule, it will appear in your state but cannot be managed by Terraform. Omit it from your configuration.
-
-## Migration from okta_app_signon_policy_rule
-
-If you currently use multiple individual `okta_app_signon_policy_rule` resources, follow these steps to safely migrate to the grouped resource:
-
-### Step 1: Backup Your State
-
-```bash
-terraform state pull > terraform-state-backup.json
-```
-
-### Step 2: Identify Rule IDs and Names
-
-List all rules in your policy to identify their IDs and names:
-
-```bash
-# Using Terraform state
-terraform state show 'okta_app_signon_policy_rule.rule1'
-```
-
-
-### Step 3: Comment the existing configuration and remove the current config from terraform state without deleting the rules on the Okta org
-
-```terraform
-removed {
-  from = okta_app_signon_policy_rule.rule1
-  lifecycle {
-    destroy = false
-  }
-}
-removed {
-  from = okta_app_signon_policy_rule.rule2
-  lifecycle {
-    destroy = false
-  }
-}
-```
-
-### Step 4: Create the Grouped Resource Configuration
-
-Create a new `okta_app_signon_policy_rules` resource with the same rules. Use **rule names as the matching key** (do NOT include `id` unless adopting an existing rule):
-
-```terraform
-resource "okta_app_signon_policy_rules" "migrated" {
-  policy_id = okta_app_signon_policy.my_policy.id
-
-  rule {
-    name                        = "High Priority Rule"
-    priority                    = 1  # Explicitly set to avoid shifting
-    factor_mode                 = "2FA"
-    re_authentication_frequency = "PT2H"
-    status                      = "ACTIVE"
-  }
-
-  rule {
-    name       = "Second Rule"
-    priority   = 2
-    factor_mode = "1FA"
-    status     = "ACTIVE"
-  }
-
-  rule {
-    name   = "Deny Rule"
-    priority = 3
-    access = "DENY"
-    status = "ACTIVE"
-  }
-}
-```
-
-### Step 5: Plan and Verify
-
-Run `terraform plan` to see if any changes will be made:
-
-```bash
-terraform plan -out migration.tfplan
-```
-
-**Expected outcome:** Either "No changes" or only legitimate config updates. If the plan shows unexpected deletes or recreates:
-- Verify rule names match exactly (case-sensitive).
-- Check that attributes (access, factor_mode, etc.) match Okta's current state.
-- Ensure you're not declaring system rules (e.g., Catch-all Rule).
-
-### Step 6: Apply the Migration
-
-```bash
-terraform apply migration.tfplan
-```
-
-### Step 6: Verify Final State
-
-```bash
-terraform plan
-# Output should show: No changes. Your infrastructure matches the configuration.
-```
-
-## Important Migration Notes
-
-### Priority Differences
-
-When migrating from `okta_app_signon_policy_rule` (single-rule resource) to `okta_app_signon_policy_rules` (grouped resource):
-
-- **Old behavior:** Single-rule resource defaults to `priority = 0` in Terraform state, even if Okta assigned a different priority.
-- **New behavior:** Grouped resource reflects the actual priority assigned by Okta. When you omit `priority`, the state will show the real Okta-assigned priority.
-
-**Action:** Explicitly set `priority` values in your configuration to avoid unexpected changes during migration.
-
-### Name-First Matching
-
-The grouped resource matches rules by **name first**, not by ID:
-
-- If you rename a rule in config, the provider will match it to the existing rule by the new name.
-- If a name doesn't exist in Okta, a new rule is created.
-- This design prevents accidental re-matching when state order differs from config order.
-
-### System Rules
-
-System rules (e.g., "Catch-all Rule") cannot be managed:
-
-- If your policy has a system rule, do NOT declare it in your configuration.
-- The provider will detect it during import/read but will not attempt to modify or delete it.
-- System rules are read-only from Terraform's perspective.
-
-## Troubleshooting
-
-### Plan shows "1 to change" but config matches Okta
-
-**Cause:** State and config rule order differ, triggering re-matching.
-
-**Solution:** Verify rule names match exactly (case-sensitive) and attributes are correct. Run `terraform plan -refresh=true` to refresh state from Okta.
-
-### Priorities shift unexpectedly after apply
-
-**Cause:** Okta automatically shifts priorities when updates conflict. This is expected behavior per Okta's prioritization rules.
-
-**Solution:** Use explicit, sequential priorities (1, 2, 3, ...) instead of 0-indexed or sparse values. Avoid updating multiple rules simultaneously with overlapping priorities.
-
-### Error: "System rule cannot be modified"
-
-**Cause:** You attempted to set conditions on a system rule (Catch-all Rule).
-
-**Solution:** Remove the system rule from your configuration. System rules are immutable.
-
-## Import
-
-Import an existing policy's rules:
-
-```bash
-terraform import okta_app_signon_policy_rules.example <policy_id>
-```
-
-This will populate your state with all rules for the policy (including system rules). Update your configuration to match.
-
-## See Also
-
-- [okta_app_signon_policy](https://registry.terraform.io/providers/okta/okta/latest/docs/resources/app_signon_policy) - Create and manage app sign-on policies.
-- [Okta Policy Rule Prioritization Guide](https://developer.okta.com/docs/guides/policy-rule-prioritization/main/) - Learn about priority management and top-down synchronization.
+- `os_expression` (String) Custom OS expression for advanced matching.
+- `os_type` (String) OS type: ANY, IOS, ANDROID, WINDOWS, OSX, MACOS, CHROMEOS, or OTHER.
+- `type` (String) Platform type: ANY, MOBILE, or DESKTOP.

@@ -1,12 +1,28 @@
 ---
 page_title: "Resource: okta_policy_signon"
+subcategory: "Security"
 description: |-
+
   Creates a Sign On Policy. This resource allows you to create and configure a Sign On Policy.
+
 ---
 
 # Resource: okta_policy_signon
 
+
 Creates a Sign On Policy. This resource allows you to create and configure a Sign On Policy.
+
+
+## Links
+
+- [Okta API docs](https://developer.okta.com/docs/api/openapi/okta-management/management/tag/Policy/)
+- [Provider source](https://github.com/okta/terraform-provider-okta/blob/master/okta/services/idaas/resource_okta_policy_sign_on.go)
+
+## Related Resources
+
+- [`okta_policy_rule_signon`](../resources/policy_rule_signon) — Rules for this policy
+- [`okta_network_zone`](../resources/network_zone) — Network zones used in policy conditions
+- [`okta_behavior`](../resources/behavior) — Behavior rules used in policy conditions
 
 ## Example Usage
 

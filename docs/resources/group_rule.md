@@ -1,20 +1,34 @@
 ---
 page_title: "Resource: okta_group_rule"
+subcategory: "Directory"
 description: |-
+
   Creates an Okta Group Rule.
   This resource allows you to create and configure an Okta Group Rule.
   -> If the Okta API marks the 'status' of the rule as 'INVALID' the Okta
   Terraform Provider will act in a force/replace manner and call the API to delete
   the underlying rule resource and create a new rule resource.
+
 ---
 
 # Resource: okta_group_rule
+
 
 Creates an Okta Group Rule.
 This resource allows you to create and configure an Okta Group Rule.
 -> If the Okta API marks the 'status' of the rule as 'INVALID' the Okta
 Terraform Provider will act in a force/replace manner and call the API to delete
 the underlying rule resource and create a new rule resource.
+
+
+## Links
+
+- [Okta API docs](https://developer.okta.com/docs/api/openapi/okta-management/management/tag/GroupRule/)
+- [Provider source](https://github.com/okta/terraform-provider-okta/blob/master/okta/services/idaas/resource_okta_group_rule.go)
+
+## Related Resources
+
+- [`okta_group`](../resources/group) — Target group for the rule
 
 ## Example Usage
 

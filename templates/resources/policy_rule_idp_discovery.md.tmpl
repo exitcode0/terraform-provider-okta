@@ -1,0 +1,51 @@
+---
+page_title: "{{.Type}}: {{.Name}}"
+subcategory: "Security"
+description: |-
+{{ if .Description }}
+{{ .Description | plainmarkdown | trimspace | prefixlines "  " }}
+{{ else }}
+  Terraform {{.Type}} for {{.Name}}.
+{{ end }}
+---
+
+# {{.Type}}: {{.Name}}
+
+{{ if .Description }}
+{{ .Description | trimspace }}
+{{ else }}
+Terraform {{.Type}} for {{.Name}}.
+{{ end }}
+
+## Links
+
+- [Okta API docs](https://developer.okta.com/docs/api/openapi/okta-management/management/tag/Policy/)
+- [Provider source](https://github.com/okta/terraform-provider-okta/blob/master/okta/services/idaas/resource_okta_policy_rule_idp_discovery.go)
+- [SDK source](https://github.com/okta/okta-sdk-golang/blob/v6.1.6/okta/api_policy.go)
+
+## Related Resources
+
+- [`okta_idp_oidc`](../resources/idp_oidc) — OIDC identity providers
+- [`okta_idp_saml`](../resources/idp_saml) — SAML identity providers
+- [`okta_idp_social`](../resources/idp_social) — Social identity providers
+- [`okta_network_zone`](../resources/network_zone) — Network zones used in conditions
+
+{{ if .HasExample -}}
+
+## Example Usage
+
+{{ tffile .ExampleFile }}
+
+{{- end }}
+
+{{ .SchemaMarkdown | trimspace }}
+
+{{ if .HasImport -}}
+
+## Import
+
+Import is supported using the following syntax:
+
+{{ codefile "shell" .ImportFile }}
+
+{{- end }}

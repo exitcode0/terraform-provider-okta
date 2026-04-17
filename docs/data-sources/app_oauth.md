@@ -1,12 +1,31 @@
 ---
 page_title: "Data Source: okta_app_oauth"
+subcategory: "Applications"
 description: |-
+
   Get a OIDC application from Okta.
+
 ---
 
 # Data Source: okta_app_oauth
 
+
 Get a OIDC application from Okta.
+
+
+## Links
+
+- [Okta API docs](https://developer.okta.com/docs/api/openapi/okta-management/management/tag/Application/)
+- [Provider source](https://github.com/okta/terraform-provider-okta/blob/master/okta/services/idaas/data_source_okta_app_oauth.go)
+
+## Related Resources
+
+- [`okta_app_group_assignment`](../resources/app_group_assignment) — Assign groups to the application
+- [`okta_app_user`](../resources/app_user) — Assign users to the application
+- [`okta_app_signon_policy`](../resources/app_signon_policy) — Application sign-on policy
+- [`okta_app_oauth_api_scope`](../resources/app_oauth_api_scope) — OAuth API scopes
+- [`okta_app_oauth_role_assignment`](../resources/app_oauth_role_assignment) — OAuth role assignments
+- [`okta_app_connection`](../resources/app_connection) — Application connection settings
 
 ## Example Usage
 
@@ -26,7 +45,7 @@ data "okta_app_oauth" "test" {
 - `label` (String) The label of the app to retrieve, conflicts with
 				label_prefix and id. Label uses the ?q=<label> query parameter exposed by
 				Okta's List Apps API. The API will search both name and label using that
-				query. Therefore similarily named and labeled apps may be returned in the query
+				query. Therefore similarly named and labeled apps may be returned in the query
 				and have the unitended result of associating the wrong app with this data
 				source. See:
 				https://developer.okta.com/docs/reference/api/apps/#list-applications
@@ -50,7 +69,7 @@ data "okta_app_oauth" "test" {
 - `login_uri` (String) URI that initiates login.
 - `logo_uri` (String) URI that references a logo for the client.
 - `name` (String) Name of application.
-- `network` (List of Object) Network restrictions for the application client. (see [below for nested schema](#nestedblock--network))
+- `network` (List of Object) Network restrictions for the application client. (see [below for nested schema](#nestedatt--network))
 - `policy_uri` (String) URI to web page providing client policy document.
 - `post_logout_redirect_uris` (Set of String) List of URIs for redirection after logout
 - `redirect_uris` (Set of String) List of URIs for use in the redirect-based flow.
@@ -59,12 +78,11 @@ data "okta_app_oauth" "test" {
 - `type` (String) The type of OAuth application.
 - `wildcard_redirect` (String) Indicates if the client is allowed to use wildcard matching of redirect_uris. Some valid values include: "SUBDOMAIN", "DISABLED".
 
-
-<a id="nestedblock--network"></a>
+<a id="nestedatt--network"></a>
 ### Nested Schema for `network`
 
 Read-Only:
 
-- `connection` (String) The network connection type. Can be `ANYWHERE` or `ZONE`.
-- `exclude` (Set of String) IP zones to exclude when `connection` is `ZONE`. Can be `ALL_IP_ZONES` or specific zone IDs.
-- `include` (Set of String) IP zones to include when `connection` is `ZONE`. Can be `ALL_IP_ZONES` or specific zone IDs.
+- `connection` (String)
+- `exclude` (Set of String)
+- `include` (Set of String)

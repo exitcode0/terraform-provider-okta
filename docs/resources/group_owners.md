@@ -1,12 +1,27 @@
 ---
 page_title: "Resource: okta_group_owners"
+subcategory: "Directory"
 description: |-
+
   Manage owners for a group in bulk. Uses the group_id as the resource ID. The resource is authoritative: any owners on the group not declared in configuration will be removed.
+
 ---
 
 # Resource: okta_group_owners
 
+
 Manage owners for a group in bulk. Uses the group_id as the resource ID. The resource is authoritative: any owners on the group not declared in configuration will be removed.
+
+
+## Links
+
+- [Okta API docs](https://developer.okta.com/docs/api/openapi/okta-management/management/tag/GroupOwner/)
+- [Provider source](https://github.com/okta/terraform-provider-okta/blob/master/okta/services/idaas/resource_okta_group_owners.go)
+- [SDK source](https://github.com/okta/okta-sdk-golang/blob/v5.0.6/okta/api_group_owner.go)
+
+## Related Resources
+
+- [`okta_group`](../resources/group) — The group
 
 ## Example Usage
 

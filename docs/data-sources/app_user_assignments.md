@@ -1,12 +1,22 @@
 ---
 page_title: "Data Source: okta_app_user_assignments"
+subcategory: "Applications"
 description: |-
+
   Get a set of users assigned to an Okta application.
+
 ---
 
 # Data Source: okta_app_user_assignments
 
+
 Get a set of users assigned to an Okta application.
+
+
+## Links
+
+- [Okta API docs](https://developer.okta.com/docs/api/openapi/okta-management/management/tag/ApplicationUsers/)
+- [Provider source](https://github.com/okta/terraform-provider-okta/blob/master/okta/services/idaas/data_source_okta_app_user_assignments.go)
 
 ## Example Usage
 
@@ -26,5 +36,3 @@ data "okta_app_user_assignments" "test" {
 ### Read-Only
 
 - `users` (Set of String) List of user IDs assigned to the app
-
-

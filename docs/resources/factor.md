@@ -1,12 +1,26 @@
 ---
 page_title: "Resource: okta_factor"
+subcategory: "Security"
 description: |-
+
   Allows you to manage the activation of Okta MFA methods. This resource allows you to manage Okta MFA methods.
+
 ---
 
 # Resource: okta_factor
 
+
 Allows you to manage the activation of Okta MFA methods. This resource allows you to manage Okta MFA methods.
+
+
+## Links
+
+- [Okta API docs](https://developer.okta.com/docs/api/openapi/okta-management/management/tag/UserFactor/)
+- [Provider source](https://github.com/okta/terraform-provider-okta/blob/master/okta/services/idaas/resource_okta_factor.go)
+
+## Related Resources
+
+- [`okta_authenticator`](../resources/authenticator) — Authenticator configuration
 
 ## Example Usage
 

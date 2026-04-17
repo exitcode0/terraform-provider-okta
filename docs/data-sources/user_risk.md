@@ -1,12 +1,27 @@
 ---
 page_title: "Data Source: okta_user_risk"
+subcategory: "Directory"
 description: |-
+
   Gets a user's risk level in Okta.
+
 ---
 
 # Data Source: okta_user_risk
 
+
 Gets a user's risk level in Okta.
+
+
+## Links
+
+- [Okta API docs](https://developer.okta.com/docs/api/openapi/okta-management/management/tag/UserRisk/)
+- [Provider source](https://github.com/okta/terraform-provider-okta/blob/master/okta/services/idaas/data_source_okta_user_risk.go)
+- [SDK source](https://github.com/okta/okta-sdk-golang/blob/v6.1.6/okta/api_user_risk.go)
+
+## Related Resources
+
+- [`okta_user`](../resources/user) — The user
 
 ## Example Usage
 
@@ -25,6 +40,6 @@ data "okta_user_risk" "example" {
 
 ### Read-Only
 
-- `id` (String) The ID of this resource.
+- `id` (String) The ID of this resource (same as user_id).
 - `reason` (String) Reason for the risk level, if available.
 - `risk_level` (String) Risk level of the user. Possible values: `HIGH`, `LOW`, `NONE`. `NONE` indicates no risk level has been set.

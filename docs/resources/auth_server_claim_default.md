@@ -1,14 +1,28 @@
 ---
 page_title: "Resource: okta_auth_server_claim_default"
+subcategory: "Security"
 description: |-
+
   Configures Default Authorization Server Claim.
   This resource allows you to configure Default Authorization Server Claims.
+
 ---
 
 # Resource: okta_auth_server_claim_default
 
+
 Configures Default Authorization Server Claim.
 This resource allows you to configure Default Authorization Server Claims.
+
+
+## Links
+
+- [Okta API docs](https://developer.okta.com/docs/api/openapi/okta-management/management/tag/AuthorizationServerClaims/)
+- [Provider source](https://github.com/okta/terraform-provider-okta/blob/master/okta/services/idaas/resource_okta_auth_server_claim_default.go)
+
+## Related Resources
+
+- [`okta_auth_server`](../resources/auth_server) — Parent authorization server
 
 ## Example Usage
 

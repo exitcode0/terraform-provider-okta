@@ -1,12 +1,22 @@
 ---
 page_title: "Resource: okta_trusted_origin"
+subcategory: "Security"
 description: |-
+
   Creates a Trusted Origin. This resource allows you to create and configure a Trusted Origin.
+
 ---
 
 # Resource: okta_trusted_origin
 
+
 Creates a Trusted Origin. This resource allows you to create and configure a Trusted Origin.
+
+
+## Links
+
+- [Okta API docs](https://developer.okta.com/docs/api/openapi/okta-management/management/tag/TrustedOrigin/)
+- [Provider source](https://github.com/okta/terraform-provider-okta/blob/master/okta/services/idaas/resource_okta_trusted_origin.go)
 
 ## Example Usage
 

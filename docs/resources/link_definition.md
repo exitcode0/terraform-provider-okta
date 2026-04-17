@@ -1,19 +1,33 @@
 ---
 page_title: "Resource: okta_link_definition"
+subcategory: "Directory"
 description: |-
+
   Manages the creation and removal of the link definitions.
   Link definition operations allow you to manage the creation and removal of the link definitions. If you remove a link
   definition, links based on that definition are unavailable. Note that this resource is immutable, thus can not be modified.
   ~> NOTE: Links reappear if you recreate the definition. However, Okta is likely to change this behavior so that links don't reappear. Don't rely on this behavior in production environments.
+
 ---
 
 # Resource: okta_link_definition
+
 
 Manages the creation and removal of the link definitions.
 		
 Link definition operations allow you to manage the creation and removal of the link definitions. If you remove a link 
 definition, links based on that definition are unavailable. Note that this resource is immutable, thus can not be modified.
 ~> **NOTE:** Links reappear if you recreate the definition. However, Okta is likely to change this behavior so that links don't reappear. Don't rely on this behavior in production environments.
+
+
+## Links
+
+- [Okta API docs](https://developer.okta.com/docs/api/openapi/okta-management/management/tag/LinkedObject/)
+- [Provider source](https://github.com/okta/terraform-provider-okta/blob/master/okta/services/idaas/resource_okta_link_definition.go)
+
+## Related Resources
+
+- [`okta_link_value`](../resources/link_value) — Link values for this definition
 
 ## Example Usage
 

@@ -1,17 +1,28 @@
 ---
 page_title: "Resource: okta_rate_limit_admin_notification_settings"
+subcategory: "Reports"
 description: |-
-  Rate  provides operations to manage rate limit admin notification settings.
+
+  Terraform Resource for okta_rate_limit_admin_notification_settings.
+
 ---
 
 # Resource: okta_rate_limit_admin_notification_settings
 
-Manages principal rate limits.
-Principal Rate Limits provides operations to manage Principal Rate Limits for your organization.
+
+Terraform Resource for okta_rate_limit_admin_notification_settings.
+
+
+## Links
+
+- [Okta API docs](https://developer.okta.com/docs/api/openapi/okta-management/management/tag/RateLimitSettings/)
+- [Provider source](https://github.com/okta/terraform-provider-okta/blob/master/okta/services/idaas/resource_okta_rate_limit_admin_notification_settings.go)
+- [SDK source](https://github.com/okta/okta-sdk-golang/blob/v5.0.6/okta/api_rate_limit_settings.go)
+
 ## Example Usage
 
 ```terraform
-resource "okta_rate_limit_admin_notification_settings" example{
+resource "okta_rate_limit_admin_notification_settings" "example" {
   notifications_enabled = true
 }
 ```
@@ -21,7 +32,11 @@ resource "okta_rate_limit_admin_notification_settings" example{
 
 ### Required
 
-- `notifications_enabled` (String) Enables or disables admin notifications for rate limiting events.
+- `notifications_enabled` (Boolean) Enables or disables admin notifications for rate limiting events.
+
+### Read-Only
+
+- `id` (String) The ID of this resource.
 
 ## Import
 

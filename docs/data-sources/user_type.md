@@ -1,12 +1,28 @@
 ---
 page_title: "Data Source: okta_user_type"
+subcategory: "Directory"
 description: |-
+
   Get a user type from Okta.
+
 ---
 
 # Data Source: okta_user_type
 
+
 Get a user type from Okta.
+
+
+## Links
+
+- [Okta API docs](https://developer.okta.com/docs/api/openapi/okta-management/management/tag/UserType/)
+- [Provider source](https://github.com/okta/terraform-provider-okta/blob/master/okta/services/idaas/data_source_okta_user_type.go)
+
+## Related Resources
+
+- [`okta_user`](../resources/user) — Users of this type
+- [`okta_user_base_schema_property`](../resources/user_base_schema_property) — Base schema properties for the user type
+- [`okta_user_schema_property`](../resources/user_schema_property) — Custom schema properties for the user type
 
 ## Example Usage
 
@@ -28,5 +44,3 @@ data "okta_user_type" "example" {
 
 - `description` (String) Description of user type.
 - `display_name` (String) Display name of user type.
-
-

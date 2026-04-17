@@ -1,12 +1,30 @@
 ---
 page_title: "Data Source: okta_app_saml"
+subcategory: "Applications"
 description: |-
+
   Get a SAML application from Okta.
+
 ---
 
 # Data Source: okta_app_saml
 
+
 Get a SAML application from Okta.
+
+
+## Links
+
+- [Okta API docs](https://developer.okta.com/docs/api/openapi/okta-management/management/tag/Application/)
+- [Provider source](https://github.com/okta/terraform-provider-okta/blob/master/okta/services/idaas/data_source_okta_app_saml.go)
+
+## Related Resources
+
+- [`okta_app_group_assignment`](../resources/app_group_assignment) — Assign groups to the application
+- [`okta_app_user`](../resources/app_user) — Assign users to the application
+- [`okta_app_signon_policy`](../resources/app_signon_policy) — Application sign-on policy
+- [`okta_app_saml_app_settings`](../resources/app_saml_app_settings) — SAML application settings
+- [`okta_app_connection`](../resources/app_connection) — Application connection settings
 
 ## Example Usage
 
@@ -86,5 +104,3 @@ Read-Only:
 - `namespace` (String)
 - `type` (String)
 - `values` (List of String)
-
-

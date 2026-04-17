@@ -1,0 +1,53 @@
+---
+page_title: "{{.Type}}: {{.Name}}"
+subcategory: "Applications"
+description: |-
+{{ if .Description }}
+{{ .Description | plainmarkdown | trimspace | prefixlines "  " }}
+{{ else }}
+  Terraform {{.Type}} for {{.Name}}.
+{{ end }}
+---
+
+# {{.Type}}: {{.Name}}
+
+{{ if .Description }}
+{{ .Description | trimspace }}
+{{ else }}
+Terraform {{.Type}} for {{.Name}}.
+{{ end }}
+
+## Links
+
+- [Okta API docs](https://developer.okta.com/docs/api/openapi/okta-management/management/tag/ApplicationFeatures/)
+- [Provider source](https://github.com/okta/terraform-provider-okta/blob/master/okta/services/idaas/resource_okta_app_features.go)
+- [SDK source](https://github.com/okta/okta-sdk-golang/blob/v5.0.6/okta/api_application_features.go)
+
+## Related Resources
+
+- [`okta_app_oauth`](../resources/app_oauth) — OAuth application
+- [`okta_app_saml`](../resources/app_saml) — SAML application
+
+~> **NOTE:** This resource cannot be deleted via Terraform. Application features are managed by Okta and can only be updated or read.
+
+~> **NOTE:** This resource is only supported with a limited subset of OIN applications. See the [Okta API docs](https://developer.okta.com/docs/api/openapi/okta-management/management/tag/ApplicationFeatures/) for more details.
+
+{{ if .HasExample -}}
+
+## Example Usage
+
+{{ tffile .ExampleFile }}
+
+{{- end }}
+
+{{ .SchemaMarkdown | trimspace }}
+
+{{ if .HasImport -}}
+
+## Import
+
+Import is supported using the following syntax:
+
+{{ codefile "shell" .ImportFile }}
+
+{{- end }}

@@ -1,12 +1,31 @@
 ---
 page_title: "{{.Type}}: {{.Name}}"
+subcategory: "Applications"
 description: |-
+{{ if .Description }}
 {{ .Description | plainmarkdown | trimspace | prefixlines "  " }}
+{{ else }}
+  Terraform {{.Type}} for {{.Name}}.
+{{ end }}
 ---
 
 # {{.Type}}: {{.Name}}
 
+{{ if .Description }}
 {{ .Description | trimspace }}
+{{ else }}
+Terraform {{.Type}} for {{.Name}}.
+{{ end }}
+
+## Links
+
+- [Okta API docs](https://developer.okta.com/docs/api/openapi/okta-management/management/tag/ApplicationPolicies/)
+- [Provider source](https://github.com/okta/terraform-provider-okta/blob/master/okta/services/idaas/data_source_okta_app_signon_policy.go)
+
+## Related Resources
+
+- [`okta_app_signon_policy_rule`](../resources/app_signon_policy_rule) — Rules for this policy
+- [`okta_app_access_policy_assignment`](../resources/app_access_policy_assignment) — Assign policy to an application
 
 ~> **WARNING:** This feature is only available as a part of the 
 Identity Engine. [Contact support](mailto:dev-inquiries@okta.com) 

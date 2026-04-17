@@ -1,16 +1,26 @@
 ---
 page_title: "Resource: okta_captcha"
+subcategory: "Customizations"
 description: |-
+
   Creates different types of captcha.
-          ~> WARNING: This feature is only available as a part of the Identity Engine. Contact support mailto:dev-inquiries@okta.com for further information.
-          This resource allows you to create and configure a CAPTCHA.
+  ~> WARNING: This feature is only available as a part of the Identity Engine. Contact support mailto:dev-inquiries@okta.com for further information.
+  This resource allows you to create and configure a CAPTCHA.
+
 ---
 
 # Resource: okta_captcha
 
+
 Creates different types of captcha.
 		~> **WARNING:** This feature is only available as a part of the Identity Engine. [Contact support](mailto:dev-inquiries@okta.com) for further information.
 		This resource allows you to create and configure a CAPTCHA.
+
+
+## Links
+
+- [Okta API docs](https://developer.okta.com/docs/api/openapi/okta-management/management/tag/CAPTCHA/)
+- [Provider source](https://github.com/okta/terraform-provider-okta/blob/master/okta/services/idaas/resource_okta_captcha.go)
 
 ## Example Usage
 

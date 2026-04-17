@@ -1,12 +1,23 @@
 ---
 page_title: "Data Source: okta_groups"
+subcategory: "Directory"
 description: |-
+
   Get a list of groups from Okta.
+
 ---
 
 # Data Source: okta_groups
 
+
 Get a list of groups from Okta.
+
+
+## Links
+
+- [Okta API docs](https://developer.okta.com/docs/api/openapi/okta-management/management/tag/Group/)
+- [Provider source](https://github.com/okta/terraform-provider-okta/blob/master/okta/services/idaas/data_source_okta_groups.go)
+- [SDK source](https://github.com/okta/okta-sdk-golang/blob/v5.0.6/okta/api_group.go)
 
 ## Example Usage
 
@@ -40,6 +51,5 @@ Read-Only:
 - `description` (String)
 - `id` (String)
 - `name` (String)
+- `source` (String)
 - `type` (String)
-
-

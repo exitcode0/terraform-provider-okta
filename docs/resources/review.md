@@ -1,27 +1,46 @@
 ---
 page_title: "Resource: okta_review"
+subcategory: "Identity Governance"
 description: |-
-  Manages reassignment of review.
-  This resource allows you to reassign an already existing review.
+
+  Terraform Resource for okta_review.
+
 ---
 
 # Resource: okta_review
 
-Manages reassignment of review.
 
-This resource allows you to reassign an already existing review.
+Terraform Resource for okta_review.
+
+
+## Links
+
+- [Okta API docs](https://developer.okta.com/docs/api/iga/openapi/governance-production-reference/reviews)
+- [Provider source](https://github.com/okta/terraform-provider-okta/blob/master/okta/services/governance/resource_review.go)
+- [SDK source](https://github.com/okta/okta-governance-sdk-golang/blob/v1.0.1/governance/api_reviews.go)
+
+## Related Resources
+
+- [`okta_campaign`](../resources/campaign) — Parent campaign
 
 ## Example Usage
 
 ```terraform
+resource "okta_user" "test" {
+  first_name = "TestAcc"
+  last_name  = "Smith"
+  login      = "testAcc-replace_with_uuid@example.com"
+  email      = "testAcc-replace_with_uuid@example.com"
+}
+
 resource "okta_review" "test" {
   campaign_id = "icizigd86iM9sOcbN1d6"
-  reviewer_id = "00unli90kor62oF5Z1d7"
+  reviewer_id = okta_user.test.id
   review_ids = [
     "icrztblxbBFiVKepb1d6"
   ]
-  reviewer_level="FIRST"
-  note = "John Smith is on leave for this month. His manager Tim will be the reviewer instead."
+  reviewer_level = "FIRST"
+  note           = "John Smith is on leave for this month. His manager Tim will be the reviewer instead."
 }
 ```
 
@@ -30,31 +49,30 @@ resource "okta_review" "test" {
 
 ### Required
 
-- `note` (String) A note to justify the reassignment decision for the specified review.
 - `campaign_id` (String) The id of the campaign.
+- `note` (String) A note to justify the reassignment decision for the specified review.
+- `review_ids` (List of String) A list of reviews (review id values) that are reassigned to the new reviewer.
 - `reviewer_id` (String) The Okta user id of the new reviewer.
-- `reviewer_level` (String) Identifies the reviewer level of each reviews during access certification. Applicable for multi level campaigns only.
-- `review_ids` (List) A list of reviews (review id values) that are reassigned to the new reviewer.
 
 ### Optional
 
-
+- `reviewer_level` (String) Identifies the reviewer level of each reviews during access certification. Applicable for multi level campaigns only.
 
 ### Read-Only
 
-- `id` (String) The ID of this resource.
-- `resource_id` (String) Can be a `group_id` or `app_id`.
-- `decision` (String) The decision of the reviewer.
-- `reviewer_type` (String) The type of reviewer to which the review is assigned.
-- `created` (String) The ISO 8601 formatted date and time when the resource was created.
+- `created` (String) The ISO 8601 formatted date and time when the resource was created
 - `created_by` (String) The id of user who created the resource.
+- `decision` (String) The decision of the reviewer.
+- `id` (String) Unique identifier for the Review.
 - `last_updated` (String) The ISO 8601 formatted date and time when the object was last updated.
 - `last_updated_by` (String) The id of user who last updated the object.
+- `resource_id` (String)
+- `reviewer_type` (String) The type of reviewer to which the review is assigned.
 
 ## Import
 
 Import is supported using the following syntax:
 
 ```shell
-terraform import okta_review.example <review_id?
+terraform import okta_review.example <review_id>
 ```

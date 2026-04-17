@@ -1,12 +1,26 @@
 ---
 page_title: "Resource: okta_policy_password_default"
+subcategory: "Security"
 description: |-
+
   Configures default password policy. This resource allows you to configure default password policy.
+
 ---
 
 # Resource: okta_policy_password_default
 
+
 Configures default password policy. This resource allows you to configure default password policy.
+
+
+## Links
+
+- [Okta API docs](https://developer.okta.com/docs/api/openapi/okta-management/management/tag/Policy/)
+- [Provider source](https://github.com/okta/terraform-provider-okta/blob/master/okta/services/idaas/resource_okta_policy_password_default.go)
+
+## Related Resources
+
+- [`okta_policy_rule_password`](../resources/policy_rule_password) — Rules for the default password policy
 
 ## Example Usage
 

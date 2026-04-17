@@ -1,12 +1,26 @@
 ---
 page_title: "Data Source: okta_group_rule"
+subcategory: "Directory"
 description: |-
+
   Get a group rule from Okta.
+
 ---
 
 # Data Source: okta_group_rule
 
+
 Get a group rule from Okta.
+
+
+## Links
+
+- [Okta API docs](https://developer.okta.com/docs/api/openapi/okta-management/management/tag/GroupRule/)
+- [Provider source](https://github.com/okta/terraform-provider-okta/blob/master/okta/services/idaas/data_source_okta_group_rule.go)
+
+## Related Resources
+
+- [`okta_group`](../resources/group) — Target group for the rule
 
 ## Example Usage
 
@@ -31,5 +45,3 @@ data "okta_group_rule" "test" {
 - `expression_value` (String) The expression value.
 - `group_assignments` (Set of String) The list of group ids to assign the users to.
 - `users_excluded` (Set of String) The list of user IDs that would be excluded when rules are processed.
-
-

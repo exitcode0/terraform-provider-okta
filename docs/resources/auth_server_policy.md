@@ -1,12 +1,27 @@
 ---
 page_title: "Resource: okta_auth_server_policy"
+subcategory: "Security"
 description: |-
+
   Creates an Authorization Server Policy. This resource allows you to create and configure an Authorization Server Policy.
+
 ---
 
 # Resource: okta_auth_server_policy
 
+
 Creates an Authorization Server Policy. This resource allows you to create and configure an Authorization Server Policy.
+
+
+## Links
+
+- [Okta API docs](https://developer.okta.com/docs/api/openapi/okta-management/management/tag/AuthorizationServerPolicies/)
+- [Provider source](https://github.com/okta/terraform-provider-okta/blob/master/okta/services/idaas/resource_okta_auth_server_policy.go)
+
+## Related Resources
+
+- [`okta_auth_server`](../resources/auth_server) — Parent authorization server
+- [`okta_auth_server_policy_rule`](../resources/auth_server_policy_rule) — Rules for this policy
 
 ## Example Usage
 

@@ -1,12 +1,26 @@
 ---
 page_title: "Resource: okta_theme"
+subcategory: "Customizations"
 description: |-
+
   Gets, updates, a single Theme of a Brand of an Okta Organization.
+
 ---
 
 # Resource: okta_theme
 
+
 Gets, updates, a single Theme of a Brand of an Okta Organization.
+
+
+## Links
+
+- [Okta API docs](https://developer.okta.com/docs/api/openapi/okta-management/management/tag/Themes/)
+- [Provider source](https://github.com/okta/terraform-provider-okta/blob/master/okta/services/idaas/resource_okta_theme.go)
+
+## Related Resources
+
+- [`okta_brand`](../resources/brand) — Parent brand
 
 This resource allows you to get and update an Okta
 [Theme](https://developer.okta.com/docs/reference/api/brands/#theme-object).

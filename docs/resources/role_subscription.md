@@ -1,19 +1,33 @@
 ---
 page_title: "Resource: okta_role_subscription"
+subcategory: "Security"
 description: |-
+
   Manages group subscription.
   This resource allows you to configure subscriptions of a Role with a specific type.
   Check configure email notifications https://help.okta.com/oie/en-us/Content/Topics/Security/custom-admin-role/administrator-email-settings.htm
   page regarding what notifications are available for specific admin roles.
+
 ---
 
 # Resource: okta_role_subscription
+
 
 Manages group subscription.
 		
 This resource allows you to configure subscriptions of a Role with a specific type. 
 Check [configure email notifications](https://help.okta.com/oie/en-us/Content/Topics/Security/custom-admin-role/administrator-email-settings.htm) 
 page regarding what notifications are available for specific admin roles.
+
+
+## Links
+
+- [Okta API docs](https://developer.okta.com/docs/api/openapi/okta-management/management/tag/Subscription/)
+- [Provider source](https://github.com/okta/terraform-provider-okta/blob/master/okta/services/idaas/resource_okta_role_subscription.go)
+
+## Related Resources
+
+- [`okta_admin_role_custom`](../resources/admin_role_custom) — Custom admin roles
 
 ## Example Usage
 

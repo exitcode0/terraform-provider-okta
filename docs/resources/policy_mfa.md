@@ -1,12 +1,27 @@
 ---
 page_title: "Resource: okta_policy_mfa"
+subcategory: "Security"
 description: |-
-  
+
+  Terraform Resource for okta_policy_mfa.
+
 ---
 
 # Resource: okta_policy_mfa
 
 
+Terraform Resource for okta_policy_mfa.
+
+
+## Links
+
+- [Okta API docs](https://developer.okta.com/docs/api/openapi/okta-management/management/tag/Policy/)
+- [Provider source](https://github.com/okta/terraform-provider-okta/blob/master/okta/services/idaas/resource_okta_policy_mfa.go)
+
+## Related Resources
+
+- [`okta_policy_rule_mfa`](../resources/policy_rule_mfa) — Rules for this policy
+- [`okta_authenticator`](../resources/authenticator) — Authenticators configured for MFA
 
 ## Example Usage
 
@@ -42,12 +57,6 @@ resource "okta_policy_mfa" "oie_example" {
   okta_verify = {
     enroll = "REQUIRED"
   }
-
-  # "aut123456789abcdef", "aut123456789ghijkl" are custom app IDs
-  custom_app = [
-    { "enroll" : "OPTIONAL", "id" : "aut123456789abcdef" },
-    { "enroll" : "OPTIONAL", "id" : "aut123456789ghijkl" }
-  ]
 
   groups_included = ["${data.okta_group.everyone.id}"]
 }
@@ -92,6 +101,7 @@ resource "okta_policy_mfa" "oie_example" {
 
 ### Optional
 
+- `custom_app` (List of Map of String) List of custom authenticators, specify entry like {"enroll": "OPTIONAL", "id": "<id_of_custom_app>"} to mark specific custom app optional, list must contain at least 1 entry.
 - `description` (String) Policy Description
 - `duo` (Map of String)
 - `external_idp` (Map of String, Deprecated)
@@ -120,7 +130,6 @@ resource "okta_policy_mfa" "oie_example" {
 - `symantec_vip` (Map of String)
 - `webauthn` (Map of String)
 - `yubikey_token` (Map of String)
-- `custom_app` (List of Map of String)
 
 ### Read-Only
 

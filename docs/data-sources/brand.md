@@ -1,12 +1,28 @@
 ---
 page_title: "Data Source: okta_brand"
+subcategory: "Customizations"
 description: |-
+
   Get a single Brand from Okta.
+
 ---
 
 # Data Source: okta_brand
 
+
 Get a single Brand from Okta.
+
+
+## Links
+
+- [Okta API docs](https://developer.okta.com/docs/api/openapi/okta-management/management/tag/Brands/)
+- [Provider source](https://github.com/okta/terraform-provider-okta/blob/master/okta/services/idaas/data_source_okta_brand.go)
+
+## Related Resources
+
+- [`okta_theme`](../resources/theme) — Brand theme
+- [`okta_email_customization`](../resources/email_customization) — Email template customizations
+- [`okta_customized_signin_page`](../resources/customized_signin_page) — Customized sign-in page
 
 ## Example Usage
 
@@ -37,5 +53,3 @@ data "okta_brand" "default" {
 - `links` (String) Link relations for this object - JSON HAL - Discoverable resources related to the brand
 - `name` (String) Brand name
 - `remove_powered_by_okta` (Boolean) Removes "Powered by Okta" from the Okta-hosted sign-in page and "© 2021 Okta, Inc." from the Okta End-User Dashboard
-
-

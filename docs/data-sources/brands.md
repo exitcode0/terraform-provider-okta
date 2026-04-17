@@ -1,12 +1,22 @@
 ---
 page_title: "Data Source: okta_brands"
+subcategory: "Customizations"
 description: |-
+
   Get the brands belonging to an Okta organization.
+
 ---
 
 # Data Source: okta_brands
 
+
 Get the brands belonging to an Okta organization.
+
+
+## Links
+
+- [Okta API docs](https://developer.okta.com/docs/api/openapi/okta-management/management/tag/Brands/)
+- [Provider source](https://github.com/okta/terraform-provider-okta/blob/master/okta/services/idaas/data_source_okta_brands.go)
 
 ## Example Usage
 
@@ -33,5 +43,3 @@ Read-Only:
 - `links` (String)
 - `name` (String)
 - `remove_powered_by_okta` (Boolean)
-
-

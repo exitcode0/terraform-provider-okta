@@ -1,21 +1,29 @@
 ---
 page_title: "Resource: okta_device"
+subcategory: "Settings"
 description: |-
-  Manages device resources in Okta.
+
+  Terraform Resource for okta_device.
+
 ---
 
 # Resource: okta_device
 
-Manages device resources in Okta. This resource is typically used for importing and managing existing devices rather than creating new ones.
 
-**Note:** This resource cannot be created via Terraform. It must be imported from existing devices in your Okta organization or managed through device lifecycle operations.
+Terraform Resource for okta_device.
+
+
+## Links
+
+- [Okta API docs](https://developer.okta.com/docs/api/openapi/okta-management/management/tag/Device/)
+- [Provider source](https://github.com/okta/terraform-provider-okta/blob/master/okta/services/idaas/resource_okta_device.go)
+- [SDK source](https://github.com/okta/okta-sdk-golang/blob/v5.0.6/okta/api_device.go)
 
 ## Example Usage
 
 ```terraform
 resource "okta_device" "example" {
-  # This resource must be imported
-  action = "SUSPEND"
+  action = "ACTIVE"
 }
 ```
 
@@ -29,8 +37,8 @@ resource "okta_device" "example" {
 ### Read-Only
 
 - `id` (String) The ID of the device.
-- `status` (String) The status of the device.
 - `resource_type` (String) The resource type of the device.
+- `status` (String) The status of the device.
 
 ## Import
 

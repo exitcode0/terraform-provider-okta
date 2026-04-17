@@ -1,16 +1,30 @@
 ---
 page_title: "Resource: okta_org_support"
+subcategory: "Settings"
 description: |-
+
   Manages Okta Support access your org
   This resource allows you to temporarily allow Okta Support to access your org as an administrator. By default,
   access will be granted for eight hours. Removing this resource will revoke Okta Support access to your org.
+
 ---
 
 # Resource: okta_org_support
 
+
 Manages Okta Support access your org
 This resource allows you to temporarily allow Okta Support to access your org as an administrator. By default,
 access will be granted for eight hours. Removing this resource will revoke Okta Support access to your org.
+
+
+## Links
+
+- [Okta API docs](https://developer.okta.com/docs/api/openapi/okta-management/management/tag/OrgSettingSupport/)
+- [Provider source](https://github.com/okta/terraform-provider-okta/blob/master/okta/services/idaas/resource_okta_org_support.go)
+
+## Related Resources
+
+- [`okta_org_configuration`](../resources/org_configuration) — Org configuration
 
 ## Example Usage
 

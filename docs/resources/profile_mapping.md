@@ -1,12 +1,26 @@
 ---
 page_title: "Resource: okta_profile_mapping"
+subcategory: "Directory"
 description: |-
+
   Manages a profile mapping. This resource allows you to manage a profile mapping by source and target IDs. -> NOTE: If using this resource with OAuth2 scopes, this resource requires okta.profileMappings.manage scope.
+
 ---
 
 # Resource: okta_profile_mapping
 
+
 Manages a profile mapping. This resource allows you to manage a profile mapping by source and target IDs. -> **NOTE:** If using this resource with OAuth2 scopes, this resource requires `okta.profileMappings.manage` scope.
+
+
+## Links
+
+- [Okta API docs](https://developer.okta.com/docs/api/openapi/okta-management/management/tag/ProfileMapping/)
+- [Provider source](https://github.com/okta/terraform-provider-okta/blob/master/okta/services/idaas/resource_okta_profile_mapping.go)
+
+## Related Resources
+
+- [`okta_app_oauth`](../resources/app_oauth) — Applications
 
 ## Example Usage
 

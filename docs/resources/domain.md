@@ -1,12 +1,28 @@
 ---
 page_title: "Resource: okta_domain"
+subcategory: "Customizations"
 description: |-
+
   Manages custom domain for your organization.
+
 ---
 
 # Resource: okta_domain
 
+
 Manages custom domain for your organization.
+
+
+## Links
+
+- [Okta API docs](https://developer.okta.com/docs/api/openapi/okta-management/management/tag/CustomDomain/)
+- [Provider source](https://github.com/okta/terraform-provider-okta/blob/master/okta/services/idaas/resource_okta_domain.go)
+- [SDK source](https://github.com/okta/okta-sdk-golang/blob/v5.0.6/okta/api_custom_domain.go)
+
+## Related Resources
+
+- [`okta_domain_certificate`](../resources/domain_certificate) — TLS certificate for the domain
+- [`okta_domain_verification`](../resources/domain_verification) — Domain ownership verification
 
 ## Example Usage
 

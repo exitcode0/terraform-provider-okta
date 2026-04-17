@@ -1,12 +1,22 @@
 ---
 page_title: "Data Source: okta_behaviors"
+subcategory: "Security"
 description: |-
+
   Get a behaviors by search criteria.
+
 ---
 
 # Data Source: okta_behaviors
 
+
 Get a behaviors by search criteria.
+
+
+## Links
+
+- [Okta API docs](https://developer.okta.com/docs/api/openapi/okta-management/management/tag/Behavior/)
+- [Provider source](https://github.com/okta/terraform-provider-okta/blob/master/okta/services/idaas/data_source_okta_behaviors.go)
 
 ## Example Usage
 
@@ -38,5 +48,3 @@ Read-Only:
 - `settings` (Map of String)
 - `status` (String)
 - `type` (String)
-
-

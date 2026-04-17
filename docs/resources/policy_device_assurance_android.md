@@ -1,18 +1,28 @@
 ---
 page_title: "Resource: okta_policy_device_assurance_android"
+subcategory: "Security"
 description: |-
+
   Manages a device assurance policy for android.
+
 ---
 
 # Resource: okta_policy_device_assurance_android
 
+
 Manages a device assurance policy for android.
+
+
+## Links
+
+- [Okta API docs](https://developer.okta.com/docs/api/openapi/okta-management/management/tag/DeviceAssurance/)
+- [Provider source](https://github.com/okta/terraform-provider-okta/blob/master/okta/services/idaas/resource_okta_device_assurance_policy_android_os.go)
 
 ## Example Usage
 
 ```terraform
 resource "okta_policy_device_assurance_android" "example" {
-  name                    = "example"
+  name                    = "testAcc-replace_with_uuid"
   os_version              = "12"
   disk_encryption_type    = toset(["FULL", "USER"])
   jailbreak               = false

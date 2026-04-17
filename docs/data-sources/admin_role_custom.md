@@ -1,18 +1,40 @@
 ---
 page_title: "Data Source: okta_admin_role_custom"
+subcategory: "Security"
 description: |-
-  Get a custom admin role from Okta.
+
+  Retrieves a custom admin role from Okta.
+
 ---
 
 # Data Source: okta_admin_role_custom
 
-Use this data source to retrieve a custom admin role from Okta.
+
+Retrieves a custom admin role from Okta.
+
+
+## Links
+
+- [Okta API docs](https://developer.okta.com/docs/api/openapi/okta-management/management/tag/RoleECustom/)
+- [Provider source](https://github.com/okta/terraform-provider-okta/blob/master/okta/services/idaas/data_source_okta_admin_role_custom.go)
+
+## Related Resources
+
+- [`okta_admin_role_custom_assignments`](../resources/admin_role_custom_assignments) — Role assignments
+- [`okta_resource_set`](../resources/resource_set) — Resource sets for the custom role
+- [`okta_admin_role_targets`](../resources/admin_role_targets) — Role targets
 
 ## Example Usage
 
 ```terraform
-data "okta_admin_role_custom" "example" {
-  id = "<role_id>"
+resource "okta_admin_role_custom" "test" {
+  label       = "testAcc_replace_with_uuid"
+  description = "test custom role"
+  permissions = ["okta.apps.assignment.manage"]
+}
+
+data "okta_admin_role_custom" "test" {
+  id = okta_admin_role_custom.test.id
 }
 ```
 
@@ -25,6 +47,6 @@ data "okta_admin_role_custom" "example" {
 
 ### Read-Only
 
-- `label` (String) The name given to the custom role.
-- `description` (String) A human-readable description of the custom role.
-- `permissions` (Set of String) The permissions that the custom role grants.
+- `description` (String) Description of the role.
+- `label` (String) Unique label for the role.
+- `permissions` (Set of String) Array of permissions that the role grants.

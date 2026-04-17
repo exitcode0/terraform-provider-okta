@@ -1,12 +1,28 @@
 ---
 page_title: "Resource: okta_email_sender"
+subcategory: "Customizations"
 description: |-
+
   Creates custom email sender. This resource allows you to create and configure a custom email sender.
+
 ---
 
 # Resource: okta_email_sender
 
+
 Creates custom email sender. This resource allows you to create and configure a custom email sender.
+
+
+## Links
+
+- [Okta API docs](https://developer.okta.com/docs/api/openapi/okta-management/management/tag/EmailDomain/)
+- [Provider source](https://github.com/okta/terraform-provider-okta/blob/master/okta/services/idaas/resource_okta_email_sender.go)
+- [SDK source](https://github.com/okta/terraform-provider-okta/blob/master/sdk/api_email_domain.go)
+
+## Related Resources
+
+- [`okta_email_sender_verification`](../resources/email_sender_verification) — Sender verification
+- [`okta_email_domain`](../resources/email_domain) — Email domain
 
 ~> **DEPRECATED** The api for this resource has been deprecated. Please use `okta_email_domain` instead.
 

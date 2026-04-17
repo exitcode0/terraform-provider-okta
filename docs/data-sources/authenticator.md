@@ -1,12 +1,26 @@
 ---
 page_title: "Data Source: okta_authenticator"
+subcategory: "Security"
 description: |-
+
   Get an authenticator by key, name of ID.
+
 ---
 
 # Data Source: okta_authenticator
 
+
 Get an authenticator by key, name of ID.
+
+
+## Links
+
+- [Okta API docs](https://developer.okta.com/docs/api/openapi/okta-management/management/tag/Authenticator/)
+- [Provider source](https://github.com/okta/terraform-provider-okta/blob/master/okta/services/idaas/data_source_okta_authenticator.go)
+
+## Related Resources
+
+- [`okta_policy_mfa`](../resources/policy_mfa) — MFA policies
 
 ~> **WARNING:** This feature is only available as a part of the 
 Identity Engine. [Contact support](mailto:dev-inquiries@okta.com) 

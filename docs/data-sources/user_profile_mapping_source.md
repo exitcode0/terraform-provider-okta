@@ -1,12 +1,22 @@
 ---
 page_title: "Data Source: okta_user_profile_mapping_source"
+subcategory: "Directory"
 description: |-
+
   Get the base user Profile Mapping source or target from Okta.
+
 ---
 
 # Data Source: okta_user_profile_mapping_source
 
+
 Get the base user Profile Mapping source or target from Okta.
+
+
+## Links
+
+- [Okta API docs](https://developer.okta.com/docs/api/openapi/okta-management/management/tag/ProfileMapping/)
+- [Provider source](https://github.com/okta/terraform-provider-okta/blob/master/okta/services/idaas/data_source_okta_user_profile_mapping_source.go)
 
 -> **NOTE:** If using this resource with OAuth2 scopes, this resource 
 requires `okta.profileMappings.read` scope.

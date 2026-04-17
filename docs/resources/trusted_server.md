@@ -1,12 +1,26 @@
 ---
 page_title: "Resource: okta_trusted_server"
+subcategory: "Security"
 description: |-
+
   Associated (Trusted) authorization servers allow you to designate a trusted authorization server that you associate with another authorization server.
+
 ---
 
 # Resource: okta_trusted_server
 
+
 Associated (Trusted) authorization servers allow you to designate a trusted authorization server that you associate with another authorization server.
+
+
+## Links
+
+- [Okta API docs](https://developer.okta.com/docs/api/openapi/okta-management/management/tag/AuthorizationServer/)
+- [Provider source](https://github.com/okta/terraform-provider-okta/blob/master/okta/services/idaas/resource_okta_trusted_server.go)
+
+## Related Resources
+
+- [`okta_auth_server`](../resources/auth_server) — Parent authorization server
 
 ## Example Usage
 

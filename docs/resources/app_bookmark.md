@@ -1,18 +1,28 @@
 ---
 page_title: "Resource: okta_app_bookmark"
+subcategory: "Applications"
 description: |-
+
   This resource allows you to create and configure a Bookmark Application.
   -> During an apply if there is change in status the app will first be
   activated or deactivated in accordance with the status change. Then, all
   other arguments that changed will be applied.
+
 ---
 
 # Resource: okta_app_bookmark
+
 
 This resource allows you to create and configure a Bookmark Application.
 -> During an apply if there is change in status the app will first be
 activated or deactivated in accordance with the status change. Then, all
 other arguments that changed will be applied.
+
+
+## Links
+
+- [Okta API docs](https://developer.okta.com/docs/api/openapi/okta-management/management/tag/Application/)
+- [Provider source](https://github.com/okta/terraform-provider-okta/blob/master/okta/services/idaas/resource_okta_app_bookmark.go)
 
 ## Example Usage
 

@@ -1,18 +1,28 @@
 ---
 page_title: "Resource: okta_policy_device_assurance_windows"
+subcategory: "Security"
 description: |-
+
   Manages a device assurance policy for windows.
+
 ---
 
 # Resource: okta_policy_device_assurance_windows
 
+
 Manages a device assurance policy for windows.
+
+
+## Links
+
+- [Okta API docs](https://developer.okta.com/docs/api/openapi/okta-management/management/tag/DeviceAssurance/)
+- [Provider source](https://github.com/okta/terraform-provider-okta/blob/master/okta/services/idaas/resource_okta_device_assurance_policy_windows_os.go)
 
 ## Example Usage
 
 ```terraform
 resource "okta_policy_device_assurance_windows" "example" {
-  name                                      = "example"
+  name                                      = "testAcc-replace_with_uuid"
   os_version                                = "12.4.6"
   disk_encryption_type                      = toset(["ALL_INTERNAL_VOLUMES"])
   secure_hardware_present                   = true

@@ -1,25 +1,28 @@
 ---
 page_title: "Data Source: okta_entity_risk_policy"
+subcategory: "Security"
 description: |-
-  Retrieves the Entity Risk Policy for an organization.
+
+  Retrieves the Entity Risk Policy. This is a system policy that is automatically created when Identity Threat Protection (ITP) is enabled. There is exactly one Entity Risk Policy per organization.
+
 ---
 
 # Data Source: okta_entity_risk_policy
 
+
 Retrieves the Entity Risk Policy. This is a system policy that is automatically created when Identity Threat Protection (ITP) is enabled. There is exactly one Entity Risk Policy per organization.
+
+
+## Links
+
+- [Okta API docs](https://developer.okta.com/docs/api/openapi/okta-management/management/tag/Policy/)
+- [Provider source](https://github.com/okta/terraform-provider-okta/blob/master/okta/services/idaas/data_source_okta_entity_risk_policy.go)
+- [SDK source](https://github.com/okta/okta-sdk-golang/blob/v6.1.6/okta/api_policy.go)
 
 ## Example Usage
 
 ```terraform
 data "okta_entity_risk_policy" "example" {
-}
-
-# Use the policy ID to create rules
-resource "okta_entity_risk_policy_rule" "example" {
-  policy_id              = data.okta_entity_risk_policy.example.id
-  name                   = "High Risk Response"
-  risk_level             = "HIGH"
-  terminate_all_sessions = true
 }
 ```
 
@@ -28,6 +31,6 @@ resource "okta_entity_risk_policy_rule" "example" {
 
 ### Read-Only
 
-- `id` (String) The ID of the Entity Risk Policy.
+- `id` (String) ID of the Entity Risk Policy.
 - `name` (String) Name of the Entity Risk Policy.
-- `status` (String) Status of the policy: `ACTIVE` or `INACTIVE`.
+- `status` (String) Status of the policy: ACTIVE or INACTIVE.

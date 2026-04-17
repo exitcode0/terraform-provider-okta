@@ -1,6 +1,8 @@
 ---
 page_title: "Resource: okta_auth_server_policy_rule"
+subcategory: "Security"
 description: |-
+
   Creates an Authorization Server Policy Rule.
   This resource allows you to create and configure an Authorization Server Policy Rule.
   -> This resource is concurrency safe. However, when creating/updating/deleting
@@ -8,9 +10,11 @@ description: |-
   'depends_on' https://www.terraform.io/language/meta-arguments/depends_on
   should be added to each rule chaining them all in sequence. Base the sequence on
   the 'priority' property in ascending value.
+
 ---
 
 # Resource: okta_auth_server_policy_rule
+
 
 Creates an Authorization Server Policy Rule.
 This resource allows you to create and configure an Authorization Server Policy Rule.
@@ -19,6 +23,17 @@ multiple rules belonging to a policy, the Terraform meta argument
 ['depends_on'](https://www.terraform.io/language/meta-arguments/depends_on)
 should be added to each rule chaining them all in sequence. Base the sequence on
 the 'priority' property in ascending value.
+
+
+## Links
+
+- [Okta API docs](https://developer.okta.com/docs/api/openapi/okta-management/management/tag/AuthorizationServerRules/)
+- [Provider source](https://github.com/okta/terraform-provider-okta/blob/master/okta/services/idaas/resource_okta_auth_server_policy_rule.go)
+
+## Related Resources
+
+- [`okta_auth_server_policy`](../resources/auth_server_policy) — Parent policy
+- [`okta_auth_server`](../resources/auth_server) — Parent authorization server
 
 ## Example Usage
 

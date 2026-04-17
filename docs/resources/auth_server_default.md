@@ -1,12 +1,26 @@
 ---
 page_title: "Resource: okta_auth_server_default"
+subcategory: "Security"
 description: |-
+
   Configures Default Authorization Server. This resource allows you to configure Default Authorization Server.
+
 ---
 
 # Resource: okta_auth_server_default
 
+
 Configures Default Authorization Server. This resource allows you to configure Default Authorization Server.
+
+
+## Links
+
+- [Okta API docs](https://developer.okta.com/docs/api/openapi/okta-management/management/tag/AuthorizationServer/)
+- [Provider source](https://github.com/okta/terraform-provider-okta/blob/master/okta/services/idaas/resource_okta_auth_server_default.go)
+
+## Related Resources
+
+- [`okta_auth_server`](../resources/auth_server) — Custom authorization servers
 
 ## Example Usage
 

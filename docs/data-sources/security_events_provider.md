@@ -1,18 +1,27 @@
 ---
 page_title: "Data Source: okta_security_events_provider"
+subcategory: "Settings"
 description: |-
-  Retrieves Security Events Provider information from Okta.
+
+  Creates a Security Events Provider instance for signal ingestion.
+
 ---
 
 # Data Source: okta_security_events_provider
 
-Get information about a Security Events Provider instance for signal ingestion.
+
+Creates a Security Events Provider instance for signal ingestion.
+
+
+## Links
+
+- [Okta API docs](https://developer.okta.com/docs/api/openapi/okta-management/management/tag/SSFReceiver/)
+- [Provider source](https://github.com/okta/terraform-provider-okta/blob/master/okta/services/idaas/data_source_okta_security_events_provider.go)
 
 ## Example Usage
 
 ```terraform
 data "okta_security_events_provider" "example" {
-  id = "<security_events_provider_id>"
 }
 ```
 
@@ -25,18 +34,17 @@ data "okta_security_events_provider" "example" {
 
 ### Read-Only
 
-- `name` (String) The name of the Security Events Provider instance.
-- `type` (String) The application type of the Security Events Provider.
 - `is_enabled` (String) Whether or not the Security Events Provider is enabled.
+- `name` (String) The name of the Security Events Provider instance.
+- `settings` (Block, Read-only) Information about the Security Events Provider for signal ingestion. (see [below for nested schema](#nestedblock--settings))
 - `status` (String) Indicates whether the Security Events Provider is active or not.
-- `settings` (Object) (see [below for nested schema](#nestedobjatt--settings))
+- `type` (String) The application type of the Security Events Provider.
 
-<a id="nestedobjatt--settings"></a>
+<a id="nestedblock--settings"></a>
 ### Nested Schema for `settings`
 
 Read-Only:
 
-- `well_known_url` (String) The published well-known URL of the Security Events Provider (the SSF transmitter).
-- `type` (String) The application type of the Security Events Provider.
 - `issuer` (String) Issuer URL.
 - `jwks_url` (String) The public URL where the JWKS public key is uploaded.
+- `well_known_url` (String) The published well-known URL of the Security Events Provider (the SSF transmitter).

@@ -1,12 +1,22 @@
 ---
 page_title: "Data Source: okta_user_security_questions"
+subcategory: "Directory"
 description: |-
-  
+
+  Terraform Data Source for okta_user_security_questions.
+
 ---
 
 # Data Source: okta_user_security_questions
 
 
+Terraform Data Source for okta_user_security_questions.
+
+
+## Links
+
+- [Okta API docs](https://developer.okta.com/docs/api/openapi/okta-management/management/tag/UserFactor/)
+- [Provider source](https://github.com/okta/terraform-provider-okta/blob/master/okta/services/idaas/data_source_okta_user_factor_questions.go)
 
 ## Example Usage
 
@@ -44,5 +54,3 @@ Read-Only:
 
 - `key` (String)
 - `text` (String)
-
-

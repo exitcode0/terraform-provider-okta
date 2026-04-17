@@ -1,12 +1,22 @@
 ---
 page_title: "Resource: okta_event_hook_verification"
+subcategory: "Workflow"
 description: |-
+
   Verifies the Event Hook. The resource won't be created unless the URI provided in the event hook returns a valid JSON object with verification. See Event Hooks https://developer.okta.com/docs/concepts/event-hooks/#one-time-verification-request documentation for details.
+
 ---
 
 # Resource: okta_event_hook_verification
 
+
 Verifies the Event Hook. The resource won't be created unless the URI provided in the event hook returns a valid JSON object with verification. See [Event Hooks](https://developer.okta.com/docs/concepts/event-hooks/#one-time-verification-request) documentation for details.
+
+
+## Links
+
+- [Okta API docs](https://developer.okta.com/docs/api/openapi/okta-management/management/tag/EventHook/)
+- [Provider source](https://github.com/okta/terraform-provider-okta/blob/master/okta/services/idaas/resource_okta_event_hook_verification.go)
 
 ## Example Usage
 
@@ -46,6 +56,6 @@ resource "okta_event_hook_verification" "example" {
 ### Read-Only
 
 - `id` (String) The ID of this resource.
-- `verification_status` (String) The verification status of the event hook.
+- `verification_status` (String) Verification status of the Event hook
 
 

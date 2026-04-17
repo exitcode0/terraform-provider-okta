@@ -1,12 +1,28 @@
 ---
 page_title: "Resource: okta_policy_rule_signon"
+subcategory: "Security"
 description: |-
+
   Creates a Sign On Policy Rule. In case Invalid condition type specified: riskScore. error is thrown, set risc_level to an empty string, since this feature is not enabled.
+
 ---
 
 # Resource: okta_policy_rule_signon
 
+
 Creates a Sign On Policy Rule. In case `Invalid condition type specified: riskScore.` error is thrown, set `risc_level` to an empty string, since this feature is not enabled.
+
+
+## Links
+
+- [Okta API docs](https://developer.okta.com/docs/api/openapi/okta-management/management/tag/Policy/)
+- [Provider source](https://github.com/okta/terraform-provider-okta/blob/master/okta/services/idaas/resource_okta_policy_rule_sign_on.go)
+
+## Related Resources
+
+- [`okta_policy_signon`](../resources/policy_signon) — Parent sign-on policy
+- [`okta_network_zone`](../resources/network_zone) — Network zones used in rule conditions
+- [`okta_behavior`](../resources/behavior) — Behavior rules used in rule conditions
 
 ## Example Usage
 
@@ -105,8 +121,8 @@ resource "okta_policy_rule_signon" "example" {
 	- 'factor_type' - (Required) Factor type of the additional authentication step. (see [below for nested schema](#nestedblock--factor_sequence))
 - `identity_provider` (String) Apply rule based on the IdP used: `ANY`, `OKTA` or `SPECIFIC_IDP`. Default: `ANY`. ~> **WARNING**: Use of `identity_provider` requires a feature flag to be enabled.
 - `identity_provider_ids` (List of String) When identity_provider is `SPECIFIC_IDP` then this is the list of IdP IDs to apply the rule on
+- `mfa_lifetime` (Number) Elapsed time before the next MFA challenge
 - `mfa_prompt` (String) Prompt for MFA based on the device used, a factor session lifetime, or every sign-on attempt: `DEVICE`, `SESSION` or`ALWAYS`.
-- `mfa_lifetime` (Number) Elapsed time before the next MFA challenge. Only applicable when the `mfa_prompt` is set to `SESSION` or `ALWAYS`.
 - `mfa_remember_device` (Boolean) Remember MFA device. Default: `false`
 - `mfa_required` (Boolean) Require MFA. Default: `false`
 - `network_connection` (String) Network selection mode: `ANYWHERE`, `ZONE`, `ON_NETWORK`, or `OFF_NETWORK`. Default: `ANYWHERE`

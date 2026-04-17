@@ -1,0 +1,39 @@
+---
+page_title: "{{.Type}}: {{.Name}}"
+subcategory: "Identity Governance"
+description: |-
+{{ if .Description }}
+{{ .Description | plainmarkdown | trimspace | prefixlines "  " }}
+{{ else }}
+  Terraform {{.Type}} for {{.Name}}.
+{{ end }}
+---
+
+# {{.Type}}: {{.Name}}
+
+{{ if .Description }}
+{{ .Description | trimspace }}
+{{ else }}
+Terraform {{.Type}} for {{.Name}}.
+{{ end }}
+
+## Links
+
+- [Okta API docs](https://developer.okta.com/docs/api/iga/openapi/governance-production-requests-admin-v2-reference/request-sequences)
+- [Provider source](https://github.com/okta/terraform-provider-okta/blob/master/okta/services/governance/data_source_request_sequence.go)
+- [SDK source](https://github.com/okta/okta-governance-sdk-golang/blob/v1.0.1/governance/api_request_sequences.go)
+
+## Related Resources
+
+- [`okta_request_v2`](../resources/request_v2) — Access requests
+- [`okta_request_condition`](../resources/request_condition) — Request conditions
+
+{{ if .HasExample -}}
+
+## Example Usage
+
+{{ tffile .ExampleFile }}
+
+{{- end }}
+
+{{ .SchemaMarkdown | trimspace }}

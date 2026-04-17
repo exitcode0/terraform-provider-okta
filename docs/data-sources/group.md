@@ -1,12 +1,32 @@
 ---
 page_title: "Data Source: okta_group"
+subcategory: "Directory"
 description: |-
+
   Get a group from Okta.
+
 ---
 
 # Data Source: okta_group
 
+
 Get a group from Okta.
+
+
+## Links
+
+- [Okta API docs](https://developer.okta.com/docs/api/openapi/okta-management/management/tag/Group/)
+- [Provider source](https://github.com/okta/terraform-provider-okta/blob/master/okta/services/idaas/data_source_okta_group.go)
+
+## Related Resources
+
+- [`okta_group_memberships`](../resources/group_memberships) — Direct membership management
+- [`okta_group_rule`](../resources/group_rule) — Dynamic group membership rules
+- [`okta_group_role`](../resources/group_role) — Admin role assignments for the group
+- [`okta_group_owner`](../resources/group_owner) — Group ownership
+- [`okta_group_schema_property`](../resources/group_schema_property) — Custom group profile schema
+- [`okta_push_group`](../resources/push_group) — Push group to applications
+- [`okta_user`](../resources/user) — Users in the group
 
 ## Example Usage
 
@@ -31,5 +51,3 @@ data "okta_group" "example" {
 
 - `description` (String) Description of group.
 - `users` (Set of String) Users associated with the group. This can also be done per user.
-
-

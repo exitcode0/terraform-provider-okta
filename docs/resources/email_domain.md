@@ -1,15 +1,30 @@
 ---
 page_title: "Resource: okta_email_domain"
+subcategory: "Customizations"
 description: |-
+
   Creates email domain. This resource allows you to create and configure an email domain.
   IMPORTANT: Due to the way Okta's API conflict with terraform design principle, updating the relationship between email_domain and brand is not configurable through terraform and has to be done through clickOps
+
 ---
 
 # Resource: okta_email_domain
 
+
 Creates email domain. This resource allows you to create and configure an email domain. 
 		
 **IMPORTANT:** Due to the way Okta's API conflict with terraform design principle, updating the relationship between email_domain and brand is not configurable through terraform and has to be done through clickOps
+
+
+## Links
+
+- [Okta API docs](https://developer.okta.com/docs/api/openapi/okta-management/management/tag/EmailDomain/)
+- [Provider source](https://github.com/okta/terraform-provider-okta/blob/master/okta/services/idaas/resource_okta_email_domain.go)
+
+## Related Resources
+
+- [`okta_email_domain_verification`](../resources/email_domain_verification) — Email domain verification
+- [`okta_email_sender`](../resources/email_sender) — Email sender configuration
 
 ## Example Usage
 

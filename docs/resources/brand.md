@@ -1,15 +1,31 @@
 ---
 page_title: "Resource: okta_brand"
+subcategory: "Customizations"
 description: |-
+
   Manages brand. This resource allows you to create and configure an Okta Brand https://developer.okta.com/docs/reference/api/brands/#brand-object.
   IMPORTANT: Due to the way Okta's API conflict with terraform design principle, updating the relationship between email_domain and brand is not configurable through terraform and has to be done through clickOps
+
 ---
 
 # Resource: okta_brand
 
+
 Manages brand. This resource allows you to create and configure an Okta [Brand](https://developer.okta.com/docs/reference/api/brands/#brand-object).
 		
 **IMPORTANT:** Due to the way Okta's API conflict with terraform design principle, updating the relationship between email_domain and brand is not configurable through terraform and has to be done through clickOps
+
+
+## Links
+
+- [Okta API docs](https://developer.okta.com/docs/api/openapi/okta-management/management/tag/Brands/)
+- [Provider source](https://github.com/okta/terraform-provider-okta/blob/master/okta/services/idaas/resource_okta_brand.go)
+
+## Related Resources
+
+- [`okta_theme`](../resources/theme) — Brand theme
+- [`okta_email_customization`](../resources/email_customization) — Email template customizations
+- [`okta_customized_signin_page`](../resources/customized_signin_page) — Customized sign-in page
 
 ## Example Usage
 

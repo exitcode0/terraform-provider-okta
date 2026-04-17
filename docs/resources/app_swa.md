@@ -1,14 +1,18 @@
 ---
 page_title: "Resource: okta_app_swa"
+subcategory: "Applications"
 description: |-
+
   Creates a SWA Application.
   This resource allows you to create and configure a SWA Application.
   -> During an apply if there is change in 'status' the app will first be
   activated or deactivated in accordance with the 'status' change. Then, all
   other arguments that changed will be applied.
+
 ---
 
 # Resource: okta_app_swa
+
 
 Creates a SWA Application.
 		
@@ -16,6 +20,12 @@ This resource allows you to create and configure a SWA Application.
 -> During an apply if there is change in 'status' the app will first be
 activated or deactivated in accordance with the 'status' change. Then, all
 other arguments that changed will be applied.
+
+
+## Links
+
+- [Okta API docs](https://developer.okta.com/docs/api/openapi/okta-management/management/tag/Application/)
+- [Provider source](https://github.com/okta/terraform-provider-okta/blob/master/okta/services/idaas/resource_okta_app_swa.go)
 
 ## Example Usage
 
@@ -29,10 +39,10 @@ resource "okta_app_swa" "example" {
 }
 
 resource "okta_app_swa" "example_with_app_settings_json" {
-  preconfigured_app = "office365"
-  label             = "Microsoft Office 365 SWA"
-  status            = "ACTIVE"
-  app_settings_json = <<JSON
+  preconfigured_app       = "office365"
+  label                   = "Microsoft Office 365 SWA"
+  status                  = "ACTIVE"
+  app_settings_json       = <<JSON
     {
       "wsFedConfigureType": "AUTO",
       "windowsTransportEnabled": false,
@@ -42,7 +52,7 @@ resource "okta_app_swa" "example_with_app_settings_json" {
       "requireAdminConsent": false
     }
 JSON
-  app_links_json = <<JSON
+  app_links_json          = <<JSON
     {
       "calendar": false,
       "crm": false,
@@ -85,7 +95,7 @@ JSON
 - `accessibility_self_service` (Boolean) Enable self service. Default is `false`
 - `admin_note` (String) Application notes for admins.
 - `app_links_json` (String) Displays specific appLinks for the app. The value for each application link should be boolean.
-- `app_settings_json` (String) Application settings in JSON format. If `app_settings_json` is defined, the individual fields `button_field`, `password_field`, `username_field`, `url`, `url_regex`, `checkbox`, `redirect_url` will be ignored
+- `app_settings_json` (String) Application settings in JSON format. If app_settings_json is defined, the individual fields button_field, password_field, username_field, url, url_regex, checkbox, redirect_url will be ignored
 - `auto_submit_toolbar` (Boolean) Display auto submit toolbar
 - `button_field` (String) Login button field
 - `checkbox` (String) CSS selector for the checkbox

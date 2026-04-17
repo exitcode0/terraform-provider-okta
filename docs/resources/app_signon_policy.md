@@ -1,6 +1,8 @@
 ---
 page_title: "Resource: okta_app_signon_policy"
+subcategory: "Applications"
 description: |-
+
   Manages a sign-on policy.
   ~> WARNING: This feature is only available as a part of the Okta Identity
   Engine (OIE) and is not compatible with Classic orgs. Authentication
@@ -19,9 +21,11 @@ description: |-
   ~> WARNING: When this policy is destroyed any other applications that
   associate the policy as their authentication policy will be reassigned to the
   default/system access policy.
+
 ---
 
 # Resource: okta_app_signon_policy
+
 
 Manages a sign-on policy.
 		
@@ -42,6 +46,18 @@ true.
 ~> **WARNING:** When this policy is destroyed any other applications that
 associate the policy as their authentication policy will be reassigned to the
 default/system access policy.
+
+
+## Links
+
+- [Okta API docs](https://developer.okta.com/docs/api/openapi/okta-management/management/tag/ApplicationPolicies/)
+- [Provider source](https://github.com/okta/terraform-provider-okta/blob/master/okta/services/idaas/resource_okta_app_signon_policy.go)
+- [SDK source](https://github.com/okta/okta-sdk-golang/blob/v5.0.6/okta/api_application_policies.go)
+
+## Related Resources
+
+- [`okta_app_signon_policy_rule`](../resources/app_signon_policy_rule) — Rules for this policy
+- [`okta_app_access_policy_assignment`](../resources/app_access_policy_assignment) — Assign policy to an application
 
 ## Example Usage
 
@@ -94,8 +110,8 @@ resource "okta_app_signon_policy_rule" "some_rule" {
 
 ### Optional
 
-- `catch_all` (Boolean, default true, creation-only argument) If false, the default rule of the policy is set access to `DENY`. Otherwise default behavior of the default rule is to leave access at `ALLOW`.  **WARNING** setting this attribute to false changes policy rule's default behavior. Use at your own risk. This is only applied during creation and does not affect import or update.
-- `priority` (Default 1) Specifies the order in which this policy is evaluated in relation to the other policies.
+- `catch_all` (Boolean) If false, the default rule of the policy is set access to `DENY`. Otherwise default behavior of the default rule is to leave access at `ALLOW`.  **WARNING** setting this attribute to false changes policy rule's default behavior. Use at your own risk. This is only applied during creation and does not affect import or update.
+- `priority` (Number) Priority of the policy
 
 ### Read-Only
 

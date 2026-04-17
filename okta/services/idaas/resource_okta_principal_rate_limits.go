@@ -68,7 +68,7 @@ func (r *principalRateLimits) Schema(_ context.Context, _ resource.SchemaRequest
 				PlanModifiers: []planmodifier.String{
 					stringplanmodifier.UseStateForUnknown(),
 				},
-				Description: "The unique identifier of the principle rate limit entity.",
+				Description: "The unique identifier of the principal rate limit entity.",
 			},
 			"principal_id": schema.StringAttribute{
 				Required:    true,
@@ -96,19 +96,19 @@ func (r *principalRateLimits) Schema(_ context.Context, _ resource.SchemaRequest
 			},
 			"created_by": schema.StringAttribute{
 				Computed:    true,
-				Description: "The Okta user ID of the user who created the principle rate limit entity.",
+				Description: "The Okta user ID of the user who created the principal rate limit entity.",
 			},
 			"created_date": schema.StringAttribute{
 				Computed:    true,
-				Description: "The date and time the principle rate limit entity was created.",
+				Description: "The date and time the principal rate limit entity was created.",
 			},
 			"last_update": schema.StringAttribute{
 				Computed:    true,
-				Description: "The date and time the principle rate limit entity was last updated.",
+				Description: "The date and time the principal rate limit entity was last updated.",
 			},
 			"last_updated_by": schema.StringAttribute{
 				Computed:    true,
-				Description: "The Okta user ID of the user who last updated the principle rate limit entity.",
+				Description: "The Okta user ID of the user who last updated the principal rate limit entity.",
 			},
 			"org_id": schema.StringAttribute{
 				Computed:    true,

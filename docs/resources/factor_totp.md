@@ -1,14 +1,18 @@
 ---
 page_title: "Resource: okta_factor_totp"
+subcategory: "Security"
 description: |-
+
   Allows you to manage the time-based one-time password (TOTP) factors. A time-based one-time password (TOTP) is a
-          temporary passcode that is generated for user authentication. Examples of TOTP include hardware authenticators and
-          mobile app authenticators.
+  temporary passcode that is generated for user authentication. Examples of TOTP include hardware authenticators and
+  mobile app authenticators.
   Once saved, the settings cannot be changed (except for the 'name' field). Any other change would force resource
   recreation.
+
 ---
 
 # Resource: okta_factor_totp
+
 
 Allows you to manage the time-based one-time password (TOTP) factors. A time-based one-time password (TOTP) is a
 		temporary passcode that is generated for user authentication. Examples of TOTP include hardware authenticators and
@@ -17,9 +21,15 @@ Allows you to manage the time-based one-time password (TOTP) factors. A time-bas
 Once saved, the settings cannot be changed (except for the 'name' field). Any other change would force resource
 recreation.
 
-~> IMPORTANT: Okta API does not allow deletion of the TOTP factors through the
-API. This provider will print a warning if it attempts to destroy the resource
-receives a 501 not implemented error from the API instead of outright failing.
+
+## Links
+
+- [Okta API docs](https://developer.okta.com/docs/api/openapi/okta-management/management/tag/UserFactor/)
+- [Provider source](https://github.com/okta/terraform-provider-okta/blob/master/okta/services/idaas/resource_okta_factor_totp.go)
+
+## Related Resources
+
+- [`okta_authenticator`](../resources/authenticator) — Authenticator configuration
 
 ## Example Usage
 

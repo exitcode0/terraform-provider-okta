@@ -1,12 +1,22 @@
 ---
 page_title: "Data Source: okta_idp_metadata_saml"
+subcategory: "Security"
 description: |-
+
   Get SAML IdP metadata from Okta.
+
 ---
 
 # Data Source: okta_idp_metadata_saml
 
+
 Get SAML IdP metadata from Okta.
+
+
+## Links
+
+- [Okta API docs](https://developer.okta.com/docs/api/openapi/okta-management/management/tag/IdentityProvider/)
+- [Provider source](https://github.com/okta/terraform-provider-okta/blob/master/okta/services/idaas/data_source_okta_idp_metadata_saml.go)
 
 ## Example Usage
 
@@ -34,5 +44,3 @@ data "okta_idp_metadata_saml" "example" {
 - `id` (String) The ID of this resource.
 - `metadata` (String) Raw IdP metadata.
 - `signing_certificate` (String) SAML request signing certificate.
-
-

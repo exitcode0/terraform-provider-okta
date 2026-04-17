@@ -1,12 +1,26 @@
 ---
 page_title: "Resource: okta_event_hook"
+subcategory: "Workflow"
 description: |-
+
   Creates an event hook. This resource allows you to create and configure an event hook.
+
 ---
 
 # Resource: okta_event_hook
 
+
 Creates an event hook. This resource allows you to create and configure an event hook.
+
+
+## Links
+
+- [Okta API docs](https://developer.okta.com/docs/api/openapi/okta-management/management/tag/EventHook/)
+- [Provider source](https://github.com/okta/terraform-provider-okta/blob/master/okta/services/idaas/resource_okta_event_hook.go)
+
+## Related Resources
+
+- [`okta_hook_key`](../resources/hook_key) — Verification keys for hooks
 
 ## Example Usage
 

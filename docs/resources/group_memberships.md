@@ -1,19 +1,23 @@
 ---
 page_title: "Resource: okta_group_memberships"
+subcategory: "Directory"
 description: |-
+
   Resource to manage a set of memberships for a specific group.
   This resource will allow you to bulk manage group membership in Okta for a given
   group. This offers an interface to pass multiple users into a single resource
   call, for better API resource usage. If you need a relationship of a single
-  user to many groups, please use the 'oktausergroupmemberships' resource.
+  user to many groups, please use the 'okta_user_group_memberships' resource.
   Important: The default behavior of the resource is to only maintain the
   state of user ids that are assigned it. This behavior will signal drift only if
   those users stop being part of the group. If the desired behavior is track all
-  users that are added/removed from the group make use of the 'trackall_users'
+  users that are added/removed from the group make use of the 'track_all_users'
   argument with this resource.
+
 ---
 
 # Resource: okta_group_memberships
+
 
 Resource to manage a set of memberships for a specific group.
 This resource will allow you to bulk manage group membership in Okta for a given
@@ -25,6 +29,17 @@ state of user ids that are assigned it. This behavior will signal drift only if
 those users stop being part of the group. If the desired behavior is track all
 users that are added/removed from the group make use of the 'track_all_users'
 argument with this resource.
+
+
+## Links
+
+- [Okta API docs](https://developer.okta.com/docs/api/openapi/okta-management/management/tag/Group/)
+- [Provider source](https://github.com/okta/terraform-provider-okta/blob/master/okta/services/idaas/resource_okta_group_memberships.go)
+
+## Related Resources
+
+- [`okta_group`](../resources/group) — The group
+- [`okta_user`](../resources/user) — The users
 
 ## Example Usage
 

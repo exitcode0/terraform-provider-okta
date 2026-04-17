@@ -1,44 +1,54 @@
 ---
 page_title: "Resource: okta_request_condition"
+subcategory: "Identity Governance"
 description: |-
-  Request conditions define what resources and access levels requesters can request from their resource catalog.
+
+  Terraform Resource for okta_request_condition.
+
 ---
 
 # Resource: okta_request_condition
 
-Manages request conditions. This resource allows you to create and configure an Okta [request-condition](https://developer.okta.com/docs/api/iga/openapi/governance.requests.admin.v2/tag/Request-Conditions/#tag/Request-Conditions).
+
+Terraform Resource for okta_request_condition.
+
+
+## Links
+
+- [Okta API docs](https://developer.okta.com/docs/api/iga/openapi/governance-production-requests-admin-v2-reference/request-conditions)
+- [Provider source](https://github.com/okta/terraform-provider-okta/blob/master/okta/services/governance/resource_request_condition.go)
+- [SDK source](https://github.com/okta/okta-governance-sdk-golang/blob/v1.0.1/governance/api_request_conditions.go)
+
+## Related Resources
+
+- [`okta_request_v2`](../resources/request_v2) — Access requests
+- [`okta_request_sequence`](../resources/request_sequence) — Approval sequences
 
 ## Example Usage
 
-### Basic Example
-
 ```terraform
-resource "okta_request_condition" "example" {
-  resource_id="<resource_id>"
-  approval_sequence_id="<approval_sequence_id>"
-  name="<name>"
-  access_scope_settings{
-    type="RESOURCE_DEFAULT"
+resource "okta_request_condition" "test" {
+  resource_id          = "0oasp3g29b1hqkcYE1d7"
+  approval_sequence_id = "69251ae704a4d0a7fcdb870f"
+  name                 = "test-condition"
+  access_scope_settings {
+    type = "RESOURCE_DEFAULT"
   }
-  requester_settings{
-    type="EVERYONE"
+  requester_settings {
+    type = "EVERYONE"
   }
 }
-```
 
-### Example with Active Status
-
-```terraform
-resource "okta_request_condition" "example_active" {
-  status="ACTIVE"
-  resource_id="<resource_id>"
-  approval_sequence_id="<approval_sequence_id>"
-  name="<name>"
-  access_scope_settings{
-    type="RESOURCE_DEFAULT"
+resource "okta_request_condition" "test_active" {
+  status               = "ACTIVE"
+  resource_id          = "0oasp3g29b1hqkcYE1d7"
+  approval_sequence_id = "69251ae704a4d0a7fcdb870f"
+  name                 = "test-condition-active"
+  access_scope_settings {
+    type = "RESOURCE_DEFAULT"
   }
-  requester_settings{
-    type="EVERYONE"
+  requester_settings {
+    type = "EVERYONE"
   }
 }
 ```
@@ -48,49 +58,73 @@ resource "okta_request_condition" "example_active" {
 
 ### Required
 
-- `resource_id` (String) The id of the resource in Okta ID format.
 - `approval_sequence_id` (String) The ID of the approval sequence.
 - `name` (String) The name of the request condition.
-- `access_scope_settings` (Block Set) (see [below for nested schema](#nestedblock--access_scope_settings))
-- `requester_settings` (Block Set) (see [below for nested schema](#nestedblock--requester_settings))
+- `resource_id` (String) The id of the resource in Okta ID format.
 
 ### Optional
 
+- `access_duration_settings` (Block, Optional) Settings that control who may specify the access duration allowed by this request condition or risk settings, as well as what duration may be requested. (see [below for nested schema](#nestedblock--access_duration_settings))
+- `access_scope_settings` (Block, Optional) (see [below for nested schema](#nestedblock--access_scope_settings))
 - `description` (String) The description of the request condition.
-- `priority` (int) The priority of the request condition. Lower numbers indicate higher priority.
-- `access_duration_settings` (Block Set) The access duration settings for the request condition (see [below for nested schema](#nestedblock--access_duration_settings))
-- `priority` (int) The priority of the request condition. Lower numbers indicate higher priority.
-- `status` (String) Status of the condition. Valid values: `ACTIVE`, `INACTIVE`. Default is `INACTIVE`. Note: `DELETED` and `INVALID` statuses are system-managed and cannot be set directly.
-
+- `priority` (Number) The priority of the condition. The smaller the number, the higher the priority.
+- `requester_settings` (Block, Optional) (see [below for nested schema](#nestedblock--requester_settings))
+- `status` (String) Status of the condition. Valid values: ACTIVE, INACTIVE. Default is INACTIVE.
 
 ### Read-Only
 
-- `id` (String) Request condition id.
-- `created` (String) The date and time when the request condition was created.
-- `last_updated` (String) The date and time when the request condition was last updated.
-- `created_by` (String) The id of the user who created the request condition.
-- `last_updated_by` (String) The id of the user who last updated the request condition.
-
-<a id="nestedblock--access_scope_settings"></a>
-### Nested Schema for `access_scope_settings`
-Required:
-- `type` (String) Enum: `RESOURCE_DEFAULT`, `GROUPS`, `ENTITLEMENT_BUNDLES`.
-- `id` (Block List) Defines access scope configuration.
-  Each block specifies a type (e.g., GROUPS) and one or more ids blocks containing an id (the group or entitlement bundle ID).
-
-<a id="nestedblock--requester_settings"></a>
-### Nested Schema for `requester_settings`
-Required:
-- `type` (String) Enum: `EVERYONE`, `TEAMS`, `GROUPS`.
-- `id` (Block List) Defines requester settings.
-  Each block specifies a type (e.g., GROUPS) and one or more ids blocks containing an id (the group or entitlement bundle ID).
+- `created` (String) The ISO 8601 formatted date and time when the resource was created.
+- `created_by` (String) The id of the Okta user who created the resource.
+- `id` (String) The id of the request condition.
+- `last_updated` (String) The ISO 8601 formatted date and time when the object was last updated.
+- `last_updated_by` (String) The id of the Okta user who last updated the object.
 
 <a id="nestedblock--access_duration_settings"></a>
 ### Nested Schema for `access_duration_settings`
-Required:
-- `type` (String) Enum: `ADMIN_FIXED_DURATION`, `REQUESTER_SPECIFIED_DURATION`.
-- `duration` (String) The duration set by the admin for access durations. Use ISO8061 notation for duration values..
 
+Optional:
+
+- `duration` (String) The duration set by the admin for access durations. Use ISO8061 notation for duration values.
+- `type` (String)
+
+
+<a id="nestedblock--access_scope_settings"></a>
+### Nested Schema for `access_scope_settings`
+
+Required:
+
+- `type` (String)
+
+Optional:
+
+- `ids` (Block List) Block list of groups/entitlement bundles ids. (see [below for nested schema](#nestedblock--access_scope_settings--ids))
+
+<a id="nestedblock--access_scope_settings--ids"></a>
+### Nested Schema for `access_scope_settings.ids`
+
+Optional:
+
+- `id` (String) The group/entitlement bundle ID.
+
+
+
+<a id="nestedblock--requester_settings"></a>
+### Nested Schema for `requester_settings`
+
+Required:
+
+- `type` (String)
+
+Optional:
+
+- `ids` (Block List) Block list of teams/groups ids. (see [below for nested schema](#nestedblock--requester_settings--ids))
+
+<a id="nestedblock--requester_settings--ids"></a>
+### Nested Schema for `requester_settings.ids`
+
+Optional:
+
+- `id` (String) The group/team ID.
 
 ## Import
 

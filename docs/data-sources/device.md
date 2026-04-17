@@ -1,18 +1,29 @@
 ---
 page_title: "Data Source: okta_device"
+subcategory: "Settings"
 description: |-
-  Retrieves device information from Okta.
+
+  Terraform Data Source for okta_device.
+
 ---
 
 # Data Source: okta_device
 
-Get information about a device in Okta.
+
+Terraform Data Source for okta_device.
+
+
+## Links
+
+- [Okta API docs](https://developer.okta.com/docs/api/openapi/okta-management/management/tag/Device/)
+- [Provider source](https://github.com/okta/terraform-provider-okta/blob/master/okta/services/idaas/data_source_okta_device.go)
+- [SDK source](https://github.com/okta/okta-sdk-golang/blob/v5.0.6/okta/api_device.go)
 
 ## Example Usage
 
 ```terraform
 data "okta_device" "example" {
-  id = "<device_id>"
+  id = "abcdefghi0123456789"
 }
 ```
 
@@ -25,38 +36,38 @@ data "okta_device" "example" {
 
 ### Read-Only
 
-- `status` (String) The status of the device.
-- `resource_type` (String) The resource type of the device.
 - `created` (String) The creation timestamp of the device.
 - `last_updated` (String) The last updated timestamp of the device.
+- `profile` (Block, Read-only) (see [below for nested schema](#nestedblock--profile))
 - `resource_alternate_id` (String) The alternate ID of the device resource.
+- `resource_display_name` (Block, Read-only) (see [below for nested schema](#nestedblock--resource_display_name))
 - `resource_id` (String) Alternate key for the id.
-- `profile` (Object) (see [below for nested schema](#nestedobjatt--profile))
-- `resource_display_name` (Object) (see [below for nested schema](#nestedobjatt--resource--display--name))
+- `resource_type` (String) The resource type of the device.
+- `status` (String) The status of the device.
 
-<a id="nestedobjatt--profile"></a>
+<a id="nestedblock--profile"></a>
 ### Nested Schema for `profile`
 
 Read-Only:
 
-- `display_name` (String) The display name of the device.
-- `platform` (String) The platform of the device.
-- `registered` (Boolean) Indicates if the device is registered at Okta.
 - `disk_encryption_type` (String) The disk encryption type of the device.
+- `display_name` (String) The display name of the device.
 - `imei` (String) The International Mobile Equipment Identity (IMEI) of the device.
-- `integrity_jail_break` (Boolean)Indicates if the device is jailbroken or rooted. Only applicable to IOS and ANDROID platforms.
+- `integrity_jail_break` (Boolean) Indicates if the device is jailbroken or rooted. Only applicable to IOS and ANDROID platforms.
 - `manufacturer` (String) The manufacturer of the device.
-- `meid` (String) The Mobile Equipment Identifier (MEID) of the device.
+- `meid` (String) Mobile equipment identifier of the device.
 - `model` (String) The model of the device.
 - `os_version` (String) The OS version of the device.
+- `platform` (String) The platform of the device.
+- `registered` (Boolean) Indicates if the device is registered at Okta.
 - `secure_hardware_present` (Boolean) Indicates if secure hardware is present on the device.
-- `serial_number` (String) The serial number of the device.
-- `sid` (String) The Security Identifier (SID) of the device.
-- `tpm_present` (String) Windows Trusted Platform Module hash value.
+- `serial_number` (String) Serial number of the device.
+- `sid` (String) Windows Security identifier of the device.
+- `tpm_public_key_hash` (String) Windows Trusted Platform Module hash value.
 - `udid` (String) MacOS Unique device identifier of the device.
-- `management_agent` (String) The management agent of the device.
 
-<a id="nestedobjatt--resource--display--name"></a>
+
+<a id="nestedblock--resource_display_name"></a>
 ### Nested Schema for `resource_display_name`
 
 Read-Only:

@@ -1,17 +1,32 @@
 ---
 page_title: "Resource: okta_policy_profile_enrollment"
+subcategory: "Security"
 description: |-
+
   Creates a Profile Enrollment Policy
   ~> WARNING: This feature is only available as a part of the Identity Engine. Contact support mailto:dev-inquiries@okta.com for further information.
   This resource allows you to create and configure a Profile Enrollment Policy.
+
 ---
 
 # Resource: okta_policy_profile_enrollment
+
 
 Creates a Profile Enrollment Policy
 		
 ~> **WARNING:** This feature is only available as a part of the Identity Engine. [Contact support](mailto:dev-inquiries@okta.com) for further information.
 This resource allows you to create and configure a Profile Enrollment Policy.
+
+
+## Links
+
+- [Okta API docs](https://developer.okta.com/docs/api/openapi/okta-management/management/tag/Policy/)
+- [Provider source](https://github.com/okta/terraform-provider-okta/blob/master/okta/services/idaas/resource_okta_policy_profile_enrollment.go)
+
+## Related Resources
+
+- [`okta_policy_rule_profile_enrollment`](../resources/policy_rule_profile_enrollment) — Rules for this policy
+- [`okta_policy_profile_enrollment_apps`](../resources/policy_profile_enrollment_apps) — Applications assigned to this policy
 
 ## Example Usage
 

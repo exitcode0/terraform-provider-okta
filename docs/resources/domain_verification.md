@@ -1,12 +1,26 @@
 ---
 page_title: "Resource: okta_domain_verification"
+subcategory: "Customizations"
 description: |-
+
   Verifies the Domain. This is replacement for the verify field from the okta_domain resource. The resource won't be created if the domain could not be verified. The provider will make several requests to verify the domain until the API returns VERIFIED verification status.
+
 ---
 
 # Resource: okta_domain_verification
 
+
 Verifies the Domain. This is replacement for the `verify` field from the `okta_domain` resource. The resource won't be created if the domain could not be verified. The provider will make several requests to verify the domain until the API returns `VERIFIED` verification status.
+
+
+## Links
+
+- [Okta API docs](https://developer.okta.com/docs/api/openapi/okta-management/management/tag/CustomDomain/)
+- [Provider source](https://github.com/okta/terraform-provider-okta/blob/master/okta/services/idaas/resource_okta_domain_verification.go)
+
+## Related Resources
+
+- [`okta_domain`](../resources/domain) — Parent domain
 
 ## Example Usage
 

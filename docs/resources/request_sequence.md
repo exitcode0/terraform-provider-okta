@@ -1,19 +1,35 @@
 ---
 page_title: "Resource: okta_request_sequence"
+subcategory: "Identity Governance"
 description: |-
-  Request sequences define a series of steps (questions, approval tasks, and custom tasks) that must be completed for a requester to gain access.
+
+  Terraform Resource for okta_request_sequence.
+
 ---
 
 # Resource: okta_request_sequence
 
-Manages request sequence. This resource allows you to read and delete an Okta [request-sequence](https://developer.okta.com/docs/api/iga/openapi/governance.requests.admin.v2/tag/Request-Sequences/#tag/Request-Sequences).
+
+Terraform Resource for okta_request_sequence.
+
+
+## Links
+
+- [Okta API docs](https://developer.okta.com/docs/api/iga/openapi/governance-production-requests-admin-v2-reference/request-sequences)
+- [Provider source](https://github.com/okta/terraform-provider-okta/blob/master/okta/services/governance/resource_request_sequence.go)
+- [SDK source](https://github.com/okta/okta-governance-sdk-golang/blob/v1.0.1/governance/api_request_sequences.go)
+
+## Related Resources
+
+- [`okta_request_v2`](../resources/request_v2) — Access requests
+- [`okta_request_condition`](../resources/request_condition) — Request conditions
 
 ## Example Usage
 
 ```terraform
-resource "okta_request_sequence" "test"{
-  id= "<sequence_id>"
-  resource_id= "<resource_id>"
+resource "okta_request_sequence" "test" {
+  id          = "68cbc2b263c689fc3336bfac"
+  resource_id = "0oaoum6j3cElINe1z1d7"
 }
 ```
 
@@ -22,20 +38,12 @@ resource "okta_request_sequence" "test"{
 
 ### Required
 
+- `id` (String) The unique identifier for the request sequence. This is typically the sequence ID in Okta.
 - `resource_id` (String) The id of the resource in Okta ID format.
-- `id` (String) The id of the sequence.Must be of 24 characters length.
 
 ### Read-Only
 
-- `description` (String) The description of the request condition.
+- `compatible_resource_types` (List of String)
+- `description` (String) Description of the request sequence
 - `link` (String) Link to edit the request sequence.
-- `name` (Block Set) The access duration settings for the request condition (see [below for nested schema](#nestedblock--access_duration_settings))
-- `compatible_resource_types` (List) Enum: `APP`, `GROUP`.
-
-## Import
-
-Import is supported using the following syntax:
-
-```shell
-terraform import okta_request_condition.example <resource_id>/<id>
-```
+- `name` (String) Name of the request sequence.

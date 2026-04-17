@@ -1,12 +1,27 @@
 ---
 page_title: "Data Source: okta_idp_saml"
+subcategory: "Security"
 description: |-
+
   Get a SAML IdP from Okta.
+
 ---
 
 # Data Source: okta_idp_saml
 
+
 Get a SAML IdP from Okta.
+
+
+## Links
+
+- [Okta API docs](https://developer.okta.com/docs/api/openapi/okta-management/management/tag/IdentityProvider/)
+- [Provider source](https://github.com/okta/terraform-provider-okta/blob/master/okta/services/idaas/data_source_okta_idp_saml.go)
+
+## Related Resources
+
+- [`okta_idp_saml_key`](../resources/idp_saml_key) — SAML signing keys
+- [`okta_policy_rule_idp_discovery`](../resources/policy_rule_idp_discovery) — IdP discovery policy rules
 
 ## Example Usage
 
@@ -37,6 +52,5 @@ data "okta_idp_saml" "example" {
 - `sso_url` (String) Single sign-on url.
 - `subject_filter` (String) Regular expression pattern used to filter untrusted IdP usernames.
 - `subject_format` (Set of String) Expression to generate or transform a unique username for the IdP user.
+- `trust_claims` (Boolean) Indicates whether to trust authentication claims from the IdP.
 - `type` (String) Type of idp.
-
-

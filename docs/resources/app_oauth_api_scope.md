@@ -1,16 +1,30 @@
 ---
 page_title: "Resource: okta_app_oauth_api_scope"
+subcategory: "Applications"
 description: |-
+
   Manages API scopes for OAuth applications.
   This resource allows you to grant or revoke API scopes for OAuth2 applications within your organization.
   Note: you have to create an application before using this resource.
+
 ---
 
 # Resource: okta_app_oauth_api_scope
 
+
 Manages API scopes for OAuth applications. 
 This resource allows you to grant or revoke API scopes for OAuth2 applications within your organization.
 Note: you have to create an application before using this resource.
+
+
+## Links
+
+- [Okta API docs](https://developer.okta.com/docs/api/openapi/okta-management/management/tag/ApplicationGrants/)
+- [Provider source](https://github.com/okta/terraform-provider-okta/blob/master/okta/services/idaas/resource_okta_app_oauth_api_scope.go)
+
+## Related Resources
+
+- [`okta_app_oauth`](../resources/app_oauth) — Parent OAuth application
 
 ## Example Usage
 

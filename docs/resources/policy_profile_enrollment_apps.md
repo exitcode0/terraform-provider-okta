@@ -1,16 +1,19 @@
 ---
 page_title: "Resource: okta_policy_profile_enrollment_apps"
+subcategory: "Security"
 description: |-
+
   Manages Profile Enrollment Policy Apps
   ~> WARNING: This feature is only available as a part of the Identity Engine. Contact support mailto:dev-inquiries@okta.com for further information.
   This resource allows you to manage the apps in the Profile Enrollment Policy.
   Important Notes:
-   - Default Enrollment Policy can not be used in this resource since it is used as a policy to re-assign apps to when they are unassigned from this one.
-   - When re-assigning the app to another policy, please use 'depends_on' in the policy to which the app will be assigned. This is necessary to avoid
-    unexpected behavior, since if the app is unassigned from the policy it is just assigned to the 'Default' one.
+  Default Enrollment Policy can not be used in this resource since it is used as a policy to re-assign apps to when they are unassigned from this one.When re-assigning the app to another policy, please use 'depends_on' in the policy to which the app will be assigned. This is necessary to avoid
+  unexpected behavior, since if the app is unassigned from the policy it is just assigned to the 'Default' one.
+
 ---
 
 # Resource: okta_policy_profile_enrollment_apps
+
 
 Manages Profile Enrollment Policy Apps
 ~> **WARNING:** This feature is only available as a part of the Identity Engine. [Contact support](mailto:dev-inquiries@okta.com) for further information.
@@ -19,6 +22,16 @@ This resource allows you to manage the apps in the Profile Enrollment Policy.
  - Default Enrollment Policy can not be used in this resource since it is used as a policy to re-assign apps to when they are unassigned from this one.
  - When re-assigning the app to another policy, please use 'depends_on' in the policy to which the app will be assigned. This is necessary to avoid 
   unexpected behavior, since if the app is unassigned from the policy it is just assigned to the 'Default' one.
+
+
+## Links
+
+- [Okta API docs](https://developer.okta.com/docs/api/openapi/okta-management/management/tag/Policy/)
+- [Provider source](https://github.com/okta/terraform-provider-okta/blob/master/okta/services/idaas/resource_okta_policy_profile_enrollment_apps.go)
+
+## Related Resources
+
+- [`okta_policy_profile_enrollment`](../resources/policy_profile_enrollment) — Parent profile enrollment policy
 
 ## Example Usage
 

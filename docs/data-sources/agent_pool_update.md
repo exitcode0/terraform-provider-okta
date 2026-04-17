@@ -1,19 +1,48 @@
 ---
 page_title: "Data Source: okta_agent_pool_update"
+subcategory: "Settings"
 description: |-
+
   Retrieves an Okta Agent Pool Update. Agent pool updates allow you to schedule and manage updates for agent pools.
+
 ---
 
 # Data Source: okta_agent_pool_update
 
+
 Retrieves an Okta Agent Pool Update. Agent pool updates allow you to schedule and manage updates for agent pools.
+
+
+## Links
+
+- [Okta API docs](https://developer.okta.com/docs/api/openapi/okta-management/management/tag/AgentPools/)
+- [Provider source](https://github.com/okta/terraform-provider-okta/blob/master/okta/services/idaas/data_source_okta_agent_pool_update.go)
+- [SDK source](https://github.com/okta/okta-sdk-golang/blob/v6.1.6/okta/api_agent_pools.go)
 
 ## Example Usage
 
 ```terraform
+resource "okta_agent_pool_update" "test" {
+  name          = "update_schedule_test"
+  agent_type    = "AD"
+  notify_admins = true
+  pool_id       = "0oaspf3cfatE1nDO31d7"
+  agents {
+    id      = "a53slzqkptH2xEJ1r1d7"
+    pool_id = "0oaspf3cfatE1nDO31d7" # this is required in schema
+  }
+
+  schedule {
+    cron     = "0 3 * * WED"
+    timezone = "Asia/Calcutta"
+    delay    = 0
+    duration = 1020
+  }
+}
+
 data "okta_agent_pool_update" "example" {
-  id      = "<update_id>"
-  pool_id = "<pool_id>"
+  id      = okta_agent_pool_update.test.id
+  pool_id = "0oaspf3cfatE1nDO31d7"
 }
 ```
 
@@ -27,15 +56,15 @@ data "okta_agent_pool_update" "example" {
 
 ### Read-Only
 
-- `agent_type` (String) Agent types that are being monitored (e.g. AD, LDAP, IWA, RADIUS, MFA, OPP, RUM, Radius).
-- `agents` (Set of Object) The agents associated with the agent pool update. (see [below for nested schema](#nestedblock--agents))
+- `agent_type` (String) Agent types that are being monitored.(e.g., AD, LDAP, IWA, RADIUS, MFA, OPP, RUM, Radius)
+- `agents` (Block Set) The agents associated with the agent pool update. (see [below for nested schema](#nestedblock--agents))
 - `enabled` (Boolean) Indicates if auto-update is enabled for the agent pool.
 - `name` (String) The name of the agent pool update.
 - `notify_admin` (Boolean) Indicates if the admin is notified about the update.
 - `reason` (String) Reason for the update.
-- `schedule` (Object) The schedule configuration for the agent pool update. (see [below for nested schema](#nestedblock--schedule))
+- `schedule` (Block, Read-only) The schedule configuration for the agent pool update. (see [below for nested schema](#nestedblock--schedule))
 - `sort_order` (Number) Specifies the sort order.
-- `status` (String) Overall state for the auto-update job from the admin perspective (e.g., Cancelled, Failed, InProgress, Paused, Scheduled, Success).
+- `status` (String) Overall state for the auto-update job from the admin perspective.
 - `target_version` (String) The agent version to update to.
 
 <a id="nestedblock--agents"></a>
@@ -48,12 +77,13 @@ Read-Only:
 - `is_latest_gaed_version` (Boolean) Determines if the agent is on the latest generally available version.
 - `last_connection` (Number) Timestamp when the agent last connected to Okta.
 - `name` (String) The name of the agent.
-- `operational_status` (String) Operational status of a given agent (e.g., DEGRADED, DISRUPTED, INACTIVE, OPERATIONAL).
+- `operational_status` (String) Operational status of a given agent (e.g. DEGRADED, DISRUPTED, INACTIVE, OPERATIONAL).
 - `pool_id` (String) Pool ID.
 - `type` (String) Agent types that are being monitored.
 - `update_message` (String) Status message of the agent.
 - `update_status` (String) Status for one agent regarding the status to auto-update that agent.
 - `version` (String) Agent version number.
+
 
 <a id="nestedblock--schedule"></a>
 ### Nested Schema for `schedule`

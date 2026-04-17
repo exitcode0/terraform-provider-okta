@@ -1,12 +1,26 @@
 ---
 page_title: "Resource: okta_auth_server_scope"
+subcategory: "Security"
 description: |-
+
   Creates an Authorization Server Scope. This resource allows you to create and configure an Authorization Server Scope.
+
 ---
 
 # Resource: okta_auth_server_scope
 
+
 Creates an Authorization Server Scope. This resource allows you to create and configure an Authorization Server Scope.
+
+
+## Links
+
+- [Okta API docs](https://developer.okta.com/docs/api/openapi/okta-management/management/tag/AuthorizationServerScopes/)
+- [Provider source](https://github.com/okta/terraform-provider-okta/blob/master/okta/services/idaas/resource_okta_auth_server_scope.go)
+
+## Related Resources
+
+- [`okta_auth_server`](../resources/auth_server) — Parent authorization server
 
 ## Example Usage
 

@@ -1,12 +1,22 @@
 ---
 page_title: "Resource: okta_preview_signin_page"
+subcategory: "Customizations"
 description: |-
+
   Manage the preview signin page of a brand
+
 ---
 
 # Resource: okta_preview_signin_page
 
+
 Manage the preview signin page of a brand
+
+
+## Links
+
+- [Okta API docs](https://developer.okta.com/docs/api/openapi/okta-management/management/tag/CustomPages/)
+- [Provider source](https://github.com/okta/terraform-provider-okta/blob/master/okta/services/idaas/resource_okta_preview_signin_page.go)
 
 ## Example Usage
 

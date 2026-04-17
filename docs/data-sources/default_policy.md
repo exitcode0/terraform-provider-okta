@@ -1,7 +1,10 @@
 ---
 page_title: "Data Source: okta_default_policy"
+subcategory: "Security"
 description: |-
+
   Get a Default policy from Okta.
+
 ---
 
 # Data Source: okta_default_policy
@@ -9,6 +12,12 @@ description: |-
 Use this data source to retrieve a default policy from Okta. This 
 same thing can be achieved using the `okta_policy` with default 
 names, this is simply a shortcut.
+
+## Links
+
+- [Okta API docs](https://developer.okta.com/docs/api/openapi/okta-management/management/tag/Policy/)
+- [Provider source](https://github.com/okta/terraform-provider-okta/blob/master/okta/services/idaas/data_source_okta_default_policy.go)
+- [SDK source](https://github.com/okta/terraform-provider-okta/blob/master/sdk/api_policy.go)
 
 ## Example Usage
 

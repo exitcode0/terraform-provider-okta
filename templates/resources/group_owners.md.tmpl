@@ -1,12 +1,31 @@
 ---
 page_title: "{{.Type}}: {{.Name}}"
+subcategory: "Directory"
 description: |-
+{{ if .Description }}
 {{ .Description | plainmarkdown | trimspace | prefixlines "  " }}
+{{ else }}
+  Terraform {{.Type}} for {{.Name}}.
+{{ end }}
 ---
 
 # {{.Type}}: {{.Name}}
 
+{{ if .Description }}
 {{ .Description | trimspace }}
+{{ else }}
+Terraform {{.Type}} for {{.Name}}.
+{{ end }}
+
+## Links
+
+- [Okta API docs](https://developer.okta.com/docs/api/openapi/okta-management/management/tag/GroupOwner/)
+- [Provider source](https://github.com/okta/terraform-provider-okta/blob/master/okta/services/idaas/resource_okta_group_owners.go)
+- [SDK source](https://github.com/okta/okta-sdk-golang/blob/v5.0.6/okta/api_group_owner.go)
+
+## Related Resources
+
+- [`okta_group`](../resources/group) — The group
 
 {{ if .HasExample -}}
 

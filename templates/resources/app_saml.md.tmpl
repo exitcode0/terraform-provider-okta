@@ -1,0 +1,51 @@
+---
+page_title: "{{.Type}}: {{.Name}}"
+subcategory: "Applications"
+description: |-
+{{ if .Description }}
+{{ .Description | plainmarkdown | trimspace | prefixlines "  " }}
+{{ else }}
+  Terraform {{.Type}} for {{.Name}}.
+{{ end }}
+---
+
+# {{.Type}}: {{.Name}}
+
+{{ if .Description }}
+{{ .Description | trimspace }}
+{{ else }}
+Terraform {{.Type}} for {{.Name}}.
+{{ end }}
+
+## Links
+
+- [Okta API docs](https://developer.okta.com/docs/api/openapi/okta-management/management/tag/Application/)
+- [Provider source](https://github.com/okta/terraform-provider-okta/blob/master/okta/services/idaas/resource_okta_app_saml.go)
+
+## Related Resources
+
+- [`okta_app_group_assignment`](../resources/app_group_assignment) — Assign groups to the application
+- [`okta_app_user`](../resources/app_user) — Assign users to the application
+- [`okta_app_signon_policy`](../resources/app_signon_policy) — Application sign-on policy
+- [`okta_app_saml_app_settings`](../resources/app_saml_app_settings) — SAML application settings
+- [`okta_app_connection`](../resources/app_connection) — Application connection settings
+
+{{ if .HasExample -}}
+
+## Example Usage
+
+{{ tffile .ExampleFile }}
+
+{{- end }}
+
+{{ .SchemaMarkdown | trimspace }}
+
+{{ if .HasImport -}}
+
+## Import
+
+Import is supported using the following syntax:
+
+{{ codefile "shell" .ImportFile }}
+
+{{- end }}

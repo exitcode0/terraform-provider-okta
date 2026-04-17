@@ -1,12 +1,27 @@
 ---
 page_title: "Resource: okta_user_group_memberships"
+subcategory: "Directory"
 description: |-
+
   Resource to manage a set of group memberships for a specific user. This resource allows you to bulk manage groups for a single user, independent of the user schema itself. This allows you to manage group membership in terraform without overriding other automatic membership operations performed by group rules and other non-managed actions.
+
 ---
 
 # Resource: okta_user_group_memberships
 
+
 Resource to manage a set of group memberships for a specific user. This resource allows you to bulk manage groups for a single user, independent of the user schema itself. This allows you to manage group membership in terraform without overriding other automatic membership operations performed by group rules and other non-managed actions.
+
+
+## Links
+
+- [Okta API docs](https://developer.okta.com/docs/api/openapi/okta-management/management/tag/Group/)
+- [Provider source](https://github.com/okta/terraform-provider-okta/blob/master/okta/services/idaas/resource_okta_user_group_memberships.go)
+
+## Related Resources
+
+- [`okta_user`](../resources/user) — The user
+- [`okta_group`](../resources/group) — The groups
 
 ## Example Usage
 

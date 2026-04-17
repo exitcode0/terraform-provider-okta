@@ -1,20 +1,34 @@
 ---
 page_title: "Resource: okta_hook_key"
+subcategory: "Workflow"
 description: |-
+
   Creates and manages a Hook Key for use with Okta Inline Hooks.
+
 ---
 
 # Resource: okta_hook_key
 
-Creates and manages a Hook Key. This resource allows you to create and configure an Okta [Hook Key](https://developer.okta.com/docs/reference/api/hook-keys/).
 
-Use Key Management to create and manage JSON Web Keys (JWKS) that support OAuth 2.0 client authentication. The key is composed of a public and private key pair. The private key signs the JSON Web Token (JWT) and the public key validates it on the client side.
+Creates and manages a Hook Key for use with Okta Inline Hooks.
+
+
+## Links
+
+- [Okta API docs](https://developer.okta.com/docs/api/openapi/okta-management/management/tag/HookKey/)
+- [Provider source](https://github.com/okta/terraform-provider-okta/blob/master/okta/services/idaas/resource_okta_hook_key.go)
+- [SDK source](https://github.com/okta/okta-sdk-golang/blob/v5.0.6/okta/api_hook_key.go)
+
+## Related Resources
+
+- [`okta_event_hook`](../resources/event_hook) — Event hooks using this key
+- [`okta_inline_hook`](../resources/inline_hook) — Inline hooks using this key
 
 ## Example Usage
 
 ```terraform
-resource "okta_hook_key" "example" {
-  name = "My Hook Key"
+resource "okta_hook_key" "test" {
+  name = "test_hook_key"
 }
 ```
 
@@ -23,20 +37,20 @@ resource "okta_hook_key" "example" {
 
 ### Required
 
-- `name` (String) Display name for the key. Must be between 1 and 255 characters.
+- `name` (String) Display name for the key.
 
 ### Read-Only
 
 - `created` (String) Timestamp when the key was created.
-- `id` (String) The unique Okta ID of this key record.
-- `is_used` (Bool) Whether this key is currently in use by other applications.
+- `id` (String) The unique Okta ID of this key record
+- `is_used` (Boolean) Whether this key is currently in use by other applications.
 - `key_id` (String) The alias of the public key.
 - `last_updated` (String) Timestamp when the key was updated.
 
 ## Import
 
-Hook Keys can be imported using the `id`.
+Import is supported using the following syntax:
 
-```sh
-terraform import okta_hook_key.example &#60;hook_key_id&#62;
+```shell
+terraform import okta_hook_key.example <id>
 ```

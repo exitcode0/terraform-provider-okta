@@ -1,12 +1,27 @@
 ---
 page_title: "Resource: okta_user_risk"
+subcategory: "Directory"
 description: |-
+
   Manages a user's risk level in Okta. This resource allows you to set and manage the risk level for a specific user.
+
 ---
 
 # Resource: okta_user_risk
 
+
 Manages a user's risk level in Okta. This resource allows you to set and manage the risk level for a specific user.
+
+
+## Links
+
+- [Okta API docs](https://developer.okta.com/docs/api/openapi/okta-management/management/tag/UserRisk/)
+- [Provider source](https://github.com/okta/terraform-provider-okta/blob/master/okta/services/idaas/resource_okta_user_risk.go)
+- [SDK source](https://github.com/okta/okta-sdk-golang/blob/v6.1.6/okta/api_user_risk.go)
+
+## Related Resources
+
+- [`okta_user`](../resources/user) — The user
 
 ## Example Usage
 
@@ -27,7 +42,7 @@ resource "okta_user_risk" "example" {
 
 ### Read-Only
 
-- `id` (String) The ID of this resource.
+- `id` (String) The ID of this resource (same as user_id).
 
 ## Import
 

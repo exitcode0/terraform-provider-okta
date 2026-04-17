@@ -1,12 +1,26 @@
 ---
 page_title: "Resource: okta_policy_rule_password"
+subcategory: "Security"
 description: |-
+
   Creates a Password Policy Rule. This resource allows you to create and configure a Password Policy Rule.
+
 ---
 
 # Resource: okta_policy_rule_password
 
+
 Creates a Password Policy Rule. This resource allows you to create and configure a Password Policy Rule.
+
+
+## Links
+
+- [Okta API docs](https://developer.okta.com/docs/api/openapi/okta-management/management/tag/Policy/)
+- [Provider source](https://github.com/okta/terraform-provider-okta/blob/master/okta/services/idaas/resource_okta_policy_rule_password.go)
+
+## Related Resources
+
+- [`okta_policy_password`](../resources/policy_password) — Parent password policy
 
 
 

@@ -66,19 +66,19 @@ func (d *principalRateLimitsDataSource) Schema(ctx context.Context, req datasour
 			},
 			"created_by": schema.StringAttribute{
 				Computed:    true,
-				Description: "The Okta user ID of the user who created the principle rate limit entity.",
+				Description: "The Okta user ID of the user who created the principal rate limit entity.",
 			},
 			"created_date": schema.StringAttribute{
 				Computed:    true,
-				Description: "The date and time the principle rate limit entity was created.",
+				Description: "The date and time the principal rate limit entity was created.",
 			},
 			"last_update": schema.StringAttribute{
 				Computed:    true,
-				Description: "The date and time the principle rate limit entity was last updated.",
+				Description: "The date and time the principal rate limit entity was last updated.",
 			},
 			"last_updated_by": schema.StringAttribute{
 				Computed:    true,
-				Description: "The Okta user ID of the user who last updated the principle rate limit entity.",
+				Description: "The Okta user ID of the user who last updated the principal rate limit entity.",
 			},
 			"org_id": schema.StringAttribute{
 				Computed:    true,

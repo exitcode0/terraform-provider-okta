@@ -1,12 +1,27 @@
 ---
 page_title: "Resource: okta_auth_server_claim"
+subcategory: "Security"
 description: |-
+
   Creates an Authorization Server Claim. This resource allows you to create and configure an Authorization Server Claim.
+
 ---
 
 # Resource: okta_auth_server_claim
 
+
 Creates an Authorization Server Claim. This resource allows you to create and configure an Authorization Server Claim.
+
+
+## Links
+
+- [Okta API docs](https://developer.okta.com/docs/api/openapi/okta-management/management/tag/AuthorizationServerClaims/)
+- [Provider source](https://github.com/okta/terraform-provider-okta/blob/master/okta/services/idaas/resource_okta_auth_server_claim.go)
+
+## Related Resources
+
+- [`okta_auth_server`](../resources/auth_server) — Parent authorization server
+- [`okta_auth_server_scope`](../resources/auth_server_scope) — Scopes referenced by claims
 
 ## Example Usage
 

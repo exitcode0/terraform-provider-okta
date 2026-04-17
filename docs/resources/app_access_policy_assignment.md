@@ -1,15 +1,29 @@
 ---
 page_title: "Resource: okta_app_access_policy_assignment"
+subcategory: "Applications"
 description: |-
+
   Manages assignment of Access Policy to an Application.
-  Warning: do not use as this will update oktaapp*.authentication_policy and vice versa
+  Warning: do not use as this will update okta_app_*.authentication_policy and vice versa
+
 ---
 
 # Resource: okta_app_access_policy_assignment
 
+
 Manages assignment of Access Policy to an Application. 
 		
 **Warning**: do not use as this will update okta_app_*.authentication_policy and vice versa
+
+
+## Links
+
+- [Okta API docs](https://developer.okta.com/docs/api/openapi/okta-management/management/tag/ApplicationPolicies/)
+- [Provider source](https://github.com/okta/terraform-provider-okta/blob/master/okta/services/idaas/resource_okta_app_access_policy_assignment.go)
+
+## Related Resources
+
+- [`okta_app_signon_policy`](../resources/app_signon_policy) — The policy being assigned
 
 Assigns an access policy (colloquially known as a sign-on policy and/or an
 authentication policy) to an application. This resource does not perform true
@@ -23,7 +37,6 @@ and during update.
 -> Inside the product a sign-on policy is referenced as an _authentication
 policy_, in the public API the policy is of type
 [`ACCESS_POLICY`](https://developer.okta.com/docs/reference/api/policy/#policy-object).
-
 
 ## Example Usage
 

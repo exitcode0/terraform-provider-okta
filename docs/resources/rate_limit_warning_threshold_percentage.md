@@ -1,16 +1,28 @@
 ---
 page_title: "Resource: okta_rate_limit_warning_threshold_percentage"
+subcategory: "Reports"
 description: |-
-  Rate limit warning threshold percentage provides operations to manage threshold for warning notifications when the API's rate limit is exceeded.
+
+  Terraform Resource for okta_rate_limit_warning_threshold_percentage.
+
 ---
 
 # Resource: okta_rate_limit_warning_threshold_percentage
 
-Rate limit warning threshold percentage provides operations to manage threshold for warning notifications when the API's rate limit is exceeded.
+
+Terraform Resource for okta_rate_limit_warning_threshold_percentage.
+
+
+## Links
+
+- [Okta API docs](https://developer.okta.com/docs/api/openapi/okta-management/management/tag/RateLimitSettings/)
+- [Provider source](https://github.com/okta/terraform-provider-okta/blob/master/okta/services/idaas/resource_okta_rate_limit_warning_threshold_percentage.go)
+- [SDK source](https://github.com/okta/okta-sdk-golang/blob/v5.0.6/okta/api_rate_limit_settings.go)
+
 ## Example Usage
 
 ```terraform
-resource "okta_rate_limit_warning_threshold_percentage" "example" {
+resource "okta_rate_limit_warning_threshold_percentage" "test" {
   warning_threshold = 90
 }
 ```
@@ -24,7 +36,7 @@ resource "okta_rate_limit_warning_threshold_percentage" "example" {
 
 ### Read-Only
 
-- `id` (String) The unique identifier of the warning threshold percentage entity.
+- `id` (String) The ID of this resource.
 
 ## Import
 

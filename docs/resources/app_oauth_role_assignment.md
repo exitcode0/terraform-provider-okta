@@ -1,16 +1,32 @@
 ---
 page_title: "Resource: okta_app_oauth_role_assignment"
+subcategory: "Applications"
 description: |-
+
   Manages assignment of an admin role to an OAuth application
-          This resource allows you to assign an Okta admin role to a OAuth
-          service application. This requires the Okta tenant feature flag for this function to be enabled.
+  This resource allows you to assign an Okta admin role to a OAuth
+  service application. This requires the Okta tenant feature flag for this function to be enabled.
+
 ---
 
 # Resource: okta_app_oauth_role_assignment
 
+
 Manages assignment of an admin role to an OAuth application
 		This resource allows you to assign an Okta admin role to a OAuth 
 		service application. This requires the Okta tenant feature flag for this function to be enabled.
+
+
+## Links
+
+- [Okta API docs](https://developer.okta.com/docs/api/openapi/okta-management/management/tag/RoleAssignmentClient/)
+- [Provider source](https://github.com/okta/terraform-provider-okta/blob/master/okta/services/idaas/resource_okta_app_oauth_role_assignment.go)
+
+## Related Resources
+
+- [`okta_app_oauth`](../resources/app_oauth) — Parent OAuth application
+- [`okta_admin_role_custom`](../resources/admin_role_custom) — Custom admin role
+- [`okta_resource_set`](../resources/resource_set) — Resource set for custom role
 
 ## Example Usage
 

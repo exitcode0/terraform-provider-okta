@@ -1,12 +1,31 @@
 ---
 page_title: "Data Source: okta_user"
+subcategory: "Directory"
 description: |-
+
   Get a single users from Okta.
+
 ---
 
 # Data Source: okta_user
 
+
 Get a single users from Okta.
+
+
+## Links
+
+- [Okta API docs](https://developer.okta.com/docs/api/openapi/okta-management/management/tag/User/)
+- [Provider source](https://github.com/okta/terraform-provider-okta/blob/master/okta/services/idaas/data_source_okta_user.go)
+
+## Related Resources
+
+- [`okta_user_type`](../resources/user_type) — Custom user types
+- [`okta_user_group_memberships`](../resources/user_group_memberships) — Group membership management
+- [`okta_user_admin_roles`](../resources/user_admin_roles) — Admin role assignments
+- [`okta_user_base_schema_property`](../resources/user_base_schema_property) — Base profile schema properties
+- [`okta_user_schema_property`](../resources/user_schema_property) — Custom profile schema properties
+- [`okta_group`](../resources/group) — Groups the user belongs to
 
 ## Example Usage
 
@@ -87,6 +106,7 @@ data "okta_user" "example" {
 - `street_address` (String)
 - `timezone` (String)
 - `title` (String)
+- `type` (List of Object) User type (see [below for nested schema](#nestedatt--type))
 - `user_type` (String)
 - `zip_code` (String)
 
@@ -101,3 +121,9 @@ Optional:
 - `value` (String)
 
 
+<a id="nestedatt--type"></a>
+### Nested Schema for `type`
+
+Read-Only:
+
+- `id` (String)

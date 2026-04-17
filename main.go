@@ -20,7 +20,10 @@ import (
 //go:generate terraform fmt -recursive ./examples/
 
 // Generate documentation.
-//go:generate go run github.com/hashicorp/terraform-plugin-docs/cmd/tfplugindocs
+// NOTE: We pass --provider-name explicitly so doc generation is stable even when
+// this repo is checked out into a directory that doesn't match the provider name
+// (e.g. git worktrees).
+//go:generate go run github.com/hashicorp/terraform-plugin-docs/cmd/tfplugindocs generate --provider-name=okta --rendered-provider-name=Okta
 
 func main() {
 	var debug bool

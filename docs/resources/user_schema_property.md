@@ -1,40 +1,33 @@
 ---
 page_title: "Resource: okta_user_schema_property"
+subcategory: "Directory"
 description: |-
+
   Creates a User Schema property. This resource allows you to create and configure a custom user schema property.
+
 ---
 
 # Resource: okta_user_schema_property
 
+
 Creates a User Schema property. This resource allows you to create and configure a custom user schema property.
+
+
+## Links
+
+- [Okta API docs](https://developer.okta.com/docs/api/openapi/okta-management/management/tag/Schema/)
+- [Provider source](https://github.com/okta/terraform-provider-okta/blob/master/okta/services/idaas/resource_okta_user_custom_schema_property.go)
+
+## Related Resources
+
+- [`okta_user`](../resources/user) — Users
+- [`okta_user_type`](../resources/user_type) — User type the schema belongs to
 
 **IMPORTANT:** With `enum`, list its values as strings even though the `type`
 may be something other than string. This is a limitation of the schema defintion
 in the Terraform Plugin SDK runtime and we juggle the type correctly when making
 Okta API calls. Same holds for the `const` value of `one_of` as well as the
 `array_*` variation of `enum` and `one_of`.
-
-⚠️ **IMPORTANT - Terraform Users:** Modifying certain properties of an existing
-`okta_user_schema_property` resource through Terraform will cause the resource to be
-**deleted and recreated**, which results in **permanent data loss** for any user data stored
-in this schema property.
-
-**Affected properties:**
-- `external_name`
-- `external_namespace`
-- `unique`
-
-**Note:** The Okta API supports in-place updates for these properties. This delete/recreate
-behavior is specific to the Terraform provider implementation.
-
-**Workaround to prevent data loss:**
-1. Update the schema property directly via the Okta Admin Console or API (e.g., using `curl`)
-2. Remove the resource from your Terraform state:
-	- Terraform: `terraform state rm <resource_address>`
-3. Re-import the updated resource:
-	- Terraform: `terraform import <resource_address> <resource_id>`
-
-
 ## Example Usage
 
 ```terraform

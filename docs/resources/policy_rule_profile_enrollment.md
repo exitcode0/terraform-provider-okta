@@ -1,15 +1,19 @@
 ---
 page_title: "Resource: okta_policy_rule_profile_enrollment"
+subcategory: "Security"
 description: |-
+
   Creates a Profile Enrollment Policy Rule.
   ~> WARNING: This feature is only available as a part of the Identity Engine. Contact support mailto:dev-inquiries@okta.com for further information.
   A profile enrollment
   policy https://developer.okta.com/docs/reference/api/policy/#profile-enrollment-policy
   is limited to one default rule. This resource does not create a rule for an
   enrollment policy, it allows the default policy rule to be updated.
+
 ---
 
 # Resource: okta_policy_rule_profile_enrollment
+
 
 Creates a Profile Enrollment Policy Rule.
 		
@@ -18,6 +22,16 @@ A [profile enrollment
 policy](https://developer.okta.com/docs/reference/api/policy/#profile-enrollment-policy)
 is limited to one default rule. This resource does not create a rule for an
 enrollment policy, it allows the default policy rule to be updated.
+
+
+## Links
+
+- [Okta API docs](https://developer.okta.com/docs/api/openapi/okta-management/management/tag/Policy/)
+- [Provider source](https://github.com/okta/terraform-provider-okta/blob/master/okta/services/idaas/resource_okta_policy_rule_profile_enrollment.go)
+
+## Related Resources
+
+- [`okta_policy_profile_enrollment`](../resources/policy_profile_enrollment) — Parent profile enrollment policy
 
 ## Example Usage
 

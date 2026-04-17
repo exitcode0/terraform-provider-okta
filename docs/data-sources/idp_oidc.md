@@ -1,12 +1,26 @@
 ---
 page_title: "Data Source: okta_idp_oidc"
+subcategory: "Security"
 description: |-
+
   Get a OIDC IdP from Okta.
+
 ---
 
 # Data Source: okta_idp_oidc
 
+
 Get a OIDC IdP from Okta.
+
+
+## Links
+
+- [Okta API docs](https://developer.okta.com/docs/api/openapi/okta-management/management/tag/IdentityProvider/)
+- [Provider source](https://github.com/okta/terraform-provider-okta/blob/master/okta/services/idaas/data_source_okta_idp_oidc.go)
+
+## Related Resources
+
+- [`okta_policy_rule_idp_discovery`](../resources/policy_rule_idp_discovery) — IdP discovery policy rules
 
 ## Example Usage
 
@@ -23,6 +37,7 @@ data "okta_idp_oidc" "example" {
 
 - `id` (String) Id of idp.
 - `name` (String) Name of the idp.
+- `slo_url` (String) OIDC IdP logout endpoint.
 
 ### Read-Only
 
@@ -37,12 +52,10 @@ data "okta_idp_oidc" "example" {
 - `max_clock_skew` (Number) Maximum allowable clock-skew when processing messages from the IdP.
 - `participate_slo` (Boolean) Set to true to have Okta send a logout request to the upstream IdP when a user signs out of Okta or a downstream app.
 - `protocol_type` (String) The type of protocol to use.
-- `slo_url` (String) OIDC IdP logout endpoint.
 - `scopes` (Set of String) The scopes of the IdP.
 - `token_binding` (String) The method of making a token request.
 - `token_url` (String) IdP Authorization Server (AS) endpoint to exchange the authorization code grant for an access token.
+- `trust_claims` (Boolean) Indicates whether to trust authentication claims from the IdP.
 - `type` (String) Type of idp.
 - `user_info_binding` (String) The method of making a user info request.
 - `user_info_url` (String) Protected resource endpoint that returns claims about the authenticated user.
-
-

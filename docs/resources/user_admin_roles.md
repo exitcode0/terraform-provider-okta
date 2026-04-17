@@ -1,12 +1,27 @@
 ---
 page_title: "Resource: okta_user_admin_roles"
+subcategory: "Directory"
 description: |-
+
   Resource to manage a set of administrator roles for a specific user. This resource allows you to manage admin roles for a single user, independent of the user schema itself.
+
 ---
 
 # Resource: okta_user_admin_roles
 
+
 Resource to manage a set of administrator roles for a specific user. This resource allows you to manage admin roles for a single user, independent of the user schema itself.
+
+
+## Links
+
+- [Okta API docs](https://developer.okta.com/docs/api/openapi/okta-management/management/tag/RoleAssignmentAUser/)
+- [Provider source](https://github.com/okta/terraform-provider-okta/blob/master/okta/services/idaas/resource_okta_user_admin_roles.go)
+
+## Related Resources
+
+- [`okta_user`](../resources/user) — The user
+- [`okta_admin_role_custom`](../resources/admin_role_custom) — Custom admin roles
 
 ## Example Usage
 

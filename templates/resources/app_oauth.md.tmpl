@@ -1,12 +1,36 @@
 ---
 page_title: "{{.Type}}: {{.Name}}"
+subcategory: "Applications"
 description: |-
+{{ if .Description }}
 {{ .Description | plainmarkdown | trimspace | prefixlines "  " }}
+{{ else }}
+  Terraform {{.Type}} for {{.Name}}.
+{{ end }}
 ---
 
 # {{.Type}}: {{.Name}}
 
+{{ if .Description }}
 {{ .Description | trimspace }}
+{{ else }}
+Terraform {{.Type}} for {{.Name}}.
+{{ end }}
+
+## Links
+
+- [Okta API docs](https://developer.okta.com/docs/api/openapi/okta-management/management/tag/Application/)
+- [Provider source](https://github.com/okta/terraform-provider-okta/blob/master/okta/services/idaas/resource_okta_app_oauth.go)
+- [SDK source](https://github.com/okta/okta-sdk-golang/blob/v6.1.6/okta/api_application.go)
+
+## Related Resources
+
+- [`okta_app_group_assignment`](../resources/app_group_assignment) — Assign groups to the application
+- [`okta_app_user`](../resources/app_user) — Assign users to the application
+- [`okta_app_signon_policy`](../resources/app_signon_policy) — Application sign-on policy
+- [`okta_app_oauth_api_scope`](../resources/app_oauth_api_scope) — OAuth API scopes
+- [`okta_app_oauth_role_assignment`](../resources/app_oauth_role_assignment) — OAuth role assignments
+- [`okta_app_connection`](../resources/app_connection) — Application connection settings
 
 ~> `okta_app_oauth_redirect_uri` has been marked deprecated and will be removed
 in the v5 release of the provider. Operators should manage the redirect URIs for
@@ -31,7 +55,6 @@ Import is supported using the following syntax:
 {{ codefile "shell" .ImportFile }}
 
 {{- end }}
-
 
 ## Etc.
 

@@ -1,12 +1,28 @@
 ---
 page_title: "Resource: okta_user_type"
+subcategory: "Directory"
 description: |-
+
   Creates a User type. This resource allows you to create and configure a User Type.
+
 ---
 
 # Resource: okta_user_type
 
+
 Creates a User type. This resource allows you to create and configure a User Type.
+
+
+## Links
+
+- [Okta API docs](https://developer.okta.com/docs/api/openapi/okta-management/management/tag/UserType/)
+- [Provider source](https://github.com/okta/terraform-provider-okta/blob/master/okta/services/idaas/resource_okta_user_type.go)
+
+## Related Resources
+
+- [`okta_user`](../resources/user) — Users of this type
+- [`okta_user_base_schema_property`](../resources/user_base_schema_property) — Base schema properties for the user type
+- [`okta_user_schema_property`](../resources/user_schema_property) — Custom schema properties for the user type
 
 ## Example Usage
 

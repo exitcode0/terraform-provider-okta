@@ -1,12 +1,27 @@
 ---
 page_title: "{{.Type}}: {{.Name}}"
+subcategory: "Applications"
 description: |-
+{{ if .Description }}
 {{ .Description | plainmarkdown | trimspace | prefixlines "  " }}
+{{ else }}
+  Terraform {{.Type}} for {{.Name}}.
+{{ end }}
 ---
 
 # {{.Type}}: {{.Name}}
 
+{{ if .Description }}
 {{ .Description | trimspace }}
+{{ else }}
+Terraform {{.Type}} for {{.Name}}.
+{{ end }}
+
+## Links
+
+- [Okta API docs](https://developer.okta.com/docs/api/openapi/okta-management/management/tag/Application/)
+- [Provider source](https://github.com/okta/terraform-provider-okta/blob/master/okta/services/idaas/resource_okta_app_oauth_redirect_uri.go)
+- [SDK source](https://github.com/okta/terraform-provider-okta/blob/master/sdk/api_application.go)
 
 ~> `okta_app_oauth_redirect_uri` has been marked deprecated and will be removed
 in the v5 release of the provider. Operators should manage the redirect URIs for

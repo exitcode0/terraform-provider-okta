@@ -1,12 +1,22 @@
 ---
 page_title: "Data Source: okta_app"
+subcategory: "Applications"
 description: |-
+
   Get an application of any kind from Okta.
+
 ---
 
 # Data Source: okta_app
 
+
 Get an application of any kind from Okta.
+
+
+## Links
+
+- [Okta API docs](https://developer.okta.com/docs/api/openapi/okta-management/management/tag/Application/)
+- [Provider source](https://github.com/okta/terraform-provider-okta/blob/master/okta/services/idaas/data_source_okta_app.go)
 
 ## Example Usage
 
@@ -26,8 +36,8 @@ data "okta_app" "example" {
 - `label` (String) The label of the app to retrieve, conflicts with
 				label_prefix and id. Label uses the ?q=<label> query parameter exposed by
 				Okta's List Apps API. The API will search both name and label using that
-				query. Therefore similarily named and labeled apps may be returned in the query
-				and have the unitended result of associating the wrong app with this data
+				query. Therefore similarly named and labeled apps may be returned in the query
+				and have the unintended result of associating the wrong app with this data
 				source. See:
 				https://developer.okta.com/docs/reference/api/apps/#list-applications
 - `label_prefix` (String) Label prefix of the app to retrieve, conflicts with label and id. This will tell the
@@ -42,5 +52,3 @@ data "okta_app" "example" {
 - `name` (String) Name of application.
 - `status` (String) Status of application.
 - `users` (Set of String, Deprecated) Users associated with the application
-
-

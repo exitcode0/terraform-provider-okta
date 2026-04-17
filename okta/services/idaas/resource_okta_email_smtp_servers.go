@@ -18,7 +18,7 @@ func resourceEmailSMTP() *schema.Resource {
 		Importer: &schema.ResourceImporter{
 			StateContext: schema.ImportStatePassthroughContext,
 		},
-		Description: `configure a custom external email provider to send email notifications. 
+		Description: `configure a custom external email provider to send email notifications.
 		By default, notifications such as the welcome email or an account recovery email are sent through an Okta-managed SMTP server.`,
 		Schema: map[string]*schema.Schema{
 			"host": {

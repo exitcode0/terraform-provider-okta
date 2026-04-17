@@ -1,12 +1,32 @@
 ---
 page_title: "Resource: okta_group"
+subcategory: "Directory"
 description: |-
+
   Creates an Okta Group. This resource allows you to create and configure an Okta Group.
+
 ---
 
 # Resource: okta_group
 
+
 Creates an Okta Group. This resource allows you to create and configure an Okta Group.
+
+
+## Links
+
+- [Okta API docs](https://developer.okta.com/docs/api/openapi/okta-management/management/tag/Group/)
+- [Provider source](https://github.com/okta/terraform-provider-okta/blob/master/okta/services/idaas/resource_okta_group.go)
+
+## Related Resources
+
+- [`okta_group_memberships`](../resources/group_memberships) — Direct membership management
+- [`okta_group_rule`](../resources/group_rule) — Dynamic group membership rules
+- [`okta_group_role`](../resources/group_role) — Admin role assignments for the group
+- [`okta_group_owner`](../resources/group_owner) — Group ownership
+- [`okta_group_schema_property`](../resources/group_schema_property) — Custom group profile schema
+- [`okta_push_group`](../resources/push_group) — Push group to applications
+- [`okta_user`](../resources/user) — Users in the group
 
 ## Example Usage
 

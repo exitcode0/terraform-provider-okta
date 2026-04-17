@@ -1,17 +1,32 @@
 ---
 page_title: "Resource: okta_admin_role_custom_assignments"
+subcategory: "Security"
 description: |-
+
   Resource to manage the assignment and unassignment of Custom Roles
   These operations allow the creation and manipulation of custom roles as custom collections of permissions.
   ~> NOTE: This an Early Access feature.
+
 ---
 
 # Resource: okta_admin_role_custom_assignments
+
 
 Resource to manage the assignment and unassignment of Custom Roles
 These operations allow the creation and manipulation of custom roles as custom collections of permissions.
 		
 ~> **NOTE:** This an Early Access feature.
+
+
+## Links
+
+- [Okta API docs](https://developer.okta.com/docs/api/openapi/okta-management/management/tag/RoleDResourceSetBinding/)
+- [Provider source](https://github.com/okta/terraform-provider-okta/blob/master/okta/services/idaas/resource_okta_admin_role_custom_assignments.go)
+
+## Related Resources
+
+- [`okta_admin_role_custom`](../resources/admin_role_custom) — The custom role
+- [`okta_resource_set`](../resources/resource_set) — Resource set
 
 ## Example Usage
 

@@ -1,12 +1,28 @@
 ---
 page_title: "Resource: okta_group_role"
+subcategory: "Directory"
 description: |-
+
   Assigns Admin roles to Okta Groups. This resource allows you to assign Okta administrator roles to Okta Groups. This resource provides a one-to-one interface between the Okta group and the admin role.
+
 ---
 
 # Resource: okta_group_role
 
+
 Assigns Admin roles to Okta Groups. This resource allows you to assign Okta administrator roles to Okta Groups. This resource provides a one-to-one interface between the Okta group and the admin role.
+
+
+## Links
+
+- [Okta API docs](https://developer.okta.com/docs/api/openapi/okta-management/management/tag/RoleAssignmentBGroup/)
+- [Provider source](https://github.com/okta/terraform-provider-okta/blob/master/okta/services/idaas/resource_okta_group_role.go)
+
+## Related Resources
+
+- [`okta_group`](../resources/group) — The group
+- [`okta_admin_role_custom`](../resources/admin_role_custom) — Custom admin roles
+- [`okta_resource_set`](../resources/resource_set) — Resource set for custom role
 
 ## Example Usage
 

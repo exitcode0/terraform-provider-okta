@@ -1,12 +1,27 @@
 ---
 page_title: "Resource: okta_user_base_schema_property"
+subcategory: "Directory"
 description: |-
+
   Manages a User Base Schema property. This resource allows you to configure a base user schema property.
+
 ---
 
 # Resource: okta_user_base_schema_property
 
+
 Manages a User Base Schema property. This resource allows you to configure a base user schema property.
+
+
+## Links
+
+- [Okta API docs](https://developer.okta.com/docs/api/openapi/okta-management/management/tag/Schema/)
+- [Provider source](https://github.com/okta/terraform-provider-okta/blob/master/okta/services/idaas/resource_okta_user_base_schema_property.go)
+
+## Related Resources
+
+- [`okta_user`](../resources/user) — Users
+- [`okta_user_type`](../resources/user_type) — User type the schema belongs to
 
 ## IMPORTANT NOTE: 
 

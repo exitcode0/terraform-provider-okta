@@ -1,12 +1,28 @@
 ---
 page_title: "Data Source: okta_domain"
+subcategory: "Customizations"
 description: |-
+
   Get a domain from Okta.
+
 ---
 
 # Data Source: okta_domain
 
+
 Get a domain from Okta.
+
+
+## Links
+
+- [Okta API docs](https://developer.okta.com/docs/api/openapi/okta-management/management/tag/CustomDomain/)
+- [Provider source](https://github.com/okta/terraform-provider-okta/blob/master/okta/services/idaas/data_source_okta_domain.go)
+- [SDK source](https://github.com/okta/okta-sdk-golang/blob/v5.0.6/okta/api_custom_domain.go)
+
+## Related Resources
+
+- [`okta_domain_certificate`](../resources/domain_certificate) — TLS certificate for the domain
+- [`okta_domain_verification`](../resources/domain_verification) — Domain ownership verification
 
 ## Example Usage
 
@@ -53,5 +69,3 @@ Read-Only:
 - `fqdn` (String)
 - `record_type` (String)
 - `values` (List of String)
-
-

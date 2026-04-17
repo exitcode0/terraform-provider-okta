@@ -1,15 +1,29 @@
 ---
 page_title: "Resource: okta_org_configuration"
+subcategory: "Settings"
 description: |-
+
   Manages org settings, logo, support and communication.
   ~> IMPORTANT: You must specify all Org Setting properties when you update an org's profile. Any property not specified in the script will be deleted.
+
 ---
 
 # Resource: okta_org_configuration
 
+
 Manages org settings, logo, support and communication.
 		
 ~> **IMPORTANT:** You must specify all Org Setting properties when you update an org's profile. Any property not specified in the script will be deleted.
+
+
+## Links
+
+- [Okta API docs](https://developer.okta.com/docs/api/openapi/okta-management/management/tag/OrgSettingGeneral/)
+- [Provider source](https://github.com/okta/terraform-provider-okta/blob/master/okta/services/idaas/resource_okta_org_configuration.go)
+
+## Related Resources
+
+- [`okta_org_support`](../resources/org_support) — Okta support settings
 
 ## Example Usage
 

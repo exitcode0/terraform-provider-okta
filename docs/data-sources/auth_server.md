@@ -1,12 +1,31 @@
 ---
 page_title: "Data Source: okta_auth_server"
+subcategory: "Security"
 description: |-
+
   Get an auth server from Okta.
+
 ---
 
 # Data Source: okta_auth_server
 
+
 Get an auth server from Okta.
+
+
+## Links
+
+- [Okta API docs](https://developer.okta.com/docs/api/openapi/okta-management/management/tag/AuthorizationServer/)
+- [Provider source](https://github.com/okta/terraform-provider-okta/blob/master/okta/services/idaas/data_source_okta_auth_server.go)
+
+## Related Resources
+
+- [`okta_auth_server_policy`](../resources/auth_server_policy) — Policies for the authorization server
+- [`okta_auth_server_claim`](../resources/auth_server_claim) — Custom claims
+- [`okta_auth_server_claim_default`](../resources/auth_server_claim_default) — Default claim overrides
+- [`okta_auth_server_scope`](../resources/auth_server_scope) — Custom scopes
+- [`okta_auth_server_default`](../resources/auth_server_default) — Default authorization server settings
+- [`okta_trusted_server`](../resources/trusted_server) — Trusted authorization server relationships
 
 ## Example Usage
 
@@ -35,5 +54,3 @@ data "okta_auth_server" "example" {
 - `issuer_mode` (String) Can be set to `CUSTOM_URL` or `ORG_URL`
 - `kid` (String) Auth server key id.
 - `status` (String) The activation status of the authorization server.
-
-

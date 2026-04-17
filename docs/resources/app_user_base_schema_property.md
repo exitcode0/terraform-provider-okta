@@ -1,12 +1,22 @@
 ---
 page_title: "Resource: okta_app_user_base_schema_property"
+subcategory: "Applications"
 description: |-
+
   Manages an Application User Base Schema property. This resource allows you to configure a base app user schema property.
+
 ---
 
 # Resource: okta_app_user_base_schema_property
 
+
 Manages an Application User Base Schema property. This resource allows you to configure a base app user schema property.
+
+
+## Links
+
+- [Okta API docs](https://developer.okta.com/docs/api/openapi/okta-management/management/tag/Schema/)
+- [Provider source](https://github.com/okta/terraform-provider-okta/blob/master/okta/services/idaas/resource_okta_app_user_base_schema_property.go)
 
 ## Example Usage
 

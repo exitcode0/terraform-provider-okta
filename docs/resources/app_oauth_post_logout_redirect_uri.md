@@ -1,12 +1,22 @@
 ---
 page_title: "Resource: okta_app_oauth_post_logout_redirect_uri"
+subcategory: "Applications"
 description: |-
+
   This resource allows you to manage post logout redirection URI for use in redirect-based flows.
+
 ---
 
 # Resource: okta_app_oauth_post_logout_redirect_uri
 
+
 This resource allows you to manage post logout redirection URI for use in redirect-based flows.
+
+
+## Links
+
+- [Okta API docs](https://developer.okta.com/docs/api/openapi/okta-management/management/tag/Application/)
+- [Provider source](https://github.com/okta/terraform-provider-okta/blob/master/okta/services/idaas/resource_okta_app_oauth_post_logout_redirect_uri.go)
 
 ~> `okta_app_oauth_post_logout_redirect_uri` has been marked deprecated and will
 be removed in the v5 release of the provider. Operators should manage the post

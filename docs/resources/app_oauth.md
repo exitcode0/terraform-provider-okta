@@ -1,18 +1,38 @@
 ---
 page_title: "Resource: okta_app_oauth"
+subcategory: "Applications"
 description: |-
+
   This resource allows you to create and configure an OIDC Application.
   -> During an apply if there is change in status the app will first be
   activated or deactivated in accordance with the status change. Then, all
   other arguments that changed will be applied.
+
 ---
 
 # Resource: okta_app_oauth
+
 
 This resource allows you to create and configure an OIDC Application.
 -> During an apply if there is change in status the app will first be
 activated or deactivated in accordance with the status change. Then, all
 other arguments that changed will be applied.
+
+
+## Links
+
+- [Okta API docs](https://developer.okta.com/docs/api/openapi/okta-management/management/tag/Application/)
+- [Provider source](https://github.com/okta/terraform-provider-okta/blob/master/okta/services/idaas/resource_okta_app_oauth.go)
+- [SDK source](https://github.com/okta/okta-sdk-golang/blob/v6.1.6/okta/api_application.go)
+
+## Related Resources
+
+- [`okta_app_group_assignment`](../resources/app_group_assignment) — Assign groups to the application
+- [`okta_app_user`](../resources/app_user) — Assign users to the application
+- [`okta_app_signon_policy`](../resources/app_signon_policy) — Application sign-on policy
+- [`okta_app_oauth_api_scope`](../resources/app_oauth_api_scope) — OAuth API scopes
+- [`okta_app_oauth_role_assignment`](../resources/app_oauth_role_assignment) — OAuth role assignments
+- [`okta_app_connection`](../resources/app_connection) — Application connection settings
 
 ~> `okta_app_oauth_redirect_uri` has been marked deprecated and will be removed
 in the v5 release of the provider. Operators should manage the redirect URIs for
@@ -65,33 +85,37 @@ resource "okta_app_oauth" "example" {
 
 ### Optional
 
+> **NOTE**: [Write-only arguments](https://developer.hashicorp.com/terraform/language/resources/ephemeral#write-only-arguments) are supported in Terraform 1.11 and later.
+
 - `accessibility_error_redirect_url` (String) Custom error page URL
 - `accessibility_login_redirect_url` (String) Custom login page URL
 - `accessibility_self_service` (Boolean) Enable self service. Default is `false`
 - `admin_note` (String) Application notes for admins.
 - `app_links_json` (String) Displays specific appLinks for the app. The value for each application link should be boolean.
 - `app_settings_json` (String) Application settings in JSON format
-- `authentication_policy` (String) The ID of the associated app_signon_policy. If this property is removed from the application the default sign-on-policy will be associated with this application. From now on, there is no need to attach authentication_policy for applications of type `SERVICE` in the upcoming release.
+- `authentication_policy` (String) The ID of the associated app_signon_policy. If this property is removed from the application, the default sign-on-policy will be associated with this application. From now on, there is no need to attach authentication_policy for applications of type SERVICE
 - `auto_key_rotation` (Boolean) Requested key rotation mode. If
 				auto_key_rotation isn't specified, the client automatically opts in for Okta's
 				key rotation. You can update this property via the API or via the administrator
 				UI.
 				See: https://developer.okta.com/docs/reference/api/apps/#oauth-credential-object"
 - `auto_submit_toolbar` (Boolean) Display auto submit toolbar
-- `client_basic_secret` (String, Sensitive) The user provided OAuth client secret key value. When set, this secret will be stored in the Terraform state file. For Terraform 1.11+, consider using `client_basic_secret_wo` instead to avoid persisting secrets in state. Either `client_basic_secret` or `client_basic_secret_wo` can be specified, but not both.
-- `client_basic_secret_wo` (String, Sensitive, Write-Only) The user provided write-only OAuth client secret key value for Terraform 1.11+. Unlike `client_basic_secret`, this secret will not be persisted in the Terraform state file, providing improved security. Only use this attribute with Terraform 1.11 or higher. Either `client_basic_secret` or `client_basic_secret_wo` can be specified, but not both.
-- `client_basic_secret_wo_version` (Number, Optional) Version number for the write-only client secret. Increment this value to trigger an update when changing `client_basic_secret_wo`.
+- `client_basic_secret` (String, Sensitive) The user provided OAuth client secret key value. When set, this secret will be stored in the Terraform state file. For Terraform 1.11+, consider using `client_basic_secret_wo` instead to avoid persisting secrets in state.
+- `client_basic_secret_wo` (String, Sensitive, [Write-only](https://developer.hashicorp.com/terraform/language/resources/ephemeral#write-only-arguments)) The user provided write-only OAuth client secret key value for Terraform 1.11+. Unlike `client_basic_secret`, this secret will not be persisted in the Terraform state file, providing improved security. Only use this attribute with Terraform 1.11 or higher.
+- `client_basic_secret_wo_version` (Number) Version number for the write-only client secret. Increment this value to trigger an update when changing `client_basic_secret_wo`.
 - `client_id` (String) OAuth client ID. If set during creation, app is created with this id.
 - `client_uri` (String) URI to a web page providing information about the client.
 - `consent_method` (String) *Early Access Property*. Indicates whether user consent is required or implicit. Valid values: REQUIRED, TRUSTED. Default value is TRUSTED. Note: Enable `API_ACCESS_MANAGEMENT`, `API_ACCESS_MANAGEMENT_CONSENT` feature flags in your org to use this property.
 - `enduser_note` (String) Application notes for end users.
+- `frontchannel_logout_session_required` (Boolean) *Early Access Property*. Determines whether Okta sends sid and iss in the logout request.
+- `frontchannel_logout_uri` (String) *Early Access Property*. URL where Okta sends the logout request. Required when participate_slo is true.
 - `grant_types` (Set of String) List of OAuth 2.0 grant types. Conditional validation params found here https://developer.okta.com/docs/api/resources/apps#credentials-settings-details. Defaults to minimum requirements per app type.
-- `groups_claim` (Block Set, Max: 1) Groups claim for an OpenID Connect client application (argument is ignored when API auth is done with OAuth 2.0 credentials, and is not supported when `preconfigured_app` is set) (see [below for nested schema](#nestedblock--groups_claim))
+- `groups_claim` (Block List, Max: 1, Deprecated) Groups claim for an OpenID Connect client application (DEPRECATED: This field will be removed in a future version. Use Authorization Server Claims instead). (see [below for nested schema](#nestedblock--groups_claim))
 - `hide_ios` (Boolean) Do not display application icon on mobile app
 - `hide_web` (Boolean) Do not display application icon to users
 - `implicit_assignment` (Boolean) *Early Access Property*. Enable Federation Broker Mode.
 - `issuer_mode` (String) *Early Access Property*. Indicates whether the Okta Authorization Server uses the original Okta org domain URL or a custom domain URL as the issuer of ID token for this client.
-- `jwks` (Block List) (see [below for nested schema](#nestedblock--jwks))
+- `jwks` (Block List) JSON Web Key Set (JWKS) for application. Note: Inline JWKS may have compatibility issues with v6 SDK. Consider using jwks_uri instead. (see [below for nested schema](#nestedblock--jwks))
 - `jwks_uri` (String) URL reference to JWKS
 - `login_mode` (String) The type of Idp-Initiated login that the client supports, if any
 - `login_scopes` (Set of String) List of scopes to use for the request
@@ -100,10 +124,11 @@ resource "okta_app_oauth" "example" {
 - `logo_uri` (String) URI that references a logo for the client.
 - `network` (Block List, Max: 1) Network restrictions for the application client. Only one `network` block may be defined. (see [below for nested schema](#nestedblock--network))
 - `omit_secret` (Boolean) This tells the provider not manage the client_secret value in state. When this is false (the default), it will cause the auto-generated client_secret to be persisted in the client_secret attribute in state. This also means that every time an update to this app is run, this value is also set on the API. If this changes from false => true, the `client_secret` is dropped from state and the secret at the time of the apply is what remains. If this is ever changes from true => false your app will be recreated, due to the need to regenerate a secret we can store in state.
+- `participate_slo` (Boolean) *Early Access Property*. Allows the app to participate in front-channel Single Logout. Note: You can only enable participate_slo for web and browser application types. When set to true, frontchannel_logout_uri must also be provided. Enable `SINGLE_LOGOUT_SUPPORT` feature flag in your org to use this property.
 - `pkce_required` (Boolean) Require Proof Key for Code Exchange (PKCE) for additional verification key rotation mode. See: https://developer.okta.com/docs/reference/api/apps/#oauth-credential-object
 - `policy_uri` (String) URI to web page providing client policy document.
 - `post_logout_redirect_uris` (Set of String) List of URIs for redirection after logout. Note: see okta_app_oauth_post_logout_redirect_uri for appending to this list in a decentralized way.
-- `preconfigured_app` (String) Tells Okta to use an existing application in their application catalog, as opposed to a custom application. Note: `groups_claim` is not supported when using `preconfigured_app`.
+- `preconfigured_app` (String) Tells Okta to use an existing application in their application catalog, as opposed to a custom application.
 - `profile` (String) Custom JSON that represents an OAuth application's profile
 - `redirect_uris` (List of String) List of URIs for use in the redirect-based flow. This is required for all application types except service. Note: see okta_app_oauth_redirect_uri for appending to this list in a decentralized way.
 - `refresh_token_leeway` (Number) *Early Access Property* Grace period for token rotation, required with grant types refresh_token
@@ -117,11 +142,7 @@ resource "okta_app_oauth" "example" {
 - `user_name_template_push_status` (String) Push username on update. Valid values: `PUSH` and `DONT_PUSH`
 - `user_name_template_suffix` (String) Username template suffix
 - `user_name_template_type` (String) Username template type. Default: `BUILT_IN`
-- `wildcard_redirect` (String) *Early Access Property*. Indicates if the client is allowed to use wildcard matching of redirect_uris.
-- `participate_slo` (Boolean) *Early Access Property*. Allows the app to participate in front-channel Single Logout. Note: You can only enable participate_slo for web and browser application types. When set to true, frontchannel_logout_uri must also be provided. Enable `SINGLE_LOGOUT_SUPPORT` feature flag in your org to use this property.
-- `frontchannel_logout_uri` (String) *Early Access Property*. URL where Okta sends the logout request. Required when participate_slo is true.
-- `frontchannel_logout_session_required` (Boolean) *Early Access Property*. Determines whether Okta sends sid and iss in the logout request.
-
+- `wildcard_redirect` (String) *Early Access Property*. Indicates if the client is allowed to use wildcard matching of redirect_uris
 
 ### Read-Only
 
@@ -194,7 +215,6 @@ Import is supported using the following syntax:
 ```shell
 terraform import okta_app_oauth.example <app_id>
 ```
-
 
 ## Etc.
 

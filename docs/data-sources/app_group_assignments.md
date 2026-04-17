@@ -1,12 +1,26 @@
 ---
 page_title: "Data Source: okta_app_group_assignments"
+subcategory: "Applications"
 description: |-
+
   Get a set of groups assigned to an Okta application.
+
 ---
 
 # Data Source: okta_app_group_assignments
 
+
 Get a set of groups assigned to an Okta application.
+
+
+## Links
+
+- [Okta API docs](https://developer.okta.com/docs/api/openapi/okta-management/management/tag/ApplicationGroups/)
+- [Provider source](https://github.com/okta/terraform-provider-okta/blob/master/okta/services/idaas/data_source_okta_app_group_assignments.go)
+
+## Related Resources
+
+- [`okta_group`](../resources/group) — The groups being assigned
 
 ## Example Usage
 
@@ -26,5 +40,3 @@ data "okta_app_group_assignments" "test" {
 ### Read-Only
 
 - `groups` (Set of String) List of groups IDs assigned to the app
-
-
