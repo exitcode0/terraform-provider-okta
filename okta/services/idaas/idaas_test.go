@@ -106,6 +106,7 @@ func TestMain(m *testing.M) {
 		setupSweeper(resources.OktaIDaaSUserSchemaProperty, sweepUserCustomSchema)
 		setupSweeper(resources.OktaIDaaSUserType, sweepUserTypes)
 		setupSweeper(resources.OktaIDaaSBrand, sweepBrands)
+		setupSweeper(resources.OktaIDaaSDevicePostureCheck, sweepDevicePostureChecks)
 	}
 
 	resource.TestMain(m)
@@ -508,6 +509,26 @@ func sweepBrands(client api.OktaIDaaSClient) error {
 			continue
 		}
 		logSweptResource("brand", *b.Id, *b.Name)
+	}
+	return condenseError(errorList)
+}
+
+func sweepDevicePostureChecks(client api.OktaIDaaSClient) error {
+	var errorList []error
+	ctx := context.Background()
+	checks, _, err := client.OktaSDKClientV6().DevicePostureCheckAPI.ListDevicePostureChecks(ctx).Execute()
+	if err != nil {
+		return err
+	}
+	for _, c := range checks {
+		if !strings.HasPrefix(c.GetName(), acctest.ResourceNamePrefixForTest) {
+			continue
+		}
+		if _, err := client.OktaSDKClientV6().DevicePostureCheckAPI.DeleteDevicePostureCheck(ctx, c.GetId()).Execute(); err != nil {
+			errorList = append(errorList, err)
+			continue
+		}
+		logSweptResource("device posture check", c.GetId(), c.GetName())
 	}
 	return condenseError(errorList)
 }

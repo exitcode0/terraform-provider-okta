@@ -1,0 +1,1 @@
+terraform import okta_device_posture_check.example <device_posture_check_id>
